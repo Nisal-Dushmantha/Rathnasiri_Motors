@@ -1,41 +1,69 @@
+// App.js
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+
+// Common components
 import SidePanel from "./compononets/SidePanel/SidePanel";
-import Dashboard from "./compononets/ServiceAndRepairDashboard/ServiceAndRepairDashboard";
-import ServiceJobCard from "./compononets/ServiceJobCard/ServiceJobCard";
-import RepairJobCard from "./compononets/RepairJobCard/RepairJobCard";
-import AllServiceJobs from "./compononets/AllJobs/AllServiceJobs";
-import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
 import Header from "./compononets/Header/Header";
 import Footer from "./compononets/Footer/Footer";
-import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
-import UpdateRepairCard from "./compononets/UpdateRepairCard/UpdateRepairCard";
+
+// Dashboards
 import Homepage from "./compononets/Homepage/Homepage";
+import Dashboard from "./compononets/ServiceAndRepairDashboard/ServiceAndRepairDashboard";
 import UserDashboard from "./compononets/UserDashboard/UserDashboard";
 import ProductsDashboard from "./compononets/ProductsDashboard/ProductsDashboard";
 import InventoryDashboard from "./compononets/InventoryDashboard/InventoryDashboard";
-import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard"; 
+import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard";
+
+// Job cards
+import ServiceJobCard from "./compononets/ServiceJobCard/ServiceJobCard";
+import RepairJobCard from "./compononets/RepairJobCard/RepairJobCard";
+
+// All jobs
+import AllServiceJobs from "./compononets/AllJobs/AllServiceJobs";
+import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
+
+// Update job cards
+import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
+import UpdateRepairCard from "./compononets/UpdateRepairCard/UpdateRepairCard";
+
+// PDF/Document page
+import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 
 function App() {
   return (
     <Router>
+      {/* Sidebar stays persistent */}
       <SidePanel />
+      
       <div className="ml-80">
         <Header />
+
         <Routes>
-          <Route path="/service" element={<Dashboard />} />
+          {/* Dashboards */}
           <Route path="/homepage" element={<Homepage />} />
+          <Route path="/service" element={<Dashboard />} />
           <Route path="/user" element={<UserDashboard />} />
           <Route path="/products" element={<ProductsDashboard />} />
           <Route path="/inventory" element={<InventoryDashboard />} />
-          <Route path="/ServiceJobCard" element={<ServiceJobCard />} />
           <Route path="/finance" element={<FinanceDashboard />} />
+
+          {/* Job cards */}
+          <Route path="/ServiceJobCard" element={<ServiceJobCard />} />
           <Route path="/RepairJobCard" element={<RepairJobCard />} />
+
+          {/* All jobs */}
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
+
+          {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
           <Route path="/AllRepairJobs/:id" element={<UpdateRepairCard />} />
+
+          {/* Repair job PDF document */}
+          <Route path="/RepairDocument/:id" element={<RepairDocument />} />
         </Routes>
+
         <Footer />
       </div>
     </Router>
