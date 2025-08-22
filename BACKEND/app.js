@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const servicerouter = require("../BACKEND/Routes/serviceRoute");
 const repairrouter = require("../BACKEND/Routes/repairRoute");
+const router = require("./Routes/UserRoute");
 
 const app = express();
 const cors = require("cors");
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/services", servicerouter);
 app.use("/repairs", repairrouter);
+app.use("/users",router);
 
 mongoose
   .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net")
