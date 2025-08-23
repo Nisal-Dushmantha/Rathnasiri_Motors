@@ -1,39 +1,29 @@
+//password = It23557574
 const express = require("express");
 const mongoose = require("mongoose");
 const servicerouter = require("../BACKEND/Routes/serviceRoute");
-const repairRouter = require("../BACKEND/Routes/repairRoute");
+const repairrouter = require("../BACKEND/Routes/repairRoute");
 const router = require("./Routes/UserRoute");
-const newBrouter = require("./Routes/newBRoutes");
 const sprouter = require("./Routes/SparePRoute");
-const cors = require("cors");
-const path = require("path");
-
+const newBrouter = require("./Routes/newBRoutes");
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const cors = require("cors");
 
-// Middleware
+//Middleware
+
 app.use(express.json());
 app.use(cors());
-
-// Serve uploaded images
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// API Routes
 app.use("/services", servicerouter);
-app.use("/repairs", repairRouter);
-app.use("/users", router);
-app.use("/newBs", newBrouter);
-app.use("/sp",sprouter )
+app.use("/repairs", repairrouter);
+app.use("/users",router);
+app.use("/sp",sprouter);
+app.use("/newBs",newBrouter)
 
-// Connect to MongoDB
 mongoose
-  .connect(
-    "mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net/?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
-  )
+  .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net")
+  .then(() => console.log("connected to MongoDB"))
   .then(() => {
-    console.log("Connected to MongoDB");
-    
+    app.listen(5000);
   })
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => console.log(err));
