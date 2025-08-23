@@ -33,7 +33,7 @@ import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 
 // BrandNew bikes form
 import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
-import NewBikesView from "./compononets/NewBikes/NewBikes";
+import NewBikes from "./compononets/NewBikes/NewBikes";
 
 function App() {
   return (
@@ -70,8 +70,8 @@ function App() {
           <Route path="/RepairDocument/:id" element={<RepairDocument />} />
 
           {/* new bikes form */}
-          <Route path="/newBikes" element={<NewBikesForm />} />
-          <Route path="/bikeOverview" element={<NewBikesView/>} />
+          <Route path="/NewBikesForm" element={<NewBikesForm />} />
+          <Route path="/NewBikes" element={<NewBikes />} />
         </Routes>
 
         <Footer />

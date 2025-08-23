@@ -14,6 +14,8 @@ function NewBikesForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -39,35 +41,83 @@ function NewBikesForm() {
     setIsSubmitting(true);
 
     try {
-      const data = new FormData();
-      data.append("type", formData.type);
-      data.append("model", formData.model);
-      data.append("color", formData.color);
-      data.append("price", formData.price);
-      data.append("status", formData.status);
-      if (formData.image) data.append("image", formData.image);
+      // Add timeout to prevent infinite waiting
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
 
+      const data = new FormData();
+      data.append("type", formData.type.trim());
+      data.append("model", formData.model.trim());
+      data.append("color", formData.color.trim());
+      data.append("price", formData.price.toString());
+      data.append("status", formData.status);
+      if (formData.image) {
+        // Compress image if it's too large
+        if (formData.image.size > 5 * 1024 * 1024) { // 5MB
+          alert("Image file is too large. Please choose an image smaller than 5MB.");
+          setIsSubmitting(false);
+          return;
+        }
+        data.append("image", formData.image);
+      }
+
+      console.log("Submitting form data...");
       const res = await axios.post("http://localhost:5000/newBs", data, {
         headers: { "Content-Type": "multipart/form-data" },
+        signal: controller.signal,
+        timeout: 30000, // 30 second timeout
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+          setUploadProgress(percentCompleted);
+          console.log(`Upload Progress: ${percentCompleted}%`);
+        }
       });
 
+      clearTimeout(timeoutId);
       console.log("Response:", res.data);
-      alert("Bike added successfully!");
-      setFormData({ type: "", model: "", color: "", price: "", status: "Available", image: null });
-      setImagePreview(null);
-      navigate("/NewBikes");
+      
+      // Show success message briefly
+      setShowSuccess(true);
+      
+      // Reset form and navigate after a short delay
+      setTimeout(() => {
+        setFormData({ type: "", model: "", color: "", price: "", status: "Available", image: null });
+        setImagePreview(null);
+        setUploadProgress(0);
+        setShowSuccess(false);
+        navigate("/NewBikes");
+      }, 1500);
     } catch (err) {
-      console.error("Error details:", err);
-      console.error("Response data:", err.response?.data);
-      console.error("Response status:", err.response?.status);
-      alert(`Failed to add bike: ${err.response?.data?.message || err.message}`);
+      if (err.name === 'AbortError') {
+        alert("Request timed out. Please check your connection and try again.");
+      } else if (err.code === 'ECONNABORTED') {
+        alert("Request timed out. Please check if the server is running.");
+      } else if (!err.response) {
+        alert("Cannot connect to server. Please check if the backend server is running on http://localhost:5000");
+      } else {
+        console.error("Error details:", err);
+        console.error("Response data:", err.response?.data);
+        console.error("Response status:", err.response?.status);
+        alert(`Failed to add bike: ${err.response?.data?.message || err.message}`);
+      }
     } finally {
       setIsSubmitting(false);
+      setUploadProgress(0);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
+      {/* Success Notification */}
+      {showSuccess && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
+          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+          <span>Bike added successfully!</span>
+        </div>
+      )}
+      
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
         {/* Header */}
         <div className="text-center mb-8">
@@ -214,9 +264,22 @@ function NewBikesForm() {
               }`}
             >
               {isSubmitting ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Adding Bike...</span>
+                <div className="flex flex-col items-center justify-center space-y-2">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Adding Bike...</span>
+                  </div>
+                  {uploadProgress > 0 && (
+                    <div className="w-full bg-white/20 rounded-full h-2">
+                      <div 
+                        className="bg-white h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${uploadProgress}%` }}
+                      ></div>
+                    </div>
+                  )}
+                  {uploadProgress > 0 && (
+                    <span className="text-sm">{uploadProgress}% uploaded</span>
+                  )}
                 </div>
               ) : (
                 <div className="flex items-center justify-center space-x-2">

@@ -12,14 +12,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^5.1.0",
-<<<<<<< HEAD
     "mongoose": "^8.16.1",
     "multer": "^2.0.2",
-=======
-    "gridfs-stream": "^1.1.1",
-    "mongoose": "^8.18.0",
-    "multer-gridfs-storage": "^5.0.2",
->>>>>>> ff63045eda3cd8f697e68732f49dc17db5ee94ee
     "nodemon": "^3.1.10"
   }
 }
