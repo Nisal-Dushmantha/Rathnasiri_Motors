@@ -1,5 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
+const servicerouter = require("../BACKEND/Routes/serviceRoute");
+const repairrouter = require("../BACKEND/Routes/repairRoute");
+const router = require("./Routes/UserRoute");
+const sprouter = require("./Routes/SparePRoute");
+const newBrouter = require("./Routes/newBRoutes");
 const cors = require("cors");
 const path = require("path");
 
