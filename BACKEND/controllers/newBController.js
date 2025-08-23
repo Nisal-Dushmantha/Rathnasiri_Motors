@@ -1,11 +1,13 @@
 const newB = require("../Model/newBModel");
 
-const getAllnewB = async (req, res, next) => {
-  let newBs;
-
-  //data display
+// Get all bikes
+const getAllnewB = async (req, res) => {
   try {
-    newBs = await newB.find();
+    const newBs = await newB.find();
+    if (!newBs || newBs.length === 0) {
+      return res.status(404).json({ message: "No bikes found" });
+    }
+    return res.status(200).json({ newBs });
   } catch (err) {
     console.log(err);
   }
@@ -13,8 +15,6 @@ const getAllnewB = async (req, res, next) => {
   if (!newBs) {
     return res.status(404).json({ message: "Bike not found" });
   }
-  //Display all Bikes
-  return res.status(200).json({ newBs });
 };
 
 //insert new bike details
@@ -44,32 +44,22 @@ const addnewB = async (req, res, next) => {
   if (!newBs) {
     return res.status(404).json({ message: "unable to add bikes" });
   }
-  return res.status(200).json({ newBs });
 };
 
-//Get by id
-const getByID = async (req, res, next) => {
-
-  const id = req.params.id;
-
-  let newBs;
-
+// Get bike by ID
+const getByID = async (req, res) => {
   try {
-    newBs = await newB.findById(id);
+    const newBike = await newB.findById(req.params.id);
+    if (!newBike) return res.status(404).json({ message: "Bike not found" });
+    return res.status(200).json({ newBike });
   } catch (err) {
     console.log(err);
+    return res.status(500).json({ message: "Error fetching bike" });
   }
-  //not available new bikes
-  if (!newBs) {
-    return res.status(404).json({ message: "bike not found" });
-  }
-  return res.status(200).json({ newBs });
 };
 
-//Update New bike details
-const updatenewB = async (req, res, next) => {
-
-  const id = req.params.id;
+// Update bike
+const updatenewB = async (req, res) => {
   const { type, model, color, price, status } = req.body;
   
   // Handle file upload
@@ -89,12 +79,8 @@ const updatenewB = async (req, res, next) => {
     newBs = await newB.findByIdAndUpdate(id, updateData, { new: true });
   }catch(err){
     console.log(err);
+    return res.status(500).json({ message: "Unable to update bike" });
   }
-
-  if (!newBs) {
-    return res.status(404).json({ message: "Unable to Update Bike Details" });
-  }
-  return res.status(200).json({ newBs });
 };
 
 //Delete new Bikes After Sold
@@ -116,8 +102,10 @@ const deletenewB = async (req, res, next) => {
     return res.status(200).json({ newBs });
 };
 
-exports.getAllnewB = getAllnewB;
-exports.addnewB = addnewB;
-exports.getByID = getByID;
-exports.updatenewB = updatenewB;
-exports.deletenewB = deletenewB;
+module.exports = {
+  getAllnewB,
+  addnewB,
+  getByID,
+  updatenewB,
+  deletenewB,
+};

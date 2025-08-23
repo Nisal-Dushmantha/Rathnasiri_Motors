@@ -31,8 +31,9 @@ import UpdateRepairCard from "./compononets/UpdateRepairCard/UpdateRepairCard";
 // PDF/Document page
 import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 
-import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm";
-import NewBikes from "./compononets/NewBikes/NewBikes";
+// BrandNew bikes form
+import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
+import NewBikesView from "./compononets/NewBikes/NewBikes";
 
 function App() {
   return (
@@ -68,8 +69,9 @@ function App() {
           {/* Repair job PDF document */}
           <Route path="/RepairDocument/:id" element={<RepairDocument />} />
 
-          <Route path="/NewBikesForm" element={<NewBikesForm />} />
-          <Route path="/NewBikes" element={<NewBikes />} />
+          {/* new bikes form */}
+          <Route path="/newBikes" element={<NewBikesForm />} />
+          <Route path="/bikeOverview" element={<NewBikesView/>} />
         </Routes>
 
         <Footer />

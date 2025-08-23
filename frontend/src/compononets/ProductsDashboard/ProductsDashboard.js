@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 
 function ProductsDashboard() {
   const topCard = {
@@ -87,6 +89,8 @@ function ProductsDashboard() {
       </div>
     </div>
   );
+  );
 }
 
+export default ProductsDashboard;
 export default ProductsDashboard;

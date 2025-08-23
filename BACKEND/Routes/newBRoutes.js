@@ -27,7 +27,4 @@ router.get("/:id",newBController.getByID);
 router.put("/:id", upload.single('image'), newBController.updatenewB);
 router.delete("/:id",newBController.deletenewB);
 
-//export
 module.exports = router;
-
-

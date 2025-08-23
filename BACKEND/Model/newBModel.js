@@ -28,7 +28,4 @@ const newBSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model(
-  "newBModel", //file name
-  newBSchema //function name
-);
+module.exports = mongoose.model("newBModel", newBSchema);
