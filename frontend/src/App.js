@@ -14,6 +14,7 @@ import UserDashboard from "./compononets/UserDashboard/UserDashboard";
 import ProductsDashboard from "./compononets/ProductsDashboard/ProductsDashboard";
 import InventoryDashboard from "./compononets/InventoryDashboard/InventoryDashboard";
 import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard";
+import InsuranceDashboard from "./compononets/InsuranceAndRegistrationDashboard/InsuranceAndRegistrationDashboard";
 
 // Job cards
 import ServiceJobCard from "./compononets/ServiceJobCard/ServiceJobCard";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/products" element={<ProductsDashboard />} />
           <Route path="/inventory" element={<InventoryDashboard />} />
           <Route path="/finance" element={<FinanceDashboard />} />
+          <Route path="/insurance" element={<InsuranceDashboard />} />
 
           {/* Job cards */}
           <Route path="/ServiceJobCard" element={<ServiceJobCard />} />
