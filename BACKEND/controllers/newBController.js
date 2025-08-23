@@ -7,7 +7,7 @@ const getAllnewB = async (req, res, next) => {
   try {
     newBs = await newB.find();
   } catch (err) {
-    consol.log(err);
+    console.log(err);
   }
   // not found
   if (!newBs) {
@@ -19,15 +19,26 @@ const getAllnewB = async (req, res, next) => {
 
 //insert new bike details
 const addnewB = async (req, res, next) => {
+  console.log("Request body:", req.body);
+  console.log("Request file:", req.file);
+  
   const { type, model, color, price, status } = req.body;
+  
+  // Handle file upload
+  let imagePath = null;
+  if (req.file) {
+    imagePath = `/uploads/${req.file.filename}`;
+  }
 
   let newBs;
 
   try {
-    newBs = new newB({ type, model, color, price, status });
+    newBs = new newB({ type, model, color, price, status, image: imagePath });
     await newBs.save();
+    console.log("Bike saved successfully:", newBs);
   } catch (err) {
-    console.log(err);
+    console.log("Error saving bike:", err);
+    return res.status(500).json({ message: "Error saving bike", error: err.message });
   }
   //not insert new bikes
   if (!newBs) {
@@ -60,13 +71,22 @@ const updatenewB = async (req, res, next) => {
 
   const id = req.params.id;
   const { type, model, color, price, status } = req.body;
+  
+  // Handle file upload
+  let imagePath = null;
+  if (req.file) {
+    imagePath = `/uploads/${req.file.filename}`;
+  }
 
   let newBs;
 
   try{
-    newBs = await newB.findByIdAndUpdate(id, 
-      {type : type, model : model, color : color, price : price, status : status});
-      newBs = await newBs.save();
+    const updateData = {type : type, model : model, color : color, price : price, status : status};
+    if (imagePath) {
+      updateData.image = imagePath;
+    }
+    
+    newBs = await newB.findByIdAndUpdate(id, updateData, { new: true });
   }catch(err){
     console.log(err);
   }
@@ -87,14 +107,13 @@ const deletenewB = async (req, res, next) => {
     try{
       newBs = await newB.findByIdAndDelete(id)
     }catch (err) {
-      consol.log(err);
-
-      if (!newBs) {
-    return res.status(404).json({ message: "Unable to Delete Bike Details" });
-  }
-  return res.status(200).json({ newBs });
-
+      console.log(err);
     }
+
+    if (!newBs) {
+      return res.status(404).json({ message: "Unable to Delete Bike Details" });
+    }
+    return res.status(200).json({ newBs });
 };
 
 exports.getAllnewB = getAllnewB;

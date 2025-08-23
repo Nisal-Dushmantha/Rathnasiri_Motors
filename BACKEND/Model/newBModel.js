@@ -21,6 +21,10 @@ const newBSchema = new Schema({
   status: {
     type: String, //datatype
     required: true, //validate
+  },
+  image: {
+    type: String, //datatype for image URL/path
+    required: false, //optional field
   }
 });
 
