@@ -1,18 +1,13 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const servicerouter = require("../BACKEND/Routes/serviceRoute");
-const repairrouter = require("../BACKEND/Routes/repairRoute");
+const repairRouter = require("../BACKEND/Routes/repairRoute");
 const router = require("./Routes/UserRoute");
-const sprouter = require("./Routes/SparePRoute");
 const newBrouter = require("./Routes/newBRoutes");
+const sprouter = require("./Routes/SparePRoute");
 const cors = require("cors");
 const path = require("path");
 
-// Routes
-const serviceRouter = require("./Routes/serviceRoute");
-const repairRouter = require("./Routes/repairRoute");
-const userRouter = require("./Routes/UserRoute");
-const newBRouter = require("./Routes/newBRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,10 +20,11 @@ app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // API Routes
-app.use("/services", serviceRouter);
+app.use("/services", servicerouter);
 app.use("/repairs", repairRouter);
-app.use("/users", userRouter);
-app.use("/newBs", newBRouter);
+app.use("/users", router);
+app.use("/newBs", newBrouter);
+app.use("/sp",sprouter )
 
 // Connect to MongoDB
 mongoose
