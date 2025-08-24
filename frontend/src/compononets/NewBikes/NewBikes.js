@@ -89,7 +89,7 @@ function NewBikes() {
                     <img
                       src={`http://localhost:5000${bike.image}`}
                       alt={bike.model}
-                      className="w-full h-48 object-cover rounded-2xl"
+                      className="w-full h-65 object-cover rounded-2xl"
                       onError={(e) => {
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
@@ -97,7 +97,7 @@ function NewBikes() {
                     />
                   ) : null}
                   <div 
-                    className={`w-full h-48 bg-gray-200 flex items-center justify-center rounded-2xl ${bike.image ? 'hidden' : ''}`}
+                    className={`w-full h-65 bg-gray-200 flex items-center justify-center rounded-2xl ${bike.image ? 'hidden' : ''}`}
                   >
                     <span className="text-gray-500 text-lg">No Image</span>
                   </div>
