@@ -21,10 +21,11 @@ const newBSchema = new Schema({
   status: {
     type: String, //datatype
     required: true, //validate
+  },
+  image: {
+    type: String, //datatype for image URL/path
+    required: false, //optional field
   }
 });
 
-module.exports = mongoose.model(
-  "newBModel", //file name
-  newBSchema //function name
-);
+module.exports = mongoose.model("newBModel", newBSchema);
