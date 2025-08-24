@@ -52,5 +52,82 @@ const addInsurance = async (req,res,next) => {
     }
     return res.status(200).json({insurances});
 };
+
+//Get by Id
+const getById = async (req,res,next) => {
+
+    const id = req.params.id;
+    let insurances;
+    try{
+        insurances = await Insurance.findById(id);
+    }catch (err){
+        console.log(err);
+    }
+
+    if(!insurances){
+        return res.status(404).send({message:"Insurance not found"});
+    }
+    return res.status(200).json({insurances});
+};
+
+//update user details
+const updateInsurance = async (req,res,next) => {
+
+    const id = req.params.id;
+    const {fullname,
+        Address,
+        ContactNo,
+        RegistrationNo,
+        VehicleType,
+        VehicleModel,
+        EngineNo,
+        ChassisNo,
+        StartDate,
+        EndDate} = req.body;
+
+        let insurances;
+        try{
+            insurances = await Insurance.findByIdAndUpdate(id,
+                {fullname : fullname,
+                 Address  : Address,
+                 ContactNo: ContactNo,
+                 RegistrationNo : RegistrationNo,
+                 VehicleType : VehicleType,
+                 VehicleModel : VehicleModel,
+                 EngineNo : EngineNo,
+                 ChassisNo : ChassisNo,
+                 StartDate :StartDate ,
+                 EndDate : EndDate    } );
+                 insurances = await insurances.save();
+        }catch (err){
+            console.log(err);
+        }
+
+        if(!insurances){
+        return res.status(404).send({message:"Insurance not updated"});
+         }
+    return res.status(200).json({insurances});
+
+};
+
+//Deleter insurance details
+const deleteInsurance = async (req,res,next) => {
+    const id = req.params.id;
+    let insurances;
+    try{
+        insurances = await Insurance.findByIdAndDelete(id);
+    }catch (err){
+        console.log(err);
+    }
+    if(!insurances){
+        return res.status(404).send({message:"Unable to delete insurance details"});
+    }
+    return res.status(200).json({insurances});
+
+};
+
 exports.getAllInsurances = getAllInsurances;
 exports.addInsurance = addInsurance;
+exports.getById =getById;
+exports.updateInsurance = updateInsurance;
+exports.deleteInsurance = deleteInsurance;
