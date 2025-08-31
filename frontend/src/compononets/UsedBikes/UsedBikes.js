@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-function NewBikes() {
+function UsedBikes() {
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,8 +14,8 @@ function NewBikes() {
   const fetchBikes = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/newBs");
-      setBikes(res.data.newBs);
+      const res = await axios.get("http://localhost:5000/usedBs");
+      setBikes(res.data.usedBs);
       setError(null);
     } catch (err) {
       console.error("Error fetching bikes:", err);
@@ -28,7 +28,7 @@ function NewBikes() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this bike?")) {
       try {
-        await axios.delete(`http://localhost:5000/newBs/${id}`);
+        await axios.delete(`http://localhost:5000/usedBs/${id}`);
         alert("Bike deleted successfully!");
         fetchBikes(); // Refresh the list
       } catch (err) {
@@ -62,10 +62,10 @@ function NewBikes() {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-blue-900">Vehicle Overview</h1>
           <Link
-            to="/NewBikesForm"
+            to="/UsedBikesForm"
             className="bg-blue-800 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition font-semibold"
           >
-            Add New Bike
+            Add Used Bike
           </Link>
         </div>
 
@@ -73,7 +73,7 @@ function NewBikes() {
           <div className="text-center py-12">
             <div className="text-2xl text-gray-600 mb-4">No bikes found</div>
             <Link
-              to="/NewBikesForm"
+              to="/UsedBikesForm"
               className="bg-blue-800 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition font-semibold"
             >
               Add Your First Bike
@@ -122,6 +122,17 @@ function NewBikes() {
                       <span className="font-semibold">Price:</span> Rs.{" "}
                       {bike.price}
                     </p>
+                    <p>
+                      <span className="font-semibold">Mileage:</span> Km{" "}
+                      {bike.mileage}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Year:</span> {bike.year}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Previous Owner:</span> {bike.owner}
+                    </p>
+                    
                   </div>
                   <div
                     className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -160,7 +171,8 @@ function NewBikes() {
   );
 }
 
-export default NewBikes;
+export default UsedBikes;
+
 
 
 
