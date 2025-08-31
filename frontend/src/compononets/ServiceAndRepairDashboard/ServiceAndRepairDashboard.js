@@ -15,7 +15,7 @@ function Dashboard() {
 
       {/* Top Card Layer */}
       <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
+        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 transition-all min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">
             {topCard.title}
           </h2>
@@ -24,7 +24,7 @@ function Dashboard() {
           {/* Sub-cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Service Job Card */}
-            <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg transition cursor-pointer min-h-[140px]">
+            <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Service Job Card</h3>
               <p className="text-sm mt-1">Track service jobs</p>
               <Link to="/ServiceJobCard">
@@ -35,7 +35,7 @@ function Dashboard() {
             </div>
 
             {/* Repair Job Card */}
-            <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg transition cursor-pointer min-h-[140px]">
+            <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Repair Job Card</h3>
               <p className="text-sm mt-1">Track repair jobs</p>
               <Link to="/RepairJobCard">
@@ -50,18 +50,7 @@ function Dashboard() {
 
       {/* Bottom Card Layer */}
       {/* Bottom Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Reports Card */}
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Reports</h2>
-          <p className="text-gray-700 text-lg">
-            Generate and view detailed reports of services, repairs, and
-            financials.
-          </p>
-          <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">
-            Go
-          </button>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
         {/* Vehicle History Card */}
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
@@ -71,9 +60,11 @@ function Dashboard() {
           <p className="text-gray-700 text-lg">
             View detailed history of services and repairs for each vehicle.
           </p>
+          <Link to="/VehicleHistory">
           <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">
             Go
           </button>
+          </Link> 
         </div>
 
         {/* All Jobs Card*/}

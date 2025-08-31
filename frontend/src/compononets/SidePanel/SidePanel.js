@@ -17,6 +17,7 @@ function SidePanel() {
     { name: "Inventory Management", icon: <AiOutlineDatabase size={20} />, path: "/inventory" },
     { name: "Service and Repair", icon: <AiOutlineTool size={20} />, path: "/service" },
     { name: "Finance Management", icon: <AiOutlineMoneyCollect size={20} />, path: "/finance" },
+     {name: "Insurance and Registration", icon: <AiOutlineMoneyCollect size={20} />, path: "/insurance" },
   ];
 
   return (
