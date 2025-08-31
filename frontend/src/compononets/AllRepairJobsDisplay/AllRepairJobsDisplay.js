@@ -35,11 +35,21 @@ function AllRepairJobsDisplay({ user, setRepairs }) {
   return (
     <div className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
       <h2 className="text-xl font-bold text-blue-700 mb-2">{Name}</h2>
-      <p><strong>Job ID:</strong> {_id}</p>
-      <p><strong>Phone:</strong> {Phone}</p>
-      <p><strong>Vehicle:</strong> {VehicleType} ({Model})</p>
-      <p><strong>Vehicle No:</strong> {VehicleNumber}</p>
-      <p><strong>Details:</strong> {Details}</p>
+      <p>
+        <strong>Job ID:</strong> {_id}
+      </p>
+      <p>
+        <strong>Phone:</strong> {Phone}
+      </p>
+      <p>
+        <strong>Vehicle:</strong> {VehicleType} ({Model})
+      </p>
+      <p>
+        <strong>Vehicle No:</strong> {VehicleNumber}
+      </p>
+      <p>
+        <strong>Details:</strong> {Details}
+      </p>
 
       {/* Update & Delete */}
       <div className="mt-4 flex gap-2">

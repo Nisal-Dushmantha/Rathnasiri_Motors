@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import ServiceDocument from "../ServiceDocument/ServiceDocument";
 
 function AllServiceJobsDisplay({ user, onDelete }) {
+  const [showDoc, setShowDoc] = React.useState(false);
   if (!user) return null;
 
   const {
@@ -57,6 +59,16 @@ function AllServiceJobsDisplay({ user, onDelete }) {
       >
         Delete Job
       </button>
+      {/* Print Job Card */}
+      <button
+        onClick={() => setShowDoc(true)}
+        className="mt-3 bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+      >
+        Print Job Card
+      </button>
+
+      {/* Popup */}
+      {showDoc && <ServiceDocument id={_id} onClose={() => setShowDoc(false)} />}
     </div>
   );
 }
