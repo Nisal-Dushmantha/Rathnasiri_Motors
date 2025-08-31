@@ -3,11 +3,11 @@ const router = express.Router();
 const multer = require("multer");
 const path = require("path");
 
-//Insert Model
-const newB = require("../Model/newBModel");
+// Insert Model
+const usedB = require("../Model/usedBModel");
 
-//Insert newB Controller
-const newBController = require("../controllers/newBController");
+// Insert usedB Controller
+const usedBController = require("../controllers/usedBController");
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({
@@ -21,10 +21,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-router.get("/",newBController.getAllnewB);
-router.post("/", upload.single('image'), newBController.addnewB);
-router.get("/:id",newBController.getByID);
-router.put("/:id", upload.single('image'), newBController.updatenewB);
-router.delete("/:id",newBController.deletenewB);
+router.get("/", usedBController.getAllusedB);
+router.post("/", upload.single('image'), usedBController.addusedB);
+router.get("/:id", usedBController.getByID);
+router.put("/:id", upload.single('image'), usedBController.updateusedB);
+router.delete("/:id", usedBController.deleteusedB);
 
 module.exports = router;

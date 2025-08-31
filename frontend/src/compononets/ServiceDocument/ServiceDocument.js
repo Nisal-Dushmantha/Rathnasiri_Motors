@@ -10,8 +10,8 @@ function RepairDocument({ id, onClose }) {
   useEffect(() => {
     const fetchJob = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/repairs/${id}`);
-        setJob(res.data.repairs || res.data);
+        const res = await axios.get(`http://localhost:5000/services/${id}`);
+        setJob(res.data.services || res.data);
       } catch (err) {
         console.error("Error fetching job:", err);
       }
@@ -122,6 +122,8 @@ function RepairDocument({ id, onClose }) {
                     <p><span className="font-semibold">Vehicle Type:</span> {job.VehicleType}</p>
                     <p><span className="font-semibold">Model:</span> {job.Model}</p>
                     <p><span className="font-semibold">Registration:</span> {job.VehicleNumber}</p>
+                    <p><span className="font-semibold">Kilometers:</span> {job.KiloMeters} km</p>
+                    <p><span className="font-semibold">Last Service Date:</span> {job.LastServiceDate}</p>
                   </div>
                 </div>
               </div>
@@ -133,7 +135,7 @@ function RepairDocument({ id, onClose }) {
                   Service Details
                 </h2>
                 <div className="bg-gray-50 p-4 rounded-lg border">
-                  <p className="text-gray-700 leading-relaxed">{job.Details}</p>
+                  <p className="text-gray-700 leading-relaxed">{job.Requests}</p>
                 </div>
               </div>
 
