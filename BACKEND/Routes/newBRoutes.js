@@ -7,7 +7,7 @@ const path = require("path");
 const newB = require("../Model/newBModel");
 
 //Insert newB Controller
-const newBController = require("../Controllers/newBController");
+const newBController = require("../controllers/newBController");
 
 // Multer configuration for file uploads
 const storage = multer.diskStorage({

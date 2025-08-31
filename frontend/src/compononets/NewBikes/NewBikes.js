@@ -122,6 +122,9 @@ function NewBikes() {
                       <span className="font-semibold">Price:</span> Rs.{" "}
                       {bike.price}
                     </p>
+                    <p>
+                      <span className="font-semibold">Offers:</span> {bike.offers}
+                    </p>
                   </div>
                   <div
                     className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -138,7 +141,7 @@ function NewBikes() {
 
                 <div className="flex gap-2 mt-4">
                   <Link
-                    to={`/edit-bike/${bike._id}`}
+                    to={`/UpdateNewBike/${bike._id}`}
                     className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-500 transition text-center font-semibold"
                   >
                     Edit
@@ -161,6 +164,3 @@ function NewBikes() {
 }
 
 export default NewBikes;
-
-
-

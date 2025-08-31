@@ -10,10 +10,7 @@ const getAllusedB = async (req, res,next) => {
     return res.status(200).json({ usedBs });
   } catch (err) {
     console.log(err);
-  }
-  // not found
-  if (!usedBs) {
-    return res.status(404).json({ message: "Bike not found" });
+    return res.status(500).json({ message: "Error fetching bikes" });
   }
 };
 
@@ -36,15 +33,12 @@ const addusedB = async (req, res, next) => {
     usedBs = new usedB({ type, model, color, price, mileage, year, owner,  status, image: imagePath });
     await usedBs.save();
     console.log("Bike saved successfully:", usedBs);
+    return res.status(201).json({ usedBs, message: "Bike added successfully" });
   } catch (err) {
     console.log("Error saving bike:", err);
     return res
       .status(500)
       .json({ message: "Error saving bike", error: err.message });
-  }
-  //not insert used bikes
-  if (!usedBs) {
-    return res.status(404).json({ message: "unable to add bikes" });
   }
 };
 
@@ -63,6 +57,7 @@ const getByID = async (req, res) => {
 // Update bike
 const updateusedB = async (req, res) => {
   const { type, model, color, price, mileage, year, owner, status } = req.body;
+  const id = req.params.id;
 
   // Handle file upload
   let imagePath = null;
@@ -87,10 +82,15 @@ const updateusedB = async (req, res) => {
       updateData.image = imagePath;
     }
 
-    usedBs = await usedB.findByIdAndUpdate(req.params.id, updateData, {
+    usedBs = await usedB.findByIdAndUpdate(id, updateData, {
       new: true,
     });
-    return res.status(200).json({ usedBs });
+    
+    if (!usedBs) {
+      return res.status(404).json({ message: "Bike not found" });
+    }
+    
+    return res.status(200).json({ usedBs, message: "Bike updated successfully" });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Unable to update bike" });
@@ -105,16 +105,16 @@ const deleteusedB = async (req, res, next) => {
 
   try {
     usedBs = await usedB.findByIdAndDelete(id);
+    if (!usedBs) {
+      return res
+        .status(404)
+        .json({ message: "Unable to Delete Bike Details" });
+    }
+    return res.status(200).json({ usedBs, message: "Bike deleted successfully" });
   } catch (err) {
     console.log(err);
+    return res.status(500).json({ message: "Error deleting bike" });
   }
-
-  if (!usedBs) {
-    return res
-      .status(404)
-      .json({ message: "Unable to Delete Bike Details" });
-  }
-  return res.status(200).json({ usedBs });
 };
 
 module.exports = {
