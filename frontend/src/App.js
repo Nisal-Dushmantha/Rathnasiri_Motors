@@ -14,7 +14,10 @@ import Homepage from "./compononets/Homepage/Homepage";
 import UserDashboard from "./compononets/UserDashboard/UserDashboard";
 import ProductsDashboard from "./compononets/ProductsDashboard/ProductsDashboard";
 import InventoryDashboard from "./compononets/InventoryDashboard/InventoryDashboard";
-import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard"; 
+import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard";
+import CustomerLoyality from "./compononets/CustomerLoyality/CustomerLoyality";
+import UpdateLoyalityPoints from "./compononets/UpdateLoyalityPoints/UpdateLoyalityPoints";
+import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 
 function App() {
   return (
@@ -35,6 +38,9 @@ function App() {
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
           <Route path="/AllRepairJobs/:id" element={<UpdateRepairCard />} />
+          <Route path="/CustomerLoyality" element={<CustomerLoyality />} />
+          <Route path="/UpdateLoyalityPoints" element={<UpdateLoyalityPoints />} />
+          <Route path="/CustomerDetails" element={<CustomerDetails />} />
         </Routes>
         <Footer />
       </div>
