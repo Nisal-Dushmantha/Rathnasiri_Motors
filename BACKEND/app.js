@@ -8,7 +8,9 @@ const repairrouter = require("../BACKEND/Routes/repairRoute");
 const router = require("./Routes/UserRoute");
 const sprouter = require("./Routes/SparePRoute");
 const newBrouter = require("./Routes/newBRoutes");
+const usedBrouter = require("./Routes/usedBRoutes");
 const Inrouter = require("./Routes/InsuranceRoute");
+
 
 const app = express();
 const cors = require("cors");
@@ -35,7 +37,9 @@ app.use("/repairs", repairrouter);
 app.use("/users",router);
 app.use("/sp",sprouter);
 app.use("/newBs",newBrouter);
+app.use("/usedBs",usedBrouter);
 app.use("/insurances",Inrouter);
+
 
 mongoose
   .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net")

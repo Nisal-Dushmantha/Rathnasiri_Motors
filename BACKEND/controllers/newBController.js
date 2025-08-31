@@ -10,10 +10,7 @@ const getAllnewB = async (req, res) => {
     return res.status(200).json({ newBs });
   } catch (err) {
     console.log(err);
-  }
-  // not found
-  if (!newBs) {
-    return res.status(404).json({ message: "Bike not found" });
+    return res.status(500).json({ message: "Error fetching bikes" });
   }
 };
 
@@ -22,7 +19,7 @@ const addnewB = async (req, res, next) => {
   console.log("Request body:", req.body);
   console.log("Request file:", req.file);
   
-  const { type, model, color, price, status } = req.body;
+  const { type, model, color, price, offers, status } = req.body;
   
   // Handle file upload
   let imagePath = null;
@@ -33,16 +30,13 @@ const addnewB = async (req, res, next) => {
   let newBs;
 
   try {
-    newBs = new newB({ type, model, color, price, status, image: imagePath });
+    newBs = new newB({ type, model, color, price, offers, status, image: imagePath });
     await newBs.save();
     console.log("Bike saved successfully:", newBs);
+    return res.status(201).json({ newBs, message: "Bike added successfully" });
   } catch (err) {
     console.log("Error saving bike:", err);
     return res.status(500).json({ message: "Error saving bike", error: err.message });
-  }
-  //not insert new bikes
-  if (!newBs) {
-    return res.status(404).json({ message: "unable to add bikes" });
   }
 };
 
@@ -60,7 +54,8 @@ const getByID = async (req, res) => {
 
 // Update bike
 const updatenewB = async (req, res) => {
-  const { type, model, color, price, status } = req.body;
+  const { type, model, color, price, offers, status } = req.body;
+  const id = req.params.id;
   
   // Handle file upload
   let imagePath = null;
@@ -71,12 +66,18 @@ const updatenewB = async (req, res) => {
   let newBs;
 
   try{
-    const updateData = {type : type, model : model, color : color, price : price, status : status};
+    const updateData = {type : type, model : model, color : color, price : price, offers : offers, status : status};
     if (imagePath) {
       updateData.image = imagePath;
     }
     
     newBs = await newB.findByIdAndUpdate(id, updateData, { new: true });
+    
+    if (!newBs) {
+      return res.status(404).json({ message: "Bike not found" });
+    }
+    
+    return res.status(200).json({ newBs, message: "Bike updated successfully" });
   }catch(err){
     console.log(err);
     return res.status(500).json({ message: "Unable to update bike" });
@@ -85,21 +86,20 @@ const updatenewB = async (req, res) => {
 
 //Delete new Bikes After Sold
 const deletenewB = async (req, res, next) => {
-
     const id = req.params.id;
 
     let newBs;
 
     try{
-      newBs = await newB.findByIdAndDelete(id)
+      newBs = await newB.findByIdAndDelete(id);
+      if (!newBs) {
+        return res.status(404).json({ message: "Unable to Delete Bike Details" });
+      }
+      return res.status(200).json({ newBs, message: "Bike deleted successfully" });
     }catch (err) {
       console.log(err);
+      return res.status(500).json({ message: "Error deleting bike" });
     }
-
-    if (!newBs) {
-      return res.status(404).json({ message: "Unable to Delete Bike Details" });
-    }
-    return res.status(200).json({ newBs });
 };
 
 module.exports = {

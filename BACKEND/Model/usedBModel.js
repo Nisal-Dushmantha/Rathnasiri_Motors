@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const newBSchema = new Schema({
+const usedBSchema = new Schema({
   type: {
     type: String, //datatype
     required: true, //validate
@@ -18,7 +18,15 @@ const newBSchema = new Schema({
     type: String, //datatype
     required: true, //validate
   },
-  offers: {
+  mileage: {
+    type: String, //datatype
+    required: true, //validate
+  },
+  year: {
+    type: String, //datatype
+    required: true, //validate
+  },
+  owner: {
     type: String, //datatype
     required: true, //validate
   },
@@ -32,4 +40,4 @@ const newBSchema = new Schema({
   }
 });
 
-module.exports = mongoose.model("newBModel", newBSchema);
+module.exports = mongoose.model("usedBModel", usedBSchema);

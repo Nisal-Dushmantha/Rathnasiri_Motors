@@ -38,7 +38,7 @@ function ProductsDashboard() {
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Used Bikes</h3>
               <p className="text-sm mt-1">View and manage used bike inventory</p>
-              <Link to="/UsedBikes">
+              <Link to="/UsedBikesForm">
                 <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">
                   Go
                 </button>
@@ -71,7 +71,8 @@ function ProductsDashboard() {
           <p className="text-gray-700 text-lg">
             Generate detailed reports on inventory, sales performance, and product analytics.
           </p>
-          <div className="mt-auto space-y-2">
+          <div className="mt-auto space-y-4">
+            {/* Increased spacing between buttons */}
             <Link to="/InventoryReports">
               <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">
                 Inventory Reports
@@ -90,4 +91,3 @@ function ProductsDashboard() {
 }
 
 export default ProductsDashboard;
-

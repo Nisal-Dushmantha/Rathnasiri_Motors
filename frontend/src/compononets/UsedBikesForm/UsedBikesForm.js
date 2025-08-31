@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-function NewBikesForm() {
+function UsedBikesForm() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     type: "",
     model: "",
     color: "",
     price: "",
+    mileage: "",
+    year: "",
+    owner: "",
     status: "Available",
     image: null,
   });
@@ -41,24 +44,22 @@ function NewBikesForm() {
     setIsSubmitting(true);
 
     try {
-      // Add timeout to prevent infinite waiting
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 30000);
 
       const data = new FormData();
       data.append("type", formData.type.trim());
       data.append("model", formData.model.trim());
       data.append("color", formData.color.trim());
       data.append("price", formData.price.toString());
-      data.append("offers", formData.offers.trim());
+      data.append("mileage", formData.mileage.trim());
+      data.append("year", formData.year.trim());
+      data.append("owner", formData.owner.trim());
       data.append("status", formData.status);
+
       if (formData.image) {
-        // Compress image if it's too large
         if (formData.image.size > 5 * 1024 * 1024) {
-          // 5MB
-          alert(
-            "Image file is too large. Please choose an image smaller than 5MB."
-          );
+          alert("Image file is too large. Please choose an image smaller than 5MB.");
           setIsSubmitting(false);
           return;
         }
@@ -66,10 +67,10 @@ function NewBikesForm() {
       }
 
       console.log("Submitting form data...");
-      const res = await axios.post("http://localhost:5000/newBs", data, {
+      const res = await axios.post("http://localhost:5000/usedBs", data, {
         headers: { "Content-Type": "multipart/form-data" },
         signal: controller.signal,
-        timeout: 30000, // 30 second timeout
+        timeout: 30000,
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round(
             (progressEvent.loaded * 100) / progressEvent.total
@@ -82,24 +83,24 @@ function NewBikesForm() {
       clearTimeout(timeoutId);
       console.log("Response:", res.data);
 
-      // Show success message briefly
       setShowSuccess(true);
 
-      // Reset form and navigate after a short delay
       setTimeout(() => {
         setFormData({
           type: "",
           model: "",
           color: "",
           price: "",
-          offers: "",
+          mileage: "",
+          year: "",
+          owner: "",
           status: "Available",
           image: null,
         });
         setImagePreview(null);
         setUploadProgress(0);
         setShowSuccess(false);
-        navigate("/NewBikes");
+        navigate("/UsedBikes");
       }, 1500);
     } catch (err) {
       if (err.name === "AbortError") {
@@ -114,9 +115,7 @@ function NewBikesForm() {
         console.error("Error details:", err);
         console.error("Response data:", err.response?.data);
         console.error("Response status:", err.response?.status);
-        alert(
-          `Failed to add bike: ${err.response?.data?.message || err.message}`
-        );
+        alert(`Failed to add bike: ${err.response?.data?.message || err.message}`);
       }
     } finally {
       setIsSubmitting(false);
@@ -136,7 +135,7 @@ function NewBikesForm() {
               clipRule="evenodd"
             />
           </svg>
-          <span>Bike added successfully!</span>
+          <span>Used bike added successfully!</span>
         </div>
       )}
 
@@ -158,18 +157,16 @@ function NewBikesForm() {
               />
             </svg>
           </div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-2">
-            Add New Bike
-          </h2>
+          <h2 className="text-4xl font-bold text-gray-800 mb-2">Add Used Bike</h2>
           <p className="text-gray-600">
-            Enter the details of the new bike to add to inventory
+            Enter the details of the used bike to add to inventory
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Form Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Type Field */}
+            {/* Type */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
                 Bike Type
@@ -180,12 +177,12 @@ function NewBikesForm() {
                 value={formData.type}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Sport, Cruiser, Touring"
               />
             </div>
 
-            {/* Model Field */}
+            {/* Model */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
                 Model
@@ -196,12 +193,12 @@ function NewBikesForm() {
                 value={formData.model}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Honda CBR 600RR"
               />
             </div>
 
-            {/* Color Field */}
+            {/* Color */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
                 Color
@@ -212,12 +209,12 @@ function NewBikesForm() {
                 value={formData.color}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="e.g., Red, Black, Blue"
               />
             </div>
 
-            {/* Price Field */}
+            {/* Price */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
                 Price (Rs.)
@@ -228,30 +225,65 @@ function NewBikesForm() {
                 value={formData.price}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="250000"
                 min="0"
               />
             </div>
 
-            {/* Offers */}
+            {/* Mileage */}
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Offers
+                Mileage (km)
+              </label>
+              <input
+                type=""number
+                name="mileage"
+                value={formData.mileage}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., 20000"
+                min="0"
+              />
+            </div>
+
+            {/* Year */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                Year
+              </label>
+              <input
+                type="number"
+                name="year"
+                value={formData.year}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., 2018"
+                min="1900"
+                max={new Date().getFullYear()}
+              />
+            </div>
+
+            {/* Owner */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+                Previous Owner
               </label>
               <input
                 type="text"
-                name="offers"
-                value={formData.offers}
+                name="owner"
+                value={formData.owner}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-              
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., First Owner, Second Owner"
               />
             </div>
           </div>
 
-          {/* Status Field */}
+          {/* Status */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
               Status
@@ -261,7 +293,7 @@ function NewBikesForm() {
               value={formData.status}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="Available">Available</option>
               <option value="Sold">Sold</option>
@@ -269,24 +301,19 @@ function NewBikesForm() {
             </select>
           </div>
 
-          {/* Image Upload */}
+          {/* Image */}
           <div className="space-y-2">
             <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
               Bike Image
             </label>
             <div className="space-y-4">
-              {/* File Input */}
-              <div className="relative">
-                <input
-                  type="file"
-                  name="image"
-                  accept="image/*"
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                />
-              </div>
-
-              {/* Image Preview */}
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleChange}
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+              />
               {imagePreview && (
                 <div className="relative group">
                   <img
@@ -294,74 +321,34 @@ function NewBikesForm() {
                     alt="Preview"
                     className="w-full h-48 object-cover rounded-xl border-2 border-gray-200"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-xl flex items-center justify-center">
-                    <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 font-medium">
-                      Image Preview
-                    </span>
-                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit */}
           <div className="pt-4">
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 ${
                 isSubmitting
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
+                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
               }`}
             >
-              {isSubmitting ? (
-                <div className="flex flex-col items-center justify-center space-y-2">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Adding Bike...</span>
-                  </div>
-                  {uploadProgress > 0 && (
-                    <div className="w-full bg-white/20 rounded-full h-2">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${uploadProgress}%` }}
-                      ></div>
-                    </div>
-                  )}
-                  {uploadProgress > 0 && (
-                    <span className="text-sm">{uploadProgress}% uploaded</span>
-                  )}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center space-x-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  <span>Add Bike to Inventory</span>
-                </div>
-              )}
+              {isSubmitting ? "Adding Used Bike..." : "Add Used Bike"}
             </button>
           </div>
 
-          {/* Back Button */}
+          {/* Back */}
           <div className="text-center">
             <button
               type="button"
-              onClick={() => navigate("/NewBikes")}
-              className="text-gray-600 hover:text-gray-800 transition-colors duration-200 font-medium"
+              onClick={() => navigate("/UsedBikes")}
+              className="text-gray-600 hover:text-gray-800 font-medium"
             >
-              ← Back to Vehicle Overview
+              ← Back to Used Bikes
             </button>
           </div>
         </form>
@@ -370,4 +357,4 @@ function NewBikesForm() {
   );
 }
 
-export default NewBikesForm;
+export default UsedBikesForm;

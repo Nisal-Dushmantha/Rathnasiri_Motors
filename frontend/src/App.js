@@ -34,6 +34,12 @@ import ServiceDocument from "./compononets/ServiceDocument/ServiceDocument";
 // BrandNew bikes form
 import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
 import NewBikes from "./compononets/NewBikes/NewBikes";
+import UpdateNewBike from "./compononets/UpdateNewBike/UpdateNewBike";
+
+import UsedBikesForm from "./compononets/UsedBikesForm/UsedBikesForm";
+import UsedBikes from "./compononets/UsedBikes/UsedBikes";
+import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
+
 
 function App() {
   return (
@@ -73,6 +79,11 @@ function App() {
           {/* new bikes form */}
           <Route path="/NewBikesForm" element={<NewBikesForm />} />
           <Route path="/NewBikes" element={<NewBikes />} />
+          <Route path="/UpdateNewBike/:id" element={<UpdateNewBike />} />
+
+          <Route path="/UsedBikesForm" element={<UsedBikesForm />} />
+          <Route path="/UsedBikes" element={< UsedBikes />}/>
+          <Route path="/UpdateUsedBike/:id" element={<UpdateUsedBike />} />
         </Routes>
 
         <Footer />
