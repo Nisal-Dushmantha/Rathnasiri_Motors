@@ -27,7 +27,7 @@ function UserDashboard() {
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg transition cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Customer Loyalty</h3>
               <p className="text-sm mt-1">Manage loyalty points & rewards</p>
-              <Link to="/CustomerLoyality">
+              <Link to="/CustomerLoyalty">
                 <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">
                   Go
                 </button>

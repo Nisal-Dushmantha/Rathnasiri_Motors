@@ -40,6 +40,8 @@ import UsedBikesForm from "./compononets/UsedBikesForm/UsedBikesForm";
 import UsedBikes from "./compononets/UsedBikes/UsedBikes";
 import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
 
+import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
+import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
 function App() {
   return (
@@ -84,6 +86,9 @@ function App() {
           <Route path="/UsedBikesForm" element={<UsedBikesForm />} />
           <Route path="/UsedBikes" element={< UsedBikes />}/>
           <Route path="/UpdateUsedBike/:id" element={<UpdateUsedBike />} />
+
+          <Route path="/CustomerDetails" element={<CustomerDetails />} />
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
         </Routes>
 
         <Footer />

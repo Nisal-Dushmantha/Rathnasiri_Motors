@@ -12,7 +12,7 @@ function UpdateLoyalityPoints() {
   const handleSave = () => {
     // Here you would normally call your API to update points
     alert(`Updated ${customer.name}'s points to ${points}`);
-    navigate("/CustomerLoyality"); // Go back to the table
+    navigate("/CustomerLoyalty"); // Go back to the table
   };
 
   if (!customer) {
@@ -33,7 +33,7 @@ function UpdateLoyalityPoints() {
         />
         <div className="flex justify-end gap-3">
           <button
-            onClick={() => navigate("/CustomerLoyality")}
+            onClick={() => navigate("/CustomerLoyalty")}
             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
           >
             Cancel
