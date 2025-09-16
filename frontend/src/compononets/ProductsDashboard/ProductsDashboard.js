@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { FaMotorcycle, FaClipboardList } from "react-icons/fa";
 
 function ProductsDashboard() {
   const [totalBikes, setTotalBikes] = useState(0);
@@ -93,7 +92,9 @@ function ProductsDashboard() {
               <h3 className="font-semibold text-lg">Add New Bikes</h3>
               <p className="text-sm mt-1">View and manage new bike inventory</p>
               <Link to="/NewBikesForm">
-                <button className="mt-2 bg-blue-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">
+                  Go
+                </button>
               </Link>
             </div>
 
@@ -102,11 +103,14 @@ function ProductsDashboard() {
               <h3 className="font-semibold text-lg">Add Used Bikes</h3>
               <p className="text-sm mt-1">View and manage used bike inventory</p>
               <Link to="/UsedBikesForm">
-                <button className="mt-2 bg-blue-800 text-white font-semibold py-2 px-6 rounded-lg hover:bg-blue-700 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">
+                  Go
+                </button>
               </Link>
             </div>
           </div>
-        </section>
+        </div>
+      </div>
 
       {/* Bottom Card Layer */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
