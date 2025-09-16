@@ -4,7 +4,7 @@ import { FaDollarSign, FaChartLine, FaFileInvoice } from "react-icons/fa";
 function FinanceDashboard() {
   return (
     <div>
-      Finance Dashboardhhhoasjscijaicjssh
+      Finance Dashboardhhhoasjscijaicjsssssh
     </div>
   )
 }
