@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaDollarSign, FaChartLine, FaFileInvoice } from "react-icons/fa";
+d
 
 function FinanceDashboard() {
   return (
