@@ -7,6 +7,7 @@ const service = require("../Model/serviceModel");
 const serviceController = require("../controllers/serviceController");
 
 router.get("/", serviceController.getAllservice);
+router.get("/count", serviceController.getServiceCount);
 router.post("/", serviceController.addServices);
 router.get("/:id", serviceController.getById);
 router.put("/:id", serviceController.updateService);

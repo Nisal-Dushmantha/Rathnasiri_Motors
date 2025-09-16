@@ -109,9 +109,21 @@ const deleteRepairs = async (req, res, next) => {
   return res.status(200).json({ repairs });
 };
 
+// Get total count of repairs
+const getRepairCount = async (req, res) => {
+  try {
+    const count = await repair.countDocuments();
+    return res.status(200).json({ count });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error fetching repair count" });
+  }
+};
+
 //exports
 exports.getById = getById;
 exports.getAllRepairs = getAllRepairs;
 exports.addRepairs = addRepairs;
 exports.updateRepairs = updateRepairs;
 exports.deleteRepairs = deleteRepairs;
+exports.getRepairCount = getRepairCount;

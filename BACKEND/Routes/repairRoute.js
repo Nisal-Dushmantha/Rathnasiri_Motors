@@ -9,6 +9,7 @@ const serviceController = require("../controllers/serviceController");
 const RepairController = require("../controllers/RepaireController");
 
 router.get("/", RepairController.getAllRepairs);
+router.get("/count", RepairController.getRepairCount);
 router.post("/", RepairController.addRepairs);
 router.get("/:id", RepairController.getById);
 router.put("/:id", RepairController.updateRepairs);
