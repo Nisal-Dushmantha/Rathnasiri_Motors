@@ -17,7 +17,7 @@ function SidePanel() {
     { name: "Inventory Management", icon: <AiOutlineDatabase size={20} />, path: "/inventory" },
     { name: "Service and Repair", icon: <AiOutlineTool size={20} />, path: "/service" },
     { name: "Finance Management", icon: <AiOutlineMoneyCollect size={20} />, path: "/finance" },
-     {name: "Insurance and Registration", icon: <AiOutlineMoneyCollect size={20} />, path: "/insurance" },
+    { name: "Insurance and Registration", icon: <AiOutlineMoneyCollect size={20} />, path: "/insurance" },
   ];
 
   return (
@@ -36,7 +36,7 @@ function SidePanel() {
           <li key={index}>
             <Link
               to={item.path}
-              className="cursor-pointer p-3 flex items-center gap-3 rounded-lg hover:bg-blue-700 hover:translate-x-2 transition-all duration-200"
+              className="cursor-pointer p-3 flex items-center gap-3 rounded-lg transition-all duration-200 hover:bg-white hover:text-blue-800 hover:scale-105"
             >
               <span>{item.icon}</span>
               <span className="font-medium text-lg">{item.name}</span>
