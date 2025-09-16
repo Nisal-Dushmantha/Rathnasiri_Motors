@@ -22,6 +22,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get("/",newBController.getAllnewB);
+router.get("/count", newBController.getNewBikesCount);
 router.post("/", upload.single('image'), newBController.addnewB);
 router.get("/:id",newBController.getByID);
 router.put("/:id", upload.single('image'), newBController.updatenewB);

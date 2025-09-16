@@ -27,18 +27,24 @@ import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
 // Update job cards
 import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
 import UpdateRepairCard from "./compononets/UpdateRepairCard/UpdateRepairCard";
-
 // PDF/Document page
 import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 import ServiceDocument from "./compononets/ServiceDocument/ServiceDocument";
+
+
 // BrandNew bikes form
 import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
 import NewBikes from "./compononets/NewBikes/NewBikes";
 import UpdateNewBike from "./compononets/UpdateNewBike/UpdateNewBike";
-
+//Used Bikes form
 import UsedBikesForm from "./compononets/UsedBikesForm/UsedBikesForm";
 import UsedBikes from "./compononets/UsedBikes/UsedBikes";
 import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
+//New Bikes Sales
+import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
+import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
+
+
 
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
@@ -82,10 +88,13 @@ function App() {
           <Route path="/NewBikesForm" element={<NewBikesForm />} />
           <Route path="/NewBikes" element={<NewBikes />} />
           <Route path="/UpdateNewBike/:id" element={<UpdateNewBike />} />
-
+          {/*used bikes form*/}
           <Route path="/UsedBikesForm" element={<UsedBikesForm />} />
           <Route path="/UsedBikes" element={< UsedBikes />}/>
           <Route path="/UpdateUsedBike/:id" element={<UpdateUsedBike />} />
+
+          <Route path="/BikesSalesHisForm/:id" element={<BikesSalesHisForm />} />
+          <Route path="/BikesSalesHistory" element={<BikesSalesHistory />} />
 
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />

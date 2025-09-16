@@ -7,6 +7,7 @@ function NewBikesForm() {
   const [formData, setFormData] = useState({
     type: "",
     model: "",
+    chassi_no: "",
     color: "",
     price: "",
     status: "Available",
@@ -48,6 +49,7 @@ function NewBikesForm() {
       const data = new FormData();
       data.append("type", formData.type.trim());
       data.append("model", formData.model.trim());
+      data.append("chassi_no", formData.chassi_no.trim());
       data.append("color", formData.color.trim());
       data.append("price", formData.price.toString());
       data.append("offers", formData.offers.trim());
@@ -90,6 +92,7 @@ function NewBikesForm() {
         setFormData({
           type: "",
           model: "",
+          chassi_no: "",
           color: "",
           price: "",
           offers: "",
@@ -171,7 +174,7 @@ function NewBikesForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Type Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Bike Type
               </label>
               <input
@@ -187,7 +190,7 @@ function NewBikesForm() {
 
             {/* Model Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Model
               </label>
               <input
@@ -201,9 +204,26 @@ function NewBikesForm() {
               />
             </div>
 
+            
+            {/* Chassi Number Field */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 ">
+                Chassi No
+              </label>
+              <input
+                type="text"
+                name="chassi_no"
+                value={formData.chassi_no}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                placeholder="e.g., Honda CBR 600RR"
+              />
+            </div>
+
             {/* Color Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Color
               </label>
               <input
@@ -219,7 +239,7 @@ function NewBikesForm() {
 
             {/* Price Field */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Price (Rs.)
               </label>
               <input
@@ -236,7 +256,7 @@ function NewBikesForm() {
 
             {/* Offers */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Offers
               </label>
               <input
@@ -253,7 +273,7 @@ function NewBikesForm() {
 
           {/* Status Field */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-gray-700 ">
               Status
             </label>
             <select
@@ -271,7 +291,7 @@ function NewBikesForm() {
 
           {/* Image Upload */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-gray-700 ">
               Bike Image
             </label>
             <div className="space-y-4">

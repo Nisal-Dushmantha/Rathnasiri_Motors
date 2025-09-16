@@ -91,6 +91,7 @@ const UpdateUsedBike = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('type', formData.type);
       formDataToSend.append('model', formData.model);
+      formDataToSend.append('chassi_no', formData.chassi_no);
       formDataToSend.append('color', formData.color);
       formDataToSend.append('price', formData.price);
       formDataToSend.append('mileage', formData.mileage);
@@ -178,6 +179,21 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="model"
                   value={formData.model}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  required
+                />
+              </div>
+
+              {/* chassi number */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Chassi No
+                </label>
+                <input
+                  type="text"
+                  name="chassi_no"
+                  value={formData.chassi_no}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
                   required
@@ -279,7 +295,7 @@ const UpdateUsedBike = () => {
                   <option value="Available">Available</option>
                   <option value="Sold">Sold</option>
                   <option value="Reserved">Reserved</option>
-                  <option value="Under Maintenance">Under Maintenance</option>
+
                 </select>
               </div>
             </div>

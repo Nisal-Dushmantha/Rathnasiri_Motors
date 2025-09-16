@@ -10,30 +10,18 @@ const newBSchema = new Schema({
     type: String, //datatype
     required: true, //validate
   },
-  chassi_no: {
-    type: String,
-    required: true,
-  },
-  color: {
+  last_price: {
     type: String, //datatype
     required: true, //validate
   },
-  price: {
+  buyer_name: {
     type: String, //datatype
     required: true, //validate
   },
-  offers: {
+  contact_no: {
     type: String, //datatype
     required: true, //validate
   },
-  status: {
-    type: String, //datatype
-    required: true, //validate
-  },
-  image: {
-    type: String, //datatype for image URL/path
-    required: false, //optional field
-  }
 });
 
-module.exports = mongoose.model("newBModel", newBSchema);
+module.exports = mongoose.model("newBSoldModel", newBSchema);

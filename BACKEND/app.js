@@ -9,6 +9,7 @@ const router = require("./Routes/UserRoute");
 const sprouter = require("./Routes/SparePRoute");
 const newBrouter = require("./Routes/newBRoutes");
 const usedBrouter = require("./Routes/usedBRoutes");
+const newBsoldHrouter = require("./Routes/newBSoldRoute");
 const Inrouter = require("./Routes/InsuranceRoute");
 
 
@@ -38,6 +39,7 @@ app.use("/users",router);
 app.use("/sp",sprouter);
 app.use("/newBs",newBrouter);
 app.use("/usedBs",usedBrouter);
+app.use("/newBsH",newBsoldHrouter);
 app.use("/insurances",Inrouter);
 
 

@@ -12,6 +12,7 @@ const UpdateNewBike = () => {
   const [formData, setFormData] = useState({
     type: '',
     model: '',
+    chassi_no: "",
     color: '',
     price: '',
     offers: '',
@@ -32,6 +33,7 @@ const UpdateNewBike = () => {
         setFormData({
           type: bike.type || '',
           model: bike.model || '',
+          chassi_no: bike.chassi_no || '',
           color: bike.color || '',
           price: bike.price || '',
           offers: bike.offers || '',
@@ -88,6 +90,7 @@ const UpdateNewBike = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('type', formData.type);
       formDataToSend.append('model', formData.model);
+      formDataToSend.append('chassi_no', formData.chassi_no);
       formDataToSend.append('color', formData.color);
       formDataToSend.append('price', formData.price);
       formDataToSend.append('offers', formData.offers);
@@ -182,6 +185,21 @@ const UpdateNewBike = () => {
                 />
               </div>
 
+              {/* chassi no*/}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Chassi No
+                </label>
+                <input
+                  type="text"
+                  name="chassi_no"
+                  value={formData.chassi_no}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+
               {/* Color */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -245,7 +263,6 @@ const UpdateNewBike = () => {
                   <option value="Available">Available</option>
                   <option value="Sold">Sold</option>
                   <option value="Reserved">Reserved</option>
-                  <option value="Under Maintenance">Under Maintenance</option>
                 </select>
               </div>
             </div>

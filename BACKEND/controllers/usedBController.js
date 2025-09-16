@@ -19,7 +19,7 @@ const addusedB = async (req, res, next) => {
   console.log("Request body:", req.body);
   console.log("Request file:", req.file);
 
-  const { type, model, color, price, mileage, year, owner, status } = req.body;
+  const { type, model, chassi_no, color, price, mileage, year, owner, status } = req.body;
 
   // Handle file upload
   let imagePath = null;
@@ -30,7 +30,7 @@ const addusedB = async (req, res, next) => {
   let usedBs;
 
   try {
-    usedBs = new usedB({ type, model, color, price, mileage, year, owner,  status, image: imagePath });
+    usedBs = new usedB({ type, model, chassi_no, color, price, mileage, year, owner,  status, image: imagePath });
     await usedBs.save();
     console.log("Bike saved successfully:", usedBs);
     return res.status(201).json({ usedBs, message: "Bike added successfully" });
@@ -56,7 +56,7 @@ const getByID = async (req, res) => {
 
 // Update bike
 const updateusedB = async (req, res) => {
-  const { type, model, color, price, mileage, year, owner, status } = req.body;
+  const { type, model, chassi_no, color, price, mileage, year, owner, status } = req.body;
   const id = req.params.id;
 
   // Handle file upload
@@ -71,6 +71,7 @@ const updateusedB = async (req, res) => {
     const updateData = {
       type: type,
       model: model,
+      chassi_no: chassi_no,
       color: color,
       price: price,
       mileage: mileage,
@@ -117,10 +118,22 @@ const deleteusedB = async (req, res, next) => {
   }
 };
 
+// Get total count of used bikes
+const getUsedBikesCount = async (req, res) => {
+  try {
+    const count = await usedB.countDocuments();
+    return res.status(200).json({ count });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error fetching bike count" });
+  }
+};
+
 module.exports = {
   getAllusedB,
   addusedB,
   getByID,
   updateusedB,
   deleteusedB,
+  getUsedBikesCount,
 };

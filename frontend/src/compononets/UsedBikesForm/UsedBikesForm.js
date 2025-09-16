@@ -7,6 +7,7 @@ function UsedBikesForm() {
   const [formData, setFormData] = useState({
     type: "",
     model: "",
+    chassi_no: "",
     color: "",
     price: "",
     mileage: "",
@@ -50,6 +51,7 @@ function UsedBikesForm() {
       const data = new FormData();
       data.append("type", formData.type.trim());
       data.append("model", formData.model.trim());
+      data.append("chassi_no", formData.chassi_no.trim());
       data.append("color", formData.color.trim());
       data.append("price", formData.price.toString());
       data.append("mileage", formData.mileage.trim());
@@ -89,6 +91,7 @@ function UsedBikesForm() {
         setFormData({
           type: "",
           model: "",
+          chassi_no: "",
           color: "",
           price: "",
           mileage: "",
@@ -168,7 +171,7 @@ function UsedBikesForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Type */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Bike Type
               </label>
               <input
@@ -184,7 +187,7 @@ function UsedBikesForm() {
 
             {/* Model */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Model
               </label>
               <input
@@ -197,10 +200,25 @@ function UsedBikesForm() {
                 placeholder="e.g., Honda CBR 600RR"
               />
             </div>
+            {/* chassi number */}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 ">
+                Chassi No
+              </label>
+              <input
+                type="text"
+                name="chassi_no"
+                value={formData.chassi_no}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="e.g., Honda CBR 600RR"
+              />
+            </div>
 
             {/* Color */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Color
               </label>
               <input
@@ -216,7 +234,7 @@ function UsedBikesForm() {
 
             {/* Price */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Price (Rs.)
               </label>
               <input
@@ -233,7 +251,7 @@ function UsedBikesForm() {
 
             {/* Mileage */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Mileage (km)
               </label>
               <input
@@ -250,7 +268,7 @@ function UsedBikesForm() {
 
             {/* Year */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+              <label className="block text-sm font-semibold text-gray-700 ">
                 Year
               </label>
               <input
@@ -268,8 +286,8 @@ function UsedBikesForm() {
 
             {/* Owner */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Previous Owner
+              <label className="block text-sm font-semibold text-gray-700 ">
+                Previous Owners
               </label>
               <input
                 type="text"
@@ -285,7 +303,7 @@ function UsedBikesForm() {
 
           {/* Status */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-gray-700 ">
               Status
             </label>
             <select
@@ -303,7 +321,7 @@ function UsedBikesForm() {
 
           {/* Image */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
+            <label className="block text-sm font-semibold text-gray-700 ">
               Bike Image
             </label>
             <div className="space-y-4">

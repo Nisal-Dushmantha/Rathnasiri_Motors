@@ -116,6 +116,9 @@ function NewBikes() {
                       <span className="font-semibold">Type:</span> {bike.type}
                     </p>
                     <p>
+                      <span className="font-semibold">Chassi No:</span> {bike.chassi_no}
+                    </p>
+                    <p>
                       <span className="font-semibold">Color:</span> {bike.color}
                     </p>
                     <p>
@@ -152,7 +155,15 @@ function NewBikes() {
                     className="flex-1 bg-red-600 text-white py-2 px-4 rounded-xl hover:bg-red-500 transition font-semibold"
                   >
                     Delete
+                    
                   </button>
+
+                   <Link
+                    to={`/BikesSalesHisForm/${bike._id}`}
+                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-500 transition text-center font-semibold"
+                  >
+                    Sold
+                  </Link>
                 </div>
               </div>
             ))}

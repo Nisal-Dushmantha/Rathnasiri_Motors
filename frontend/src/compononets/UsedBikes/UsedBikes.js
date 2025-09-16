@@ -116,6 +116,13 @@ function UsedBikes() {
                       <span className="font-semibold">Type:</span> {bike.type}
                     </p>
                     <p>
+                      <span className="font-semibold">Model:</span> {bike.model}
+                    </p>
+                    <p>
+                      <span className="font-semibold">Chassi No:</span>{" "}
+                      {bike.chassi_no}
+                    </p>
+                    <p>
                       <span className="font-semibold">Color:</span> {bike.color}
                     </p>
                     <p>
@@ -130,9 +137,9 @@ function UsedBikes() {
                       <span className="font-semibold">Year:</span> {bike.year}
                     </p>
                     <p>
-                      <span className="font-semibold">Previous Owner:</span> {bike.owner}
+                      <span className="font-semibold">Previous Owners:</span>{" "}
+                      {bike.owner}
                     </p>
-                    
                   </div>
                   <div
                     className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
@@ -161,6 +168,12 @@ function UsedBikes() {
                   >
                     Delete
                   </button>
+                  <Link
+                    to={`/BikesSalesHisForm/${bike._id}`}
+                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-500 transition text-center font-semibold"
+                  >
+                    Sold
+                  </Link>
                 </div>
               </div>
             ))}
@@ -172,7 +185,3 @@ function UsedBikes() {
 }
 
 export default UsedBikes;
-
-
-
-
