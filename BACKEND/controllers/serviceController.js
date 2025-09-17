@@ -130,9 +130,21 @@ const deleteService = async (req, res, next) => {
   return res.status(200).json({ services });
 };
 
+// Get total count of services
+const getServiceCount = async (req, res) => {
+  try {
+    const count = await service.countDocuments();
+    return res.status(200).json({ count });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error fetching service count" });
+  }
+};
+
 //exports
 exports.getById = getById;
 exports.getAllservice = getAllservice;
 exports.addServices = addServices;
 exports.updateService = updateService;
 exports.deleteService = deleteService;
+exports.getServiceCount = getServiceCount;
