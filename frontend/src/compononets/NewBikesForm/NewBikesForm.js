@@ -9,6 +9,7 @@ function NewBikesForm() {
     model: "",
     chassi_no: "",
     color: "",
+    quantity: "",
     price: "",
     status: "Available",
     image: null,
@@ -51,6 +52,7 @@ function NewBikesForm() {
       data.append("model", formData.model.trim());
       data.append("chassi_no", formData.chassi_no.trim());
       data.append("color", formData.color.trim());
+      data.append("quantity", formData.quantity.trim());
       data.append("price", formData.price.toString());
       data.append("offers", formData.offers.trim());
       data.append("status", formData.status);
@@ -94,6 +96,7 @@ function NewBikesForm() {
           model: "",
           chassi_no: "",
           color: "",
+          quantity: "",
           price: "",
           offers: "",
           status: "Available",
@@ -234,6 +237,22 @@ function NewBikesForm() {
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
                 placeholder="e.g., Red, Black, Blue"
+              />
+            </div>
+
+            {/* quantity*/}
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700 ">
+                Quantity
+              </label>
+              <input
+                type="text"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                placeholder="1, 2, 3, 4"
               />
             </div>
 
