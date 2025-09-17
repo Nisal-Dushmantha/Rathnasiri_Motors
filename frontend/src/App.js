@@ -59,7 +59,8 @@ function Layout() {
   const location = useLocation();
 
   // Hide sidebar, header, and footer only on "/"
-  const isIndexPage = location.pathname === "/";
+  const isIndexPage = location.pathname === "/" || location.pathname === "/Login" 
+                  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage";
 
   return (
     <>
