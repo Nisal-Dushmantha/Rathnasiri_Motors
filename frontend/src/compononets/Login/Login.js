@@ -59,12 +59,13 @@ function Login() {
           />
 
           {/* Login button */}
-          <button
+          <Link to="/Homepage"><button
             type="submit"
             className="w-full bg-blue-800 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition duration-300"
           >
             Login
-          </button>
+          </button></Link>
+          
         </form>
 
         <p className="text-gray-600 mt-4">
