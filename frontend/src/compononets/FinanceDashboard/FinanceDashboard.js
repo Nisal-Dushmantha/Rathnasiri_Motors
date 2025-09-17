@@ -1,6 +1,5 @@
 import React from 'react'
 
-
 function FinanceDashboard() {
   return (
     <div className="flex-1 bg-gradient-to-b from-sky-100 to-sky-50 p-10 min-h-screen">
