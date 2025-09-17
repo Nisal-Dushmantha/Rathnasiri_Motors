@@ -1,10 +1,9 @@
 import React from 'react'
 
-
 function FinanceDashboard() {
   return (
     <div>
-      Finance Dashboardhhhoasjscijaicjsssssh
+      Finance Dashboaiyefuiwfjrdhhhoasjscijaicjh
     </div>
   )
 }
