@@ -63,6 +63,7 @@ import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm"
 import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 
 
+import Index from "./compononets/Index/Index";
 
 
 
@@ -145,12 +146,5 @@ function App() {
   );
 }
 
-function App() {
-  return (
-    <Router>
-      <Layout />
-    </Router>
-  );
-}
 
 export default App;
