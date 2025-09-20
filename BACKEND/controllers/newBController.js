@@ -19,7 +19,7 @@ const addnewB = async (req, res, next) => {
   console.log("Request body:", req.body);
   console.log("Request file:", req.file);
   
-  const { type, model, chassi_no, color, price, offers, status } = req.body;
+  const { type, model, chassi_no, color, quantity, price, offers, status } = req.body;
   
   // Handle file upload
   let imagePath = null;
@@ -30,7 +30,7 @@ const addnewB = async (req, res, next) => {
   let newBs;
 
   try {
-    newBs = new newB({ type, model, chassi_no, color, price, offers, status, image: imagePath });
+    newBs = new newB({ type, model, chassi_no, color, quantity, price, offers, status, image: imagePath });
     await newBs.save();
     console.log("Bike saved successfully:", newBs);
     return res.status(201).json({ newBs, message: "Bike added successfully" });
@@ -54,7 +54,7 @@ const getByID = async (req, res) => {
 
 // Update bike
 const updatenewB = async (req, res) => {
-  const { type, model, chassi_no, color, price, offers, status } = req.body;
+  const { type, model, chassi_no, color, quantity, price, offers, status } = req.body;
   const id = req.params.id;
   
   // Handle file upload
@@ -66,7 +66,7 @@ const updatenewB = async (req, res) => {
   let newBs;
 
   try{
-    const updateData = {type : type, model : model, chassi_no : chassi_no, color : color, price : price, offers : offers, status : status};
+    const updateData = {type : type, model : model, chassi_no : chassi_no, color : color, quantity : quantity, price : price, offers : offers, status : status};
     if (imagePath) {
       updateData.image = imagePath;
     }
