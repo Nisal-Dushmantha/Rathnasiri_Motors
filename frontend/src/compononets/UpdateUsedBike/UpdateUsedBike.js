@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -23,15 +23,11 @@ const UpdateUsedBike = () => {
 
   const [previewImage, setPreviewImage] = useState('');
 
-  useEffect(() => {
-    fetchBikeData();
-  }, [id]);
-
-  const fetchBikeData = async () => {
+  const fetchBikeData = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/usedBs/${id}`);
-      const bike = response.data.usedBike;
+      const res = await axios.get(`http://localhost:5000/usedBs/${id}`);
+      const bike = res.data.usedBike;
       
       setFormData({
         type: bike.type || '',
@@ -54,7 +50,11 @@ const UpdateUsedBike = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchBikeData();
+  }, [fetchBikeData]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -103,7 +103,7 @@ const UpdateUsedBike = () => {
         formDataToSend.append('image', formData.image);
       }
 
-      const response = await axios.put(`http://localhost:5000/usedBs/${id}`, formDataToSend, {
+      await axios.put(`http://localhost:5000/usedBs/${id}`, formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

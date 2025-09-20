@@ -49,6 +49,19 @@ import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
+//Inventory insert form
+import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
+import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
+import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
+import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+
+
+
+
+
+
+
 function App() {
   return (
     <Router>
@@ -98,6 +111,15 @@ function App() {
 
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          {/*Inventory*/}
+          <Route path="/SparePartsForm" element={<SparePartsForm />} />
+          <Route path="/SparePartsDisplay" element={<SparePartsDisplay />} />
+          <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
+          <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
+          <Route path="/SparePartBill" element={<SparePartBill />} />
+
+
         </Routes>
 
         <Footer />

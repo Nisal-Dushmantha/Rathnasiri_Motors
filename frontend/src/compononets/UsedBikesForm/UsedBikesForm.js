@@ -18,7 +18,7 @@ function UsedBikesForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  // Removed upload progress state to avoid unused variable warnings
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -73,13 +73,7 @@ function UsedBikesForm() {
         headers: { "Content-Type": "multipart/form-data" },
         signal: controller.signal,
         timeout: 30000,
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round(
-            (progressEvent.loaded * 100) / progressEvent.total
-          );
-          setUploadProgress(percentCompleted);
-          console.log(`Upload Progress: ${percentCompleted}%`);
-        },
+        // Upload progress UI not used currently; omit handler to avoid warnings
       });
 
       clearTimeout(timeoutId);
@@ -101,7 +95,7 @@ function UsedBikesForm() {
           image: null,
         });
         setImagePreview(null);
-        setUploadProgress(0);
+        
         setShowSuccess(false);
         navigate("/UsedBikes");
       }, 1500);
@@ -122,7 +116,7 @@ function UsedBikesForm() {
       }
     } finally {
       setIsSubmitting(false);
-      setUploadProgress(0);
+      
     }
   };
 

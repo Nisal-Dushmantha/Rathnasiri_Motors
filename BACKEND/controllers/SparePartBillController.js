@@ -1,0 +1,71 @@
+const SpareB = require("../Model/SparePartBillModel");
+
+const getAllSparePartsBill = async (req, res, next) => {
+
+  let spb;
+  // get all spare parts display 
+  try {
+    spb = await SpareB.find();
+  } catch (err) {
+    console.log(err);
+  }
+  //not found
+  if (!spb) {
+    return res.status(404).json({ message: "Spare parts Bill not found" });
+  }
+
+  //Displays all spare parts
+  return res.status(200).json({ spb });
+};
+
+
+
+//Data Insert
+const addSparePartsBill = async (req,res,next) => {
+
+    const {bill_no,name,brand,quantity,price} = req.body;
+
+    let spb;
+
+    try{
+        spb = new SpareB({bill_no,name,brand,quantity,price});
+        await spb.save();
+    }
+    catch(err){
+        console.log(err);
+    }
+
+    // not insert spare parts
+    if(!spb){
+        return res.status(404).json({message:"unable to add spare parts bill"});
+    }
+    return res.status(200).json({ spb });
+
+};
+
+//Get by Id
+const getById = async (req, res, next) => {
+  
+    const id = req.params.id;
+
+    let spb;
+
+    try{
+        spb = await SpareB.findById(id);
+    }
+    catch(err){
+        console.log(err);
+    }
+
+    //not avaiable spare parts
+if (!spb) {
+    return res.status(404).json({ message: "Spare part bill not found" });
+}
+
+
+    return res.status(200).json({spb});
+};
+
+exports.getAllSparePartsBill = getAllSparePartsBill;
+exports.addSparePartsBill = addSparePartsBill;
+exports.getById = getById;
