@@ -7,7 +7,6 @@ function UsedBikesForm() {
   const [formData, setFormData] = useState({
     type: "",
     model: "",
-    chassi_no: "",
     color: "",
     price: "",
     mileage: "",
@@ -18,7 +17,7 @@ function UsedBikesForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  // Removed upload progress state to avoid unused variable warnings
+  const [uploadProgress, setUploadProgress] = useState(0); // Added state
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -28,9 +27,7 @@ function UsedBikesForm() {
       setFormData({ ...formData, image: file });
       if (file) {
         const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreview(reader.result);
-        };
+        reader.onloadend = () => setImagePreview(reader.result);
         reader.readAsDataURL(file);
       } else {
         setImagePreview(null);
@@ -51,7 +48,6 @@ function UsedBikesForm() {
       const data = new FormData();
       data.append("type", formData.type.trim());
       data.append("model", formData.model.trim());
-      data.append("chassi_no", formData.chassi_no.trim());
       data.append("color", formData.color.trim());
       data.append("price", formData.price.toString());
       data.append("mileage", formData.mileage.trim());
@@ -68,24 +64,25 @@ function UsedBikesForm() {
         data.append("image", formData.image);
       }
 
-      console.log("Submitting form data...");
       const res = await axios.post("http://localhost:5000/usedBs", data, {
         headers: { "Content-Type": "multipart/form-data" },
         signal: controller.signal,
         timeout: 30000,
-        // Upload progress UI not used currently; omit handler to avoid warnings
+        onUploadProgress: (progressEvent) => {
+          const percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          setUploadProgress(percentCompleted);
+        },
       });
 
       clearTimeout(timeoutId);
-      console.log("Response:", res.data);
-
       setShowSuccess(true);
 
       setTimeout(() => {
         setFormData({
           type: "",
           model: "",
-          chassi_no: "",
           color: "",
           price: "",
           mileage: "",
@@ -95,7 +92,7 @@ function UsedBikesForm() {
           image: null,
         });
         setImagePreview(null);
-        
+        setUploadProgress(0); // Reset progress
         setShowSuccess(false);
         navigate("/UsedBikes");
       }, 1500);
@@ -110,19 +107,15 @@ function UsedBikesForm() {
         );
       } else {
         console.error("Error details:", err);
-        console.error("Response data:", err.response?.data);
-        console.error("Response status:", err.response?.status);
         alert(`Failed to add bike: ${err.response?.data?.message || err.message}`);
       }
     } finally {
       setIsSubmitting(false);
-      
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
-      {/* Success Notification */}
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -137,7 +130,6 @@ function UsedBikesForm() {
       )}
 
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
             <svg
@@ -155,19 +147,14 @@ function UsedBikesForm() {
             </svg>
           </div>
           <h2 className="text-4xl font-bold text-gray-800 mb-2">Add Used Bike</h2>
-          <p className="text-gray-600">
-            Enter the details of the used bike to add to inventory
-          </p>
+          <p className="text-gray-600">Enter the details of the used bike to add to inventory</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Form Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Type */}
+            {/* Bike Type */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Bike Type
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Bike Type</label>
               <input
                 type="text"
                 name="type"
@@ -181,9 +168,7 @@ function UsedBikesForm() {
 
             {/* Model */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Model
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Model</label>
               <input
                 type="text"
                 name="model"
@@ -194,27 +179,10 @@ function UsedBikesForm() {
                 placeholder="e.g., Honda CBR 600RR"
               />
             </div>
-            {/* chassi number */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Chassi No
-              </label>
-              <input
-                type="text"
-                name="chassi_no"
-                value={formData.chassi_no}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., Honda CBR 600RR"
-              />
-            </div>
 
             {/* Color */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Color
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Color</label>
               <input
                 type="text"
                 name="color"
@@ -228,9 +196,7 @@ function UsedBikesForm() {
 
             {/* Price */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Price (Rs.)
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Price (Rs.)</label>
               <input
                 type="number"
                 name="price"
@@ -245,26 +211,22 @@ function UsedBikesForm() {
 
             {/* Mileage */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Mileage (km)
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Mileage (km)</label>
               <input
-                type=""number
+                type="number"
                 name="mileage"
                 value={formData.mileage}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., 20000"
+                placeholder="20000"
                 min="0"
               />
             </div>
 
             {/* Year */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Year
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Year</label>
               <input
                 type="number"
                 name="year"
@@ -272,7 +234,7 @@ function UsedBikesForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="e.g., 2018"
+                placeholder="2018"
                 min="1900"
                 max={new Date().getFullYear()}
               />
@@ -280,9 +242,7 @@ function UsedBikesForm() {
 
             {/* Owner */}
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Previous Owners
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Previous Owners</label>
               <input
                 type="text"
                 name="owner"
@@ -297,9 +257,7 @@ function UsedBikesForm() {
 
           {/* Status */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 ">
-              Status
-            </label>
+            <label className="block text-sm font-semibold text-gray-700">Status</label>
             <select
               name="status"
               value={formData.status}
@@ -315,9 +273,7 @@ function UsedBikesForm() {
 
           {/* Image */}
           <div className="space-y-2">
-            <label className="block text-sm font-semibold text-gray-700 ">
-              Bike Image
-            </label>
+            <label className="block text-sm font-semibold text-gray-700">Bike Image</label>
             <div className="space-y-4">
               <input
                 type="file"
@@ -337,6 +293,16 @@ function UsedBikesForm() {
               )}
             </div>
           </div>
+
+          {/* Upload Progress */}
+          {uploadProgress > 0 && (
+            <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
+              <div
+                className="bg-blue-600 h-2 rounded-full transition-all"
+                style={{ width: `${uploadProgress}%` }}
+              />
+            </div>
+          )}
 
           {/* Submit */}
           <div className="pt-4">

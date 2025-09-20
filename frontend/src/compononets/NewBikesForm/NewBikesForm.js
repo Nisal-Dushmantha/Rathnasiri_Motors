@@ -7,7 +7,6 @@ function NewBikesForm() {
   const [formData, setFormData] = useState({
     type: "",
     model: "",
-    chassi_no: "",
     color: "",
     quantity: "",
     price: "",
@@ -50,7 +49,6 @@ function NewBikesForm() {
       const data = new FormData();
       data.append("type", formData.type.trim());
       data.append("model", formData.model.trim());
-      data.append("chassi_no", formData.chassi_no.trim());
       data.append("color", formData.color.trim());
       data.append("quantity", formData.quantity.trim());
       data.append("price", formData.price.toString());
@@ -94,7 +92,6 @@ function NewBikesForm() {
         setFormData({
           type: "",
           model: "",
-          chassi_no: "",
           color: "",
           quantity: "",
           price: "",
@@ -200,23 +197,6 @@ function NewBikesForm() {
                 type="text"
                 name="model"
                 value={formData.model}
-                onChange={handleChange}
-                required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="e.g., Honda CBR 600RR"
-              />
-            </div>
-
-            
-            {/* Chassi Number Field */}
-            <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 ">
-                Chassi No
-              </label>
-              <input
-                type="text"
-                name="chassi_no"
-                value={formData.chassi_no}
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"

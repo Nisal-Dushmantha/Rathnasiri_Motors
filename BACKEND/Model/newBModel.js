@@ -10,10 +10,6 @@ const newBSchema = new Schema({
     type: String, //datatype
     required: true, //validate
   },
-  chassi_no: {
-    type: String,
-    required: true,
-  },
   color: {
     type: String, //datatype
     required: true, //validate
