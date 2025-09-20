@@ -1,6 +1,6 @@
 // App.js
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
 import SidePanel from "./compononets/SidePanel/SidePanel";
@@ -27,24 +27,30 @@ import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
 // Update job cards
 import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
 import UpdateRepairCard from "./compononets/UpdateRepairCard/UpdateRepairCard";
+
 // PDF/Document page
 import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 import ServiceDocument from "./compononets/ServiceDocument/ServiceDocument";
 
-
-// BrandNew bikes form
+// BrandNew bikes
 import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
 import NewBikes from "./compononets/NewBikes/NewBikes";
 import UpdateNewBike from "./compononets/UpdateNewBike/UpdateNewBike";
-//Used Bikes form
+
+// Used bikes
 import UsedBikesForm from "./compononets/UsedBikesForm/UsedBikesForm";
 import UsedBikes from "./compononets/UsedBikes/UsedBikes";
 import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
-//New Bikes Sales
+
+// New Bikes Sales
 import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
 import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
 
-
+// Add New Insurances form
+import NewInsurances from  "./compononets/NewInsurances/NewInsurances";
+import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
+import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
+import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
@@ -64,14 +70,15 @@ import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 
 function App() {
   return (
-    <Router>
-      {/* Sidebar stays persistent */}
-      <SidePanel />
-      
-      <div className="ml-80">
-        <Header />
+    <>
+      {!isIndexPage && <SidePanel />}
+      <div className={!isIndexPage ? "ml-80" : ""}>
+        {!isIndexPage && <Header />}
 
         <Routes>
+          {/* Default index page */}
+          <Route path="/" element={<Index />} />
+
           {/* Dashboards */}
           <Route path="/homepage" element={<Homepage />} />
           <Route path="/service" element={<Dashboard />} />
@@ -93,24 +100,34 @@ function App() {
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
           <Route path="/AllRepairJobs/:id" element={<UpdateRepairCard />} />
 
-          {/* Repair job PDF document */}
+          {/* PDF Documents */}
           <Route path="/RepairDocument/:id" element={<RepairDocument />} />
-          {/* Service job PDF document */}
           <Route path="/ServiceDocument/:id" element={<ServiceDocument />} />
-          {/* new bikes form */}
+
+          {/* New bikes */}
           <Route path="/NewBikesForm" element={<NewBikesForm />} />
           <Route path="/NewBikes" element={<NewBikes />} />
           <Route path="/UpdateNewBike/:id" element={<UpdateNewBike />} />
-          {/*used bikes form*/}
+
+          {/* Used bikes */}
           <Route path="/UsedBikesForm" element={<UsedBikesForm />} />
-          <Route path="/UsedBikes" element={< UsedBikes />}/>
+          <Route path="/UsedBikes" element={<UsedBikes />} />
           <Route path="/UpdateUsedBike/:id" element={<UpdateUsedBike />} />
 
+          {/* Sales */}
           <Route path="/BikesSalesHisForm/:id" element={<BikesSalesHisForm />} />
           <Route path="/BikesSalesHistory" element={<BikesSalesHistory />} />
 
+          {/* Customers */}
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          {/* Add New Insurances form */}
+          <Route path="/NewInsurances" element={<NewInsurances />} />
+          <Route path="/InsurancesAll" element={<InsurancesAll />} />
+          <Route path="/UpdateInsurances/:id" element={<UpdateInsurances/>} />
+          <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+
 
           {/*Inventory*/}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />
@@ -122,8 +139,16 @@ function App() {
 
         </Routes>
 
-        <Footer />
+        {!isIndexPage && <Footer />}
       </div>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Layout />
     </Router>
   );
 }

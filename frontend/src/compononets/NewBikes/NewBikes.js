@@ -122,6 +122,9 @@ function NewBikes() {
                       <span className="font-semibold">Color:</span> {bike.color}
                     </p>
                     <p>
+                      <span className="font-semibold">Quantity:</span> {bike.quantity}
+                    </p>
+                    <p>
                       <span className="font-semibold">Price:</span> Rs.{" "}
                       {bike.price}
                     </p>

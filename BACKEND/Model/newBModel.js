@@ -18,6 +18,10 @@ const newBSchema = new Schema({
     type: String, //datatype
     required: true, //validate
   },
+  quantity: {
+    type: String, //datatype
+    required: true, //validate
+  },
   price: {
     type: String, //datatype
     required: true, //validate
