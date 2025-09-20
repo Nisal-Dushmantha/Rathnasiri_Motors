@@ -36,7 +36,7 @@ function AllServiceJobsDisplay({ user, onDelete }) {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+    <div className="bg-white p-7 rounded-2xl shadow-md hover:shadow-lg transition">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>

@@ -17,7 +17,7 @@ function UsedBikesForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
+  // Removed upload progress state to avoid unused variable warnings
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -95,7 +95,7 @@ function UsedBikesForm() {
           image: null,
         });
         setImagePreview(null);
-        setUploadProgress(0);
+        
         setShowSuccess(false);
         navigate("/UsedBikes");
       }, 1500);
@@ -116,7 +116,7 @@ function UsedBikesForm() {
       }
     } finally {
       setIsSubmitting(false);
-      setUploadProgress(0);
+      
     }
   };
 

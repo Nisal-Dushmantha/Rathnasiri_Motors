@@ -1,34 +1,135 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from "react-router-dom"; 
+import axios from 'axios';
 
 function  InventoryDashboard() {
+  const [totalUnits, setTotalUnits] = useState(null);
+  const [loadingTotal, setLoadingTotal] = useState(true);
+  const [itemCount, setItemCount] = useState(null);
+  const [lowStockCount, setLowStockCount] = useState(0);
+  const [lowStockItems, setLowStockItems] = useState([]);
+  const [showLowStock, setShowLowStock] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchTotals = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/sp');
+        const items = res?.data?.sp || [];
+        const sum = items.reduce((acc, item) => acc + (Number(item.Quentity) || 0), 0);
+        if (isMounted) {
+          setTotalUnits(sum);
+          setItemCount(items.length);
+        }
+      } catch (e) {
+        if (isMounted) {
+          setTotalUnits(null);
+          setItemCount(null);
+        }
+      } finally {
+        if (isMounted) setLoadingTotal(false);
+      }
+    };
+    const fetchLowStock = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/sp/low-stock?threshold=5');
+        if (isMounted) {
+          setLowStockCount(res?.data?.count || 0);
+          setLowStockItems(res?.data?.items || []);
+        }
+      } catch (e) {
+        if (isMounted) {
+          setLowStockCount(0);
+          setLowStockItems([]);
+        }
+      }
+    };
+    fetchTotals();
+    fetchLowStock();
+    return () => { isMounted = false; };
+  }, []);
   return (
     <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 p-10 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Inventory Dashboard</h1>
-        <div className="flex gap-4">
-          <Link to="/NewBikesForm">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">Add New</button>
+        <div className="relative">
+          <h1 className="text-4xl font-bold text-blue-900">Inventory Dashboard</h1>
+        </div>
+        <div className="flex gap-4 items-center">
+          {/* Low-stock notification control placed near the Add New button */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowLowStock((v) => !v)}
+              className="w-10 h-10 rounded-full bg-white shadow border border-gray-200 flex items-center justify-center hover:bg-gray-50"
+              aria-label="Low stock notifications"
+            >
+              {/* Bell emoji as requested */}
+              <span className="text-2xl" aria-hidden="true">🔔</span>
+              {lowStockCount > 0 && (
+                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-red-600 rounded-full">
+                  {lowStockCount}
+                </span>
+              )}
+            </button>
+            {showLowStock && (
+              <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
+                <div className="p-3 border-b border-gray-100 flex items-center justify-between">
+                  <span className="font-semibold text-gray-800">Low Stock</span>
+                  <span className="text-xs text-gray-500">Below 5</span>
+                </div>
+                <div className="max-h-64 overflow-auto">
+                  {lowStockItems.length === 0 ? (
+                    <div className="p-4 text-sm text-gray-500">No low stock items</div>
+                  ) : (
+                    lowStockItems.map((item) => (
+                      <div key={item._id} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
+                          <div className="text-xs text-gray-500 truncate">Brand: {item.brand} • Rack: {item.rack}</div>
+                        </div>
+                        <span className="ml-3 inline-flex items-center justify-center px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">
+                          Qty: {item.Quentity}
+                        </span>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          <Link to="/SparePartsForm">
+            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">+ Add New</button>
           </Link>
           <Link to="/UsedBikes">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">Add Used</button>
+            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">Notification</button>
           </Link>
         </div>
       </div>
 
       {/* Metric Panel */}
-      <div className="mb-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-blue-900 mb-2">Total Items in Inventory</h2>
-              <p className="text-gray-600">New bikes, used bikes, and parts</p>
-            </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-blue-600">—</div>
-              <p className="text-sm text-gray-500 mt-1">Total Units</p>
-            </div>
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Spare Parts Count Card (left) */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900 mb-2">Spare Parts Count</h2>
+            <p className="text-gray-600">Number of distinct items</p>
+          </div>
+          <div className="text-right">
+            <div className="text-4xl font-bold text-emerald-600">{loadingTotal ? '—' : (itemCount ?? '—')}</div>
+            <p className="text-sm text-gray-500 mt-1">Items</p>
+          </div>
+        </div>
+
+        {/* Total Units Card (right) */}
+        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600 flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-blue-900 mb-2">Total Items in Inventory</h2>
+            <p className="text-gray-600">Sum of all quantities</p>
+          </div>
+          <div className="text-right">
+            <div className="text-4xl font-bold text-emerald-600">{loadingTotal ? '—' : (totalUnits ?? '—')}</div>
+            <p className="text-sm text-gray-500 mt-1">Total Units</p>
           </div>
         </div>
       </div>
@@ -40,16 +141,16 @@ function  InventoryDashboard() {
           <p className="text-gray-700 text-lg mb-6">Add and manage inventory</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg">New Bikes</h3>
-              <p className="text-sm mt-1">Add brand new bikes</p>
-              <Link to="/NewBikesForm">
+              <h3 className="font-semibold text-lg">Spare Parts</h3>
+              <p className="text-sm mt-1">Add Spare Parts</p>
+              <Link to="/SparePartsForm">
                 <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
               </Link>
             </div>
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Used Bikes</h3>
               <p className="text-sm mt-1">Add used bikes</p>
-              <Link to="/UsedBikes">
+              <Link to="/SparePartsUpdate">
                 <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
               </Link>
             </div>
@@ -60,26 +161,31 @@ function  InventoryDashboard() {
       {/* Bottom Card Layer */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Spare Parts</h2>
-          <p className="text-gray-700 text-lg">Manage spare parts inventory.</p>
-          <Link to="/SpareParts">
-            <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Open</button>
-          </Link>
-        </div>
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Reports</h2>
-          <p className="text-gray-700 text-lg">Inventory and sales performance.</p>
-          <div className="mt-auto space-y-2">
-            <Link to="/InventoryReports">
-              <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Inventory Reports</button>
+          <h2 className="text-2xl font-bold mb-4 text-blue-800">Spare Parts Overview</h2>
+          <p className="text-gray-700 text-lg">Display the all details of spare parts and generate bill.</p>
+          <div className="mt-auto flex gap-4">
+            <Link to="/SparePartsDisplay" className="flex-1">
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Open</button>
             </Link>
-            <Link to="/SalesReports">
-              <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Sales Reports</button>
+            <Link to="/SparePartBill" className="flex-1">
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Generate Bill</button>
             </Link>
           </div>
         </div>
+      <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
+         <h2 className="text-2xl font-bold mb-4 text-blue-800">Reports & Summary</h2>
+         <p className="text-gray-700 text-lg">Browse all completed service and repair jobs.</p>
+         <div className="mt-auto flex gap-4">
+            
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Service Jobs</button>
+            
+            
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
+            
+          </div>
       </div>
     </div>
+  </div>
   );
 }
 

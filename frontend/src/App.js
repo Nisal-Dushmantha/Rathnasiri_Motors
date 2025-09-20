@@ -59,17 +59,20 @@ import Index from "./compononets/Index/Index";
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
-import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
-import Login from "./compononets/Login/Login";
-import Register from "./compononets/Register/Register";
+//Inventory insert form
+import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
+import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
+import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
+import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 
-function Layout() {
-  const location = useLocation();
 
-  // Hide sidebar, header, and footer only on "/"
-  const isIndexPage = location.pathname === "/" || location.pathname === "/Login" 
-                  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage";
 
+
+
+
+
+function App() {
   return (
     <>
       {!isIndexPage && <SidePanel />}
@@ -122,6 +125,21 @@ function Layout() {
           {/* Customers */}
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          {/* Add New Insurances form */}
+          <Route path="/NewInsurances" element={<NewInsurances />} />
+          <Route path="/InsurancesAll" element={<InsurancesAll />} />
+          <Route path="/UpdateInsurances/:id" element={<UpdateInsurances/>} />
+          <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+
+
+          {/*Inventory*/}
+          <Route path="/SparePartsForm" element={<SparePartsForm />} />
+          <Route path="/SparePartsDisplay" element={<SparePartsDisplay />} />
+          <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
+          <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
+          <Route path="/SparePartBill" element={<SparePartBill />} />
+
 
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
