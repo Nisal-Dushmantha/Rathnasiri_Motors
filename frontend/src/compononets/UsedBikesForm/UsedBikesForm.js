@@ -17,7 +17,7 @@ function UsedBikesForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState(null);
-  // Removed upload progress state to avoid unused variable warnings
+  const [uploadProgress, setUploadProgress] = useState(0); // Added state
   const [showSuccess, setShowSuccess] = useState(false);
 
   const handleChange = (e) => {
@@ -64,7 +64,6 @@ function UsedBikesForm() {
         data.append("image", formData.image);
       }
 
-      console.log("Submitting form data...");
       const res = await axios.post("http://localhost:5000/usedBs", data, {
         headers: { "Content-Type": "multipart/form-data" },
         signal: controller.signal,
@@ -78,8 +77,6 @@ function UsedBikesForm() {
       });
 
       clearTimeout(timeoutId);
-      console.log("Response:", res.data);
-
       setShowSuccess(true);
 
       setTimeout(() => {
@@ -95,7 +92,7 @@ function UsedBikesForm() {
           image: null,
         });
         setImagePreview(null);
-        
+        setUploadProgress(0); // Reset progress
         setShowSuccess(false);
         navigate("/UsedBikes");
       }, 1500);
@@ -110,19 +107,15 @@ function UsedBikesForm() {
         );
       } else {
         console.error("Error details:", err);
-        console.error("Response data:", err.response?.data);
-        console.error("Response status:", err.response?.status);
         alert(`Failed to add bike: ${err.response?.data?.message || err.message}`);
       }
     } finally {
       setIsSubmitting(false);
-      
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
-      {/* Success Notification */}
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -137,7 +130,6 @@ function UsedBikesForm() {
       )}
 
       <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
             <svg
@@ -159,7 +151,6 @@ function UsedBikesForm() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Form Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Bike Type */}
             <div className="space-y-2">
@@ -188,7 +179,6 @@ function UsedBikesForm() {
                 placeholder="e.g., Honda CBR 600RR"
               />
             </div>
-
 
             {/* Color */}
             <div className="space-y-2">
