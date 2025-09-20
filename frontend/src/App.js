@@ -46,6 +46,14 @@ import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
 import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
 import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
 
+//Sales Bike Form
+import SalesBikeForm from "./compononets/SalesBikeForm/SalesBikeForm";
+import BikeSalesReport from "./compononets/BikeSalesReport/BikeSalesReport"; 
+import BikeReportView from "./compononets/BikeReportView/BikeReportView";
+
+// Bike Summary
+import BikeSummary from "./compononets/BikeSummary/BikeSummary";
+
 // Other pages
 import Index from "./compononets/Index/Index";
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
@@ -118,7 +126,19 @@ function Layout() {
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
+
+        {/*Bike Sales Report*/}
+        <Route path="/SalesBikeForm" element={<SalesBikeForm />} />
+        <Route path="/BikeSalesReport" element={<BikeSalesReport />} />
+        <Route path="/BikeReportView/:id" element={<BikeReportView />} />
+        
+        {/*Bike Summary*/}
+        <Route path="/bikesummery" element={<BikeSummary />} />
+
         </Routes>
+
+
+
 
         {!isIndexPage && <Footer />}
       </div>

@@ -11,6 +11,7 @@ const newBrouter = require("./Routes/newBRoutes");
 const usedBrouter = require("./Routes/usedBRoutes");
 const newBsoldHrouter = require("./Routes/newBSoldRoute");
 const Inrouter = require("./Routes/InsuranceRoute");
+const BSrouter = require("./Routes//BikeSalesReportRoute");
 
 
 const app = express();
@@ -41,6 +42,8 @@ app.use("/newBs",newBrouter);
 app.use("/usedBs",usedBrouter);
 app.use("/newBsH",newBsoldHrouter);
 app.use("/insurances",Inrouter);
+app.use("/bikeSalesReports",BSrouter);
+
 
 
 mongoose

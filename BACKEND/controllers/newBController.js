@@ -19,7 +19,7 @@ const addnewB = async (req, res, next) => {
   console.log("Request body:", req.body);
   console.log("Request file:", req.file);
   
-  const { type, model, chassi_no, color, quantity, price, offers, status } = req.body;
+  const { type, model, color, quantity, price, offers, status } = req.body;
   
   // Handle file upload
   let imagePath = null;
@@ -30,7 +30,7 @@ const addnewB = async (req, res, next) => {
   let newBs;
 
   try {
-    newBs = new newB({ type, model, chassi_no, color, quantity, price, offers, status, image: imagePath });
+    newBs = new newB({ type, model, color, quantity, price, offers, status, image: imagePath });
     await newBs.save();
     console.log("Bike saved successfully:", newBs);
     return res.status(201).json({ newBs, message: "Bike added successfully" });
@@ -54,7 +54,7 @@ const getByID = async (req, res) => {
 
 // Update bike
 const updatenewB = async (req, res) => {
-  const { type, model, chassi_no, color, quantity, price, offers, status } = req.body;
+  const { type, model, color, quantity, price, offers, status } = req.body;
   const id = req.params.id;
   
   // Handle file upload
@@ -66,7 +66,7 @@ const updatenewB = async (req, res) => {
   let newBs;
 
   try{
-    const updateData = {type : type, model : model, chassi_no : chassi_no, color : color, quantity : quantity, price : price, offers : offers, status : status};
+    const updateData = {type : type, model : model, color : color, quantity : quantity, price : price, offers : offers, status : status};
     if (imagePath) {
       updateData.image = imagePath;
     }
@@ -113,6 +113,62 @@ const getNewBikesCount = async (req, res) => {
   }
 };
 
+// Get total quantity (stock units) across all new bikes
+const getNewBikesQuantitySum = async (req, res) => {
+  try {
+    // Fetch only quantity field to minimize payload
+    const docs = await newB.find({}, { quantity: 1, _id: 0 }).lean();
+    const totalQuantity = docs.reduce((sum, doc) => {
+      const q = parseInt(doc.quantity, 10);
+      return sum + (Number.isNaN(q) ? 0 : q);
+    }, 0);
+    return res.status(200).json({ totalQuantity });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error summing bike quantities" });
+  }
+};
+
+// Get low stock new bikes (quantity below threshold)
+const getLowStockNewBikes = async (req, res) => {
+  try {
+    const thresholdParam = req.query.threshold;
+    const threshold = Number.isNaN(parseInt(thresholdParam, 10))
+      ? 20
+      : parseInt(thresholdParam, 10);
+
+    // Convert string quantity to int and filter
+    const lowStock = await newB
+      .aggregate([
+        {
+          $addFields: {
+            numericQuantity: { $toInt: "$quantity" },
+          },
+        },
+        {
+          $match: { numericQuantity: { $lt: threshold } },
+        },
+        {
+          $project: {
+            type: 1,
+            model: 1,
+            color: 1,
+            quantity: 1,
+            price: 1,
+            status: 1,
+            image: 1,
+          },
+        },
+      ])
+      .exec();
+
+    return res.status(200).json({ threshold, items: lowStock });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Error fetching low stock bikes" });
+  }
+};
+
 module.exports = {
   getAllnewB,
   addnewB,
@@ -120,4 +176,6 @@ module.exports = {
   updatenewB,
   deletenewB,
   getNewBikesCount,
+  getNewBikesQuantitySum,
+  getLowStockNewBikes,
 };
