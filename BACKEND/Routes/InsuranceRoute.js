@@ -11,6 +11,10 @@ router.post("/",InsuranceController.addInsurance);
 router.get("/:id",InsuranceController.getById);
 router.put("/:id",InsuranceController.updateInsurance);
 router.delete("/:id",InsuranceController.deleteInsurance);
+router.get("/total", InsuranceController.getTotalInsurances);
+
+
+
 
 //export
 module.exports = router;

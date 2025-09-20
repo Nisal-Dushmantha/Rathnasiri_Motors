@@ -44,7 +44,11 @@ import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
 import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
 import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
 
-
+// Add New Insurances form
+import NewInsurances from  "./compononets/NewInsurances/NewInsurances";
+import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
+import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
+import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
@@ -98,6 +102,13 @@ function App() {
 
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          {/* Add New Insurances form */}
+          <Route path="/NewInsurances" element={<NewInsurances />} />
+          <Route path="/InsurancesAll" element={<InsurancesAll />} />
+          <Route path="/UpdateInsurances/:id" element={<UpdateInsurances/>} />
+          <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+
         </Routes>
 
         <Footer />
