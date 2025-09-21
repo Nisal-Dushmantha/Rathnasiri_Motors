@@ -14,6 +14,7 @@ function Header() {
           <Link to="/ServiceJobCard" className="hover:text-gray-300">Service Jobs</Link>
           <Link to="/RepairJobCard" className="hover:text-gray-300">Repair Jobs</Link>
           <Link to="/Reports" className="hover:text-gray-300">Reports</Link>
+          <Link to="/Index"><button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition">Logout</button></Link>
         </nav>
       </div>
     </header>

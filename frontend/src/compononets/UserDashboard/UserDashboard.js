@@ -60,9 +60,9 @@ function UserDashboard() {
       {/* Bottom Card Layer */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Vouchers & Offers</h2>
+          <h2 className="text-2xl font-bold mb-4 text-blue-800">Discounts & Offers</h2>
           <p className="text-gray-700 text-lg">Create and manage discounts and offers.</p>
-          <Link to="/VouchersOffers">
+          <Link to="/CustomerOffers">
             <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Open</button>
           </Link>
         </div>

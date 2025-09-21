@@ -83,10 +83,8 @@ const updateSpareParts = async (req,res,next) =>{
   let sp;
 
   try{
-    sp = await SpareP.findByIdAndUpdate(
-      id,
-     {barcode:barcode,name:name,brand:brand,rack:rack,Quentity:Quentity,price:price});
-     sp = await SpareP.findById(id);
+    sp = await SpareP.findByIdAndUpdate(id,
+      {barcode:barcode,name:name,brand:brand,rack:rack,Quentity:Quentity,price:price}, {new: true});
   }catch(err){
     console.log(err);
   }
@@ -106,7 +104,7 @@ const deleteSpareParts = async(req,res,next)=>{
   try{
     sp = await SpareP.findByIdAndDelete(id)
   }catch(err){
-    console.lof(err);
+    console.log(err);
   }
   if(!sp){
         return res.status(404).json({message:"Unable to delete spare parts details"});
