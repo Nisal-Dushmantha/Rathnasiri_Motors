@@ -91,7 +91,7 @@ function RepairDocument({ id, onClose }) {
               <div className="flex justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg">
                 <div>
                   <p className="text-gray-600 text-sm font-medium">INVOICE #</p>
-                  <p className="text-xl font-bold text-gray-800">{job._id}</p>
+                  <p className="text-xl font-bold text-gray-800">{job?._id || "N/A"}</p>
                 </div>
                 <div className="text-right">
                   <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
@@ -108,8 +108,8 @@ function RepairDocument({ id, onClose }) {
                     Customer Information
                   </h2>
                   <div className="space-y-2 text-gray-700">
-                    <p><span className="font-semibold">Name:</span> {job.Name}</p>
-                    <p><span className="font-semibold">Phone:</span> {job.Phone}</p>
+                    <p><span className="font-semibold">Name:</span> {job?.Name || "N/A"}</p>
+                    <p><span className="font-semibold">Phone:</span> {job?.Phone || "N/A"}</p>
                   </div>
                 </div>
                 
@@ -119,11 +119,11 @@ function RepairDocument({ id, onClose }) {
                     Vehicle Information
                   </h2>
                   <div className="space-y-2 text-gray-700">
-                    <p><span className="font-semibold">Vehicle Type:</span> {job.VehicleType}</p>
-                    <p><span className="font-semibold">Model:</span> {job.Model}</p>
-                    <p><span className="font-semibold">Registration:</span> {job.VehicleNumber}</p>
-                    <p><span className="font-semibold">Kilometers:</span> {job.KiloMeters} km</p>
-                    <p><span className="font-semibold">Last Service Date:</span> {job.LastServiceDate}</p>
+                    <p><span className="font-semibold">Vehicle Type:</span> {job?.VehicleType || "N/A"}</p>
+                    <p><span className="font-semibold">Model:</span> {job?.Model || "N/A"}</p>
+                    <p><span className="font-semibold">Registration:</span> {job?.VehicleNumber || "N/A"}</p>
+                    <p><span className="font-semibold">Kilometers:</span> {job?.KiloMeters || "N/A"} km</p>
+                    <p><span className="font-semibold">Last Service Date:</span> {job?.LastServiceDate || "N/A"}</p>
                   </div>
                 </div>
               </div>
@@ -135,7 +135,7 @@ function RepairDocument({ id, onClose }) {
                   Service Details
                 </h2>
                 <div className="bg-gray-50 p-4 rounded-lg border">
-                  <p className="text-gray-700 leading-relaxed">{job.Requests}</p>
+                  <p className="text-gray-700 leading-relaxed">{job?.Requests || "No details available."}</p>
                 </div>
               </div>
 

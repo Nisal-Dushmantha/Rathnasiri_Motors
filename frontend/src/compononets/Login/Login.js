@@ -1,16 +1,33 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import background1 from '../uploads/background1.mp4';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // TODO: Add login logic here
-    console.log('Email:', email);
-    console.log('Password:', password);
+    setError('');
+    setSuccess('');
+    try {
+      const response = await axios.post('http://localhost:5000/register/login', {
+        Email: email,
+        Password: password,
+      });
+      if (response.status === 200) {
+        setSuccess('Login successful! Redirecting...');
+        setTimeout(() => {
+          navigate('/Homepage');
+        }, 1500);
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || 'Login failed');
+    }
   };
 
   return (
@@ -36,7 +53,8 @@ function Login() {
         <p className="text-gray-700 mb-6">
           Please login to continue
         </p>
-
+        {error && <p className="text-red-600 mb-2">{error}</p>}
+        {success && <p className="text-green-600 mb-2">{success}</p>}
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           {/* Email input */}
           <input
@@ -59,13 +77,12 @@ function Login() {
           />
 
           {/* Login button */}
-          <Link to="/Homepage"><button
+          <button
             type="submit"
             className="w-full bg-blue-800 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition duration-300"
           >
             Login
-          </button></Link>
-          
+          </button>
         </form>
 
         <p className="text-gray-600 mt-4">
