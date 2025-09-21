@@ -23,6 +23,7 @@ import RepairJobCard from "./compononets/RepairJobCard/RepairJobCard";
 // All jobs
 import AllServiceJobs from "./compononets/AllJobs/AllServiceJobs";
 import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
+import VehicleHistory from "./compononets/VehicleHistory/VehicleHistory";
 
 // Update job cards
 import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
@@ -54,13 +55,20 @@ import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
 import Register from "./compononets/Register/Register";
+import CustomerBrandNewBikes from "./compononets/CustomerBikes/CustomerBrandNewBikes";
+import CustomerUsedBikes from "./compononets/CustomerBikes/CustomerUsedBikes";
+import CustomerSpareParts from "./compononets/CustomerSpareParts/CustomerSpareParts";
+import CustomerServiceDates from "./compononets/CustomerServiceDates/CustomerServiceDates";
+import CustomerAboutUs from "./compononets/CustomerAboutUs/CustomerAboutUs";
 
 function Layout() {
   const location = useLocation();
 
   // Hide sidebar, header, and footer only on "/"
   const isIndexPage = location.pathname === "/" || location.pathname === "/Login" 
-                  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage";
+  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage" || location.pathname === "/Index" ||
+  location.pathname === "/CustomerBrandNewBikes" || location.pathname === "/CustomerUsedBikes" || location.pathname === "/CustomerSpareParts"
+  || location.pathname === "/CustomerServiceDates" || location.pathname === "/CustomerAboutUs";
 
   return (
     <>
@@ -88,6 +96,7 @@ function Layout() {
           {/* All jobs */}
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
+          <Route path="/VehicleHistory" element={<VehicleHistory />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -118,6 +127,16 @@ function Layout() {
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
+          <Route path="Index" element={<Index />} />
+
+          {/*Customer Routes */}
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} /> 
+          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+          <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes/>} />
+          <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+          <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+          <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
+
         </Routes>
 
         {!isIndexPage && <Footer />}
