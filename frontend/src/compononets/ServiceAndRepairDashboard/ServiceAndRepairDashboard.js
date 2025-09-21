@@ -91,14 +91,14 @@ function Dashboard() {
               <h3 className="font-semibold text-lg">Service Jobs</h3>
               <p className="text-sm mt-1">Track service jobs</p>
               <Link to="/ServiceJobCard">
-                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Add Service</button>
               </Link>
             </div>
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Repair Jobs</h3>
               <p className="text-sm mt-1">Track repair jobs</p>
               <Link to="/RepairJobCard">
-                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Add Repaire</button>
               </Link>
             </div>
           </div>
@@ -111,7 +111,7 @@ function Dashboard() {
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Vehicle History</h2>
           <p className="text-gray-700 text-lg">View detailed history of services and repairs for each vehicle.</p>
           <Link to="/VehicleHistory">
-            <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Go</button>
+            <button className="mt-auto bg-blue-800 text-white py-2 px-8 rounded-xl  hover:bg-blue-700 transition">View Details</button>
           </Link>
         </div>
 

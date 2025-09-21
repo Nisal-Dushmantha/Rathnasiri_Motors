@@ -15,11 +15,23 @@ function UsedBikes() {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:5000/usedBs");
-      setBikes(res.data.usedBs);
-      setError(null);
+      if (res.status === 200 && Array.isArray(res.data.usedBs)) {
+        setBikes(res.data.usedBs);
+        setError(null);
+      } else if (res.status === 404) {
+        setBikes([]);
+        setError(null); // Show 'No bikes found' instead of error
+      } else {
+        setError("Failed to load bikes");
+      }
     } catch (err) {
-      console.error("Error fetching bikes:", err);
-      setError("Failed to load bikes");
+      if (err.response && err.response.status === 404) {
+        setBikes([]);
+        setError(null); // Show 'No bikes found' instead of error
+      } else {
+        console.error("Error fetching bikes:", err);
+        setError("Failed to load bikes");
+      }
     } finally {
       setLoading(false);
     }

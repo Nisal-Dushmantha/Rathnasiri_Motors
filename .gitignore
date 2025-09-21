@@ -1,0 +1,27 @@
+# Ignore node_modules for both frontend and backend
+node_modules/
+frontend/node_modules/
+BACKEND/node_modules/
+
+# Ignore build output
+build/
+dist/
+
+# Ignore environment files
+.env
+BACKEND/.env
+
+# Ignore logs
+*.log
+
+# Ignore OS files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore uploads (optional, if you don't want to track uploaded images)
+BACKEND/uploads/
+frontend/src/uploads/
