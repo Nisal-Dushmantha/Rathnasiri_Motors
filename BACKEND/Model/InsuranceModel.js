@@ -47,4 +47,4 @@ const InsuranceSchema = new Schema({
 module.exports = mongoose.model(
     "InsuranceModel",//filename
     InsuranceSchema //function name
-)
+);
