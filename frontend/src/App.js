@@ -55,6 +55,10 @@ import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
 import Register from "./compononets/Register/Register";
 
+import CustomerReports from "./compononets/CustomerReports/CustomerReports";
+
+import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+
 function Layout() {
   const location = useLocation();
 
@@ -118,6 +122,10 @@ function Layout() {
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
+
+          <Route path="/Reports" element={<CustomerReports/>}/>
+          
+          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
         </Routes>
 
         {!isIndexPage && <Footer />}

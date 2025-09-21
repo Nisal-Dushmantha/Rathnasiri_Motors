@@ -11,6 +11,9 @@ const newBrouter = require("./Routes/newBRoutes");
 const usedBrouter = require("./Routes/usedBRoutes");
 const newBsoldHrouter = require("./Routes/newBSoldRoute");
 const Inrouter = require("./Routes/InsuranceRoute");
+const loyaltyRouter = require("./Routes/LoyaltyRoute");
+const customerRouter = require("./Routes/CustomerRoute");
+const offerRouter = require("./Routes/OfferRoute");
 
 
 const app = express();
@@ -41,6 +44,9 @@ app.use("/newBs",newBrouter);
 app.use("/usedBs",usedBrouter);
 app.use("/newBsH",newBsoldHrouter);
 app.use("/insurances",Inrouter);
+app.use("/loyalty", loyaltyRouter);
+app.use("/customers", customerRouter);
+app.use("/offers", offerRouter);
 
 
 mongoose

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 function CustomerDetails() {
   const [customers, setCustomers] = useState([]);
@@ -10,7 +11,20 @@ function CustomerDetails() {
   });
   const [error, setError] = useState("");
   const [editingIndex, setEditingIndex] = useState(null);
+  const [editingId, setEditingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/customers");
+        setCustomers(res.data || []);
+      } catch (err) {
+        console.error("Failed to load customers", err);
+      }
+    };
+    fetchCustomers();
+  }, []);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -21,23 +35,20 @@ function CustomerDetails() {
     return Boolean(form.customerId && form.customerName && form.contactNumber && form.email);
   }
 
-  function handleAddCustomer() {
+  async function handleAddCustomer() {
     if (!isFormValid()) {
       setError("Please fill in all fields before adding.");
       return;
     }
-
-    setCustomers((prev) => [
-      ...prev,
-      {
-        customerId: form.customerId,
-        customerName: form.customerName,
-        contactNumber: form.contactNumber,
-        email: form.email,
-      },
-    ]);
-    setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
-    setError("");
+    try {
+      const res = await axios.post("http://localhost:5000/customers", form);
+      setCustomers((prev) => [res.data, ...prev]);
+      setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
+      setError("");
+    } catch (err) {
+      console.error("Failed to add customer", err);
+      setError("Failed to add customer. Please try again.");
+    }
   }
 
   function handleStartEdit(index) {
@@ -49,35 +60,46 @@ function CustomerDetails() {
       email: selected.email,
     });
     setEditingIndex(index);
+    setEditingId(selected._id);
     setError("");
   }
 
-  function handleSaveUpdate() {
+  async function handleSaveUpdate() {
     if (!isFormValid()) {
       setError("Please fill in all fields before saving.");
       return;
     }
-    setCustomers((prev) =>
-      prev.map((c, idx) =>
-        idx === editingIndex
-          ? {
-              customerId: form.customerId,
-              customerName: form.customerName,
-              contactNumber: form.contactNumber,
-              email: form.email,
-            }
-          : c
-      )
-    );
-    setEditingIndex(null);
-    setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
-    setError("");
+    try {
+      const res = await axios.put(`http://localhost:5000/customers/${editingId}`, form);
+      const updated = res.data;
+      setCustomers((prev) => prev.map((c, idx) => (idx === editingIndex ? updated : c)));
+      setEditingIndex(null);
+      setEditingId(null);
+      setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
+      setError("");
+    } catch (err) {
+      console.error("Failed to update customer", err);
+      setError("Failed to update customer. Please try again.");
+    }
   }
 
   function handleCancelEdit() {
     setEditingIndex(null);
+    setEditingId(null);
     setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
     setError("");
+  }
+
+  async function handleDeleteCustomer(id) {
+    if (window.confirm("Are you sure you want to delete this customer?")) {
+      try {
+        await axios.delete(`http://localhost:5000/customers/${id}`);
+        setCustomers((prev) => prev.filter((c) => c._id !== id));
+      } catch (err) {
+        console.error("Failed to delete customer", err);
+        setError("Failed to delete customer. Please try again.");
+      }
+    }
   }
 
   return (
@@ -141,13 +163,21 @@ function CustomerDetails() {
                       <td className="p-3 border-b">{customer.contactNumber}</td>
                       <td className="p-3 border-b">{customer.email}</td>
                       <td className="p-3 border-b">
-                        <button
-                          onClick={() => handleStartEdit(originalIndex)}
-                          className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-                          disabled={editingIndex !== null && editingIndex !== originalIndex}
-                        >
-                          Update
-                        </button>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleStartEdit(originalIndex)}
+                            className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
+                            disabled={editingIndex !== null && editingIndex !== originalIndex}
+                          >
+                            Update
+                          </button>
+                          <button
+                            onClick={() => handleDeleteCustomer(customer._id)}
+                            className="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700"
+                          >
+                            Delete
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
