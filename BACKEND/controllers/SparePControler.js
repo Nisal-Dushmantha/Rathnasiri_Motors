@@ -17,6 +17,18 @@ const getAllSpareParts = async (req, res, next) => {
   return res.status(200).json({ sp });
 };
 
+// Low stock: quantity below threshold (default 5)
+const getLowStock = async (req, res, next) => {
+  try {
+    const threshold = Number(req.query.threshold) || 5;
+    const items = await SpareP.find({ Quentity: { $lt: threshold } });
+    return res.status(200).json({ items, count: items.length, threshold });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Failed to fetch low stock items" });
+  }
+};
+
 //Data Insert
 const addSpareParts = async (req,res,next) => {
 
@@ -72,8 +84,7 @@ const updateSpareParts = async (req,res,next) =>{
 
   try{
     sp = await SpareP.findByIdAndUpdate(id,
-      {barcode:barcode,name:name,brand:brand,rack:rack,Quentity:Quentity,price:price});
-      sp = await SpareP.save();
+      {barcode:barcode,name:name,brand:brand,rack:rack,Quentity:Quentity,price:price}, {new: true});
   }catch(err){
     console.log(err);
   }
@@ -93,7 +104,7 @@ const deleteSpareParts = async(req,res,next)=>{
   try{
     sp = await SpareP.findByIdAndDelete(id)
   }catch(err){
-    console.lof(err);
+    console.log(err);
   }
   if(!sp){
         return res.status(404).json({message:"Unable to delete spare parts details"});
@@ -103,7 +114,8 @@ const deleteSpareParts = async(req,res,next)=>{
 
 
 exports.getAllSpareParts = getAllSpareParts;
+exports.getLowStock = getLowStock;
 exports.addSpareParts = addSpareParts;
 exports.getById = getById;
-exports.updateSpareParts=updateSpareParts;
-exports.deleteSpareParts=deleteSpareParts;
+exports.updateSpareParts = updateSpareParts;
+exports.deleteSpareParts = deleteSpareParts;

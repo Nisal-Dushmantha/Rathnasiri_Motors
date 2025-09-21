@@ -23,6 +23,7 @@ import RepairJobCard from "./compononets/RepairJobCard/RepairJobCard";
 // All jobs
 import AllServiceJobs from "./compononets/AllJobs/AllServiceJobs";
 import AllRepairJobs from "./compononets/AllJobs/AllRepairJobs";
+import VehicleHistory from "./compononets/VehicleHistory/VehicleHistory";
 
 // Update job cards
 import UpdateServiceCard from "./compononets/UpdateServiceCard/UpdateServiceCard";
@@ -33,7 +34,7 @@ import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 import ServiceDocument from "./compononets/ServiceDocument/ServiceDocument";
 
 // BrandNew bikes
-import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
+import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm";
 import NewBikes from "./compononets/NewBikes/NewBikes";
 import UpdateNewBike from "./compononets/UpdateNewBike/UpdateNewBike";
 
@@ -43,17 +44,44 @@ import UsedBikes from "./compononets/UsedBikes/UsedBikes";
 import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
 
 // New Bikes Sales
-import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
+import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm";
 import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
+
+// Sales Bike Form
+import SalesBikeForm from "./compononets/SalesBikeForm/SalesBikeForm";
+import BikeSalesReport from "./compononets/BikeSalesReport/BikeSalesReport";
+import BikeReportView from "./compononets/BikeReportView/BikeReportView";
+
+// Bike Summary
+import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 
 // Other pages
 import Index from "./compononets/Index/Index";
-import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
-import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
+//import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
+//import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
+// Inventory insert form
+import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
+import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
+import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
+import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+
+// Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
 import Register from "./compononets/Register/Register";
+import CustomerBrandNewBikes from "./compononets/CustomerBikes/CustomerBrandNewBikes";
+import CustomerUsedBikes from "./compononets/CustomerBikes/CustomerUsedBikes";
+import CustomerSpareParts from "./compononets/CustomerSpareParts/CustomerSpareParts";
+import CustomerServiceDates from "./compononets/CustomerServiceDates/CustomerServiceDates";
+import CustomerAboutUs from "./compononets/CustomerAboutUs/CustomerAboutUs";
+
+// Insurances
+import NewInsurances from "./compononets/NewInsurances/NewInsurances";
+import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
+import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
+import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -62,9 +90,12 @@ import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
 function Layout() {
   const location = useLocation();
 
-  // Hide sidebar, header, and footer only on "/"
-  const isIndexPage = location.pathname === "/" || location.pathname === "/Login" 
-                  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage";
+  const isIndexPage = [
+    "/", "/Login", "/Register", "/CustomerHomepage", "/Index",
+     "/CustomerBrandNewBikes", "/CustomerUsedBikes", 
+    "/CustomerSpareParts",
+    "/CustomerServiceDates", "/CustomerAboutUs"
+  ].includes(location.pathname);
 
   return (
     <>
@@ -73,8 +104,17 @@ function Layout() {
         {!isIndexPage && <Header />}
 
         <Routes>
-          {/* Default index page */}
+          {/* Public pages */}
           <Route path="/" element={<Index />} />
+          <Route path="/Index" element={<Index />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+          <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
+          <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+          <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+          <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
 
           {/* Dashboards */}
           <Route path="/homepage" element={<Homepage />} />
@@ -92,6 +132,7 @@ function Layout() {
           {/* All jobs */}
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
+          <Route path="/VehicleHistory" element={<VehicleHistory />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -114,6 +155,10 @@ function Layout() {
           {/* Sales */}
           <Route path="/BikesSalesHisForm/:id" element={<BikesSalesHisForm />} />
           <Route path="/BikesSalesHistory" element={<BikesSalesHistory />} />
+          <Route path="/SalesBikeForm" element={<SalesBikeForm />} />
+          <Route path="/BikeSalesReport" element={<BikeSalesReport />} />
+          <Route path="/BikeReportView/:id" element={<BikeReportView />} />
+          <Route path="/bikesummery" element={<BikeSummary />} />
 
           {/* Customers */}
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
@@ -126,6 +171,21 @@ function Layout() {
           <Route path="/Reports" element={<CustomerReports/>}/>
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
+
+          {/* Insurances */}
+          <Route path="/NewInsurances" element={<NewInsurances />} />
+          <Route path="/InsurancesAll" element={<InsurancesAll />} />
+          <Route path="/UpdateInsurances/:id" element={<UpdateInsurances />} />
+          <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+
+          {/* Inventory */}
+          <Route path="/SparePartsForm" element={<SparePartsForm />} />
+          <Route path="/SparePartsDisplay" element={<SparePartsDisplay />} />
+          <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
+          <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
+          <Route path="/SparePartBill" element={<SparePartBill />} />
         </Routes>
 
         {!isIndexPage && <Footer />}
@@ -134,10 +194,14 @@ function Layout() {
   );
 }
 
+function AppContent() {
+  return <Layout />;
+}
+
 function App() {
   return (
     <Router>
-      <Layout />
+      <AppContent />
     </Router>
   );
 }

@@ -15,11 +15,23 @@ function UsedBikes() {
     try {
       setLoading(true);
       const res = await axios.get("http://localhost:5000/usedBs");
-      setBikes(res.data.usedBs);
-      setError(null);
+      if (res.status === 200 && Array.isArray(res.data.usedBs)) {
+        setBikes(res.data.usedBs);
+        setError(null);
+      } else if (res.status === 404) {
+        setBikes([]);
+        setError(null); // Show 'No bikes found' instead of error
+      } else {
+        setError("Failed to load bikes");
+      }
     } catch (err) {
-      console.error("Error fetching bikes:", err);
-      setError("Failed to load bikes");
+      if (err.response && err.response.status === 404) {
+        setBikes([]);
+        setError(null); // Show 'No bikes found' instead of error
+      } else {
+        console.error("Error fetching bikes:", err);
+        setError("Failed to load bikes");
+      }
     } finally {
       setLoading(false);
     }
@@ -119,10 +131,6 @@ function UsedBikes() {
                       <span className="font-semibold">Model:</span> {bike.model}
                     </p>
                     <p>
-                      <span className="font-semibold">Chassi No:</span>{" "}
-                      {bike.chassi_no}
-                    </p>
-                    <p>
                       <span className="font-semibold">Color:</span> {bike.color}
                     </p>
                     <p>
@@ -157,14 +165,14 @@ function UsedBikes() {
                 <div className="flex gap-2 mt-4">
                   <Link
                     to={`/UpdateUsedBike/${bike._id}`}
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-500 transition text-center font-semibold"
+                    className="flex-1 bg-blue-600 text-white py-2 px-2 rounded-xl hover:bg-blue-500 transition text-center font-semibold"
                   >
-                    Edit
+                    Update
                   </Link>
 
                   <button
                     onClick={() => handleDelete(bike._id)}
-                    className="flex-1 bg-red-600 text-white py-2 px-4 rounded-xl hover:bg-red-500 transition font-semibold"
+                    className="flex-1 bg-red-600 text-white py-2 px-3 rounded-xl hover:bg-red-500 transition font-semibold"
                   >
                     Delete
                   </button>
