@@ -71,6 +71,11 @@ import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
 import Register from "./compononets/Register/Register";
+import CustomerBrandNewBikes from "./compononets/CustomerBrandNewBikes/CustomerBrandNewBikes";
+import CustomerUsedBikes from "./compononets/CustomerUsedBikes/CustomerUsedBikes";
+import CustomerSpareParts from "./compononets/CustomerSpareParts/CustomerSpareParts";
+import CustomerServiceDates from "./compononets/CustomerServiceDates/CustomerServiceDates";
+import CustomerAboutUs from "./compononets/CustomerAboutUs/CustomerAboutUs";
 
 // Insurances
 import NewInsurances from "./compononets/NewInsurances/NewInsurances";
