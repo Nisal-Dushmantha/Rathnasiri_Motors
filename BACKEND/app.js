@@ -12,6 +12,9 @@ const newBrouter = require("./Routes/newBRoutes");
 const usedBrouter = require("./Routes/usedBRoutes");
 const newBsoldHrouter = require("./Routes/newBSoldRoute");
 const Inrouter = require("./Routes/InsuranceRoute");
+const BSrouter = require("./Routes//BikeSalesReportRoute");
+const spbrouter = require("./Routes/SparePartBillRoutes");
+
 const registerRouter = require("./Routes/RegisterRoute");
 const serviceDateRouter = require("./Routes/serviceDateRoutes"); // ✅ NEW
 
@@ -42,6 +45,16 @@ app.use("/newBsH", newBsoldHrouter);
 app.use("/insurances", Inrouter);
 app.use("/register", registerRouter);
 app.use("/api", serviceDateRouter); // ✅ NEW
+app.use("/users",router);
+app.use("/sp",sprouter);
+app.use("/newBs",newBrouter);
+app.use("/usedBs",usedBrouter);
+app.use("/newBsH",newBsoldHrouter);
+app.use("/insurances",Inrouter);
+app.use("/spb",spbrouter);
+app.use("/bikeSalesReports",BSrouter);
+
+
 
 mongoose
   .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net")

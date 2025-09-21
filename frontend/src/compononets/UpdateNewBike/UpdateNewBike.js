@@ -12,8 +12,8 @@ const UpdateNewBike = () => {
   const [formData, setFormData] = useState({
     type: '',
     model: '',
-    chassi_no: "",
     color: '',
+    quantity: '',
     price: '',
     offers: '',
     status: '',
@@ -33,8 +33,8 @@ const UpdateNewBike = () => {
         setFormData({
           type: bike.type || '',
           model: bike.model || '',
-          chassi_no: bike.chassi_no || '',
           color: bike.color || '',
+          quantity: bike.quantity || '',
           price: bike.price || '',
           offers: bike.offers || '',
           status: bike.status || '',
@@ -90,8 +90,8 @@ const UpdateNewBike = () => {
       const formDataToSend = new FormData();
       formDataToSend.append('type', formData.type);
       formDataToSend.append('model', formData.model);
-      formDataToSend.append('chassi_no', formData.chassi_no);
       formDataToSend.append('color', formData.color);
+      formDataToSend.append('quantity', formData.quantity);
       formDataToSend.append('price', formData.price);
       formDataToSend.append('offers', formData.offers);
       formDataToSend.append('status', formData.status);
@@ -185,21 +185,6 @@ const UpdateNewBike = () => {
                 />
               </div>
 
-              {/* chassi no*/}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Chassi No
-                </label>
-                <input
-                  type="text"
-                  name="chassi_no"
-                  value={formData.chassi_no}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  required
-                />
-              </div>
-
               {/* Color */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -209,6 +194,21 @@ const UpdateNewBike = () => {
                   type="text"
                   name="color"
                   value={formData.color}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                />
+              </div>
+
+              {/* quantity */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Quantity
+                </label>
+                <input
+                  type="text"
+                  name="quantity"
+                  value={formData.quantity}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required

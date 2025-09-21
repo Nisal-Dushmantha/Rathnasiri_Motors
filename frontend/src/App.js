@@ -34,7 +34,7 @@ import RepairDocument from "./compononets/RepairDocument/RepairDocument";
 import ServiceDocument from "./compononets/ServiceDocument/ServiceDocument";
 
 // BrandNew bikes
-import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm"; 
+import NewBikesForm from "./compononets/NewBikesForm/NewBikesForm";
 import NewBikes from "./compononets/NewBikes/NewBikes";
 import UpdateNewBike from "./compononets/UpdateNewBike/UpdateNewBike";
 
@@ -44,24 +44,42 @@ import UsedBikes from "./compononets/UsedBikes/UsedBikes";
 import UpdateUsedBike from "./compononets/UpdateUsedBike/UpdateUsedBike";
 
 // New Bikes Sales
-import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm"; 
+import BikesSalesHisForm from "./compononets/BikesSalesHisForm/BikesSalesHisForm";
 import BikesSalesHistory from "./compononets/BikesSalesHistory/BikesSalesHistory";
+
+// Sales Bike Form
+import SalesBikeForm from "./compononets/SalesBikeForm/SalesBikeForm";
+import BikeSalesReport from "./compononets/BikeSalesReport/BikeSalesReport";
+import BikeReportView from "./compononets/BikeReportView/BikeReportView";
+
+// Bike Summary
+import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 
 // Other pages
 import Index from "./compononets/Index/Index";
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
+// Inventory insert form
+import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
+import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
+import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
+import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+
+// Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
 import Register from "./compononets/Register/Register";
-import CustomerBrandNewBikes from "./compononets/CustomerBikes/CustomerBrandNewBikes";
-import CustomerUsedBikes from "./compononets/CustomerBikes/CustomerUsedBikes";
-import CustomerSpareParts from "./compononets/CustomerSpareParts/CustomerSpareParts";
-import CustomerServiceDates from "./compononets/CustomerServiceDates/CustomerServiceDates";
-import CustomerAboutUs from "./compononets/CustomerAboutUs/CustomerAboutUs";
 
-function Layout() {
+// Insurances
+import NewInsurances from "./compononets/NewInsurances/NewInsurances";
+import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
+import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
+import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
+
+// Main AppContent component that uses useLocation
+function AppContent() {
   const location = useLocation();
 
   // Hide sidebar, header, and footer only on "/"
@@ -124,6 +142,20 @@ function Layout() {
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
 
+          {/* Insurances */}
+          <Route path="/NewInsurances" element={<NewInsurances />} />
+          <Route path="/InsurancesAll" element={<InsurancesAll />} />
+          <Route path="/UpdateInsurances/:id" element={<UpdateInsurances />} />
+          <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+
+          {/* Inventory */}
+          <Route path="/SparePartsForm" element={<SparePartsForm />} />
+          <Route path="/SparePartsDisplay" element={<SparePartsDisplay />} />
+          <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
+          <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
+          <Route path="/SparePartBill" element={<SparePartBill />} />
+
+          {/* Customer & Auth */}
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
@@ -137,6 +169,14 @@ function Layout() {
           <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
           <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
 
+
+          {/* Bike Sales Report */}
+          <Route path="/SalesBikeForm" element={<SalesBikeForm />} />
+          <Route path="/BikeSalesReport" element={<BikeSalesReport />} />
+          <Route path="/BikeReportView/:id" element={<BikeReportView />} />
+
+          {/* Bike Summary */}
+          <Route path="/bikesummery" element={<BikeSummary />} />
         </Routes>
 
         {!isIndexPage && <Footer />}
@@ -145,10 +185,11 @@ function Layout() {
   );
 }
 
+// Main App wrapped in Router
 function App() {
   return (
     <Router>
-      <Layout />
+      <AppContent />
     </Router>
   );
 }

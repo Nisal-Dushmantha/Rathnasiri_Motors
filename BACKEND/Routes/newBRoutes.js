@@ -23,6 +23,8 @@ const upload = multer({ storage: storage });
 
 router.get("/",newBController.getAllnewB);
 router.get("/count", newBController.getNewBikesCount);
+router.get("/quantity-sum", newBController.getNewBikesQuantitySum);
+router.get("/low-stock", newBController.getLowStockNewBikes);
 router.post("/", upload.single('image'), newBController.addnewB);
 router.get("/:id",newBController.getByID);
 router.put("/:id", upload.single('image'), newBController.updatenewB);
