@@ -29,6 +29,9 @@ function InsuranceDocument({ user, onClose }) {
   };
 
   if (!user) return <p className="text-center p-4">Loading insurance details...</p>;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString();
+    const timeStr = now.toLocaleTimeString();
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
@@ -41,13 +44,48 @@ function InsuranceDocument({ user, onClose }) {
           ✕
         </button>
 
-        {/* Insurance Form Preview */}
-        <div ref={invoiceRef} className="bg-white border-2 border-gray-200 rounded-lg shadow-sm overflow-hidden max-w-4xl mx-auto p-6 space-y-4">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6 rounded-lg">
-            <h1 className="text-3xl font-bold mb-1">Insurance Form</h1>
-            <p className="text-blue-100 text-lg">Rathnasiri Motors</p>
-          </div>
+        
+        {/* Invoice preview - Scrollable container */}
+        <div className="flex-1 overflow-auto pr-2">
+          <div
+            ref={invoiceRef}
+            className="bg-white border-2 border-gray-200 rounded-lg shadow-sm overflow-hidden max-w-4xl mx-auto"
+          >
+            {/* Header with gradient background */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-3xl font-bold mb-1">RATHNASIRI MOTORS</h1>
+                  <p className="text-blue-100 text-lg">Insurance Registration Center</p>
+                  <div className="mt-3 space-y-1 text-blue-100 text-sm">
+                    <p>📍 123 Main Street, Colombo, Sri Lanka</p>
+                    <p>📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+                    <p className="text-blue-100 text-sm font-medium">INVOICE DATE</p>
+                    <p className="text-white text-lg font-semibold">{dateStr}</p>
+                    <p className="text-blue-100 text-sm">{timeStr}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Invoice Details */}
+            <div className="p-6">
+              {/* Invoice Number and Status */}
+              <div className="flex justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="text-gray-600 text-sm font-medium">INVOICE #</p>
+                  <p className="text-xl font-bold text-gray-800">{user._id}</p>
+                </div>
+                <div className="text-right">
+                  <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    COMPLETED
+                  </span>
+                </div>
+              </div>
 
           {/* Details */}
           <div className="grid md:grid-cols-2 gap-4">
@@ -69,6 +107,7 @@ function InsuranceDocument({ user, onClose }) {
             <p className="text-sm text-gray-600 mt-1">We appreciate your trust and business.</p>
           </div>
         </div>
+        </div>
 
 
         {/* Action Buttons */}
@@ -88,6 +127,8 @@ function InsuranceDocument({ user, onClose }) {
         </div>
       </div>
     </div>
+    </div>
+    
   );
 }
 

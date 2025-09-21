@@ -11,7 +11,7 @@ function InsuranceAndRegistrationDashboard() {
 useEffect(() => {
   const fetchTotal = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/insurances/total");
+      const res = await axios.get("http://localhost:5000/insurances/total/count");
       setTotalActive(res.data.total);  // now shows all registrations
     } catch (err) {
       console.error(err);
@@ -25,7 +25,7 @@ useEffect(() => {
     <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 p-10 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Insurance & Registration</h1>
+        <h1 className="text-4xl font-bold text-blue-900">Insurance & Registration Dashboard</h1>
         <div className="flex gap-4">
           <Link to="/NewInsurances">
             <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">+ Add New Insurances</button>
@@ -46,7 +46,7 @@ useEffect(() => {
             </div>
             <div className="text-right">
               <div className="text-4xl font-bold text-blue-600">{totalActive}</div>
-              <p className="text-sm text-gray-500 mt-1">Total</p>
+              <p className="text-sm text-gray-500 mt-1">Records</p>
             </div>
           </div>
         </div>
@@ -80,7 +80,7 @@ useEffect(() => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Insurance History</h2>
-          <p className="text-gray-700 text-lg">View detailed service and repair history.</p>
+          <p className="text-gray-700 text-lg">View detailed Insurance history.</p>
           <Link to="/VehicleHistory">
             <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Go</button>
           </Link>
