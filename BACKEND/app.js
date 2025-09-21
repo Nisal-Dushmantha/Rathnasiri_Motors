@@ -49,7 +49,7 @@ app.use("/bikeSalesReports",BSrouter);
 
 
 mongoose
-  .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net")
+  .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net/")
   .then(() => console.log("connected to MongoDB"))
   .then(() => {
     app.listen(5000);
