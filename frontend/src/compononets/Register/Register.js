@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import background1 from '../uploads/background1.mp4';
 
 function Register() {
@@ -9,16 +10,41 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
-  const handleRegister = (e) => {
+  const navigate = useNavigate();
+
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log({ email, username, password, confirmPassword, phone, otp });
-    // TODO: Add registration logic here
-  };
 
-  const sendOtp = () => {
-    // TODO: Implement OTP sending
-    alert(`OTP sent to ${phone}`);
+    setError('');
+    setSuccess('');
+
+    // Confirm Password validation
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:5000/register', {
+        Email: email,
+        Name: username,
+        Password: password,
+        Number: phone,
+      });
+
+      if (response.status === 200) {
+        setSuccess('Registration successful! Redirecting to login...');
+        setTimeout(() => {
+          navigate('/Login');
+        }, 2000);
+      }
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Registration failed');
+    }
   };
 
   return (
@@ -42,6 +68,10 @@ function Register() {
       <div className="bg-white bg-opacity-90 shadow-2xl rounded-2xl p-10 max-w-md w-full text-center z-10">
         <h1 className="text-4xl font-bold text-blue-900 mb-4">Create Account</h1>
         <p className="text-gray-700 mb-6">Fill in your details to register</p>
+
+        {/* Error / Success Messages */}
+        {error && <p className="text-red-600 mb-2">{error}</p>}
+        {success && <p className="text-green-600 mb-2">{success}</p>}
 
         <form onSubmit={handleRegister} className="flex flex-col gap-4">
           <input
@@ -90,13 +120,6 @@ function Register() {
               required
               className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
-            <button
-              type="button"
-              onClick={sendOtp}
-              className="bg-green-600 text-white font-semibold px-4 py-3 rounded-xl hover:bg-green-500 transition duration-300"
-            >
-              Send OTP
-            </button>
           </div>
 
           <input

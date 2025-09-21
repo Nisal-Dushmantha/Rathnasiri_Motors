@@ -3,8 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import JsBarcode from "jsbarcode";
 import jsPDF from "jspdf";
-import "svg2pdf.js";
-
 function SparePartsViewForm() {
   const { id } = useParams();
   const navigate = useNavigate();

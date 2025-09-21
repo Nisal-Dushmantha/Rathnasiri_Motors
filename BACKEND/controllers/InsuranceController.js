@@ -126,17 +126,63 @@ const deleteInsurance = async (req,res,next) => {
 
 };
 
-// controllers/InsuranceController.js
+// Count all insurances up to today
 const getTotalInsurances = async (req, res) => {
   try {
-    const total = await Insurance.countDocuments(); // count all documents
+    const today = new Date();
+    today.setHours(23, 59, 59, 999);
+
+    const total = await Insurance.countDocuments({
+      StartDate: { $lte: today }
+    });
+
     res.status(200).json({ total });
   } catch (err) {
-    res.status(500).json({ message: "Error fetching total insurances", error: err });
+    console.error("Error counting insurances:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
+const sendExpiryReminders = async (req, res) => {
+  try {
+    // Find tomorrow's date
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
+    // Get only the date part
+    const startOfDay = new Date(tomorrow.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(tomorrow.setHours(23, 59, 59, 999));
+
+    // Find insurances expiring tomorrow
+    const expiringInsurances = await Insurance.find({
+      EndDate: { $gte: startOfDay, $lte: endOfDay }
+    });
+
+    if (expiringInsurances.length === 0) {
+      return res.status(200).json({ message: "No insurances expiring tomorrow." });
+    }
+
+    // Loop through and send SMS
+    for (const insurance of expiringInsurances) {
+      const message = `Dear ${insurance.fullname}, your insurance for vehicle ${insurance.RegistrationNo} will expire on ${insurance.EndDate.toDateString()}. Please renew before expiry.`;
+
+      await client.messages.create({
+        body: message,
+        from: twilioPhone,
+        to: insurance.ContactNo // must be in E.164 format, e.g. +94712345678
+      });
+    }
+
+    return res.status(200).json({ 
+      message: "Reminder SMS sent.", 
+      count: expiringInsurances.length 
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Error sending reminder SMS" });
+  }
+};
 
 
 exports.getAllInsurances = getAllInsurances;
@@ -145,3 +191,11 @@ exports.getById =getById;
 exports.updateInsurance = updateInsurance;
 exports.deleteInsurance = deleteInsurance;
 exports.getTotalInsurances = getTotalInsurances;
+exports.sendExpiryReminders = sendExpiryReminders;
+exports.addInsurance = addInsurance;
+exports.getById =getById;
+exports.updateInsurance = updateInsurance;
+exports.deleteInsurance = deleteInsurance;
+exports.getTotalInsurances = getTotalInsurances;
+exports.sendExpiryReminders = sendExpiryReminders;
+
