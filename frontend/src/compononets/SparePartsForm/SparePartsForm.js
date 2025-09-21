@@ -131,7 +131,7 @@ function SparePartsForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="e.g., Yamaha FZ"
+                placeholder="e.g., name"
               />
             </div>
 
@@ -147,7 +147,7 @@ function SparePartsForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="e.g., Honda"
+                placeholder="e.g., Yamaha FZ"
               />
             </div>
 

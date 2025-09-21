@@ -81,15 +81,6 @@ import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument
 function AppContent() {
   const location = useLocation();
   const isIndexPage = location.pathname === "/" || location.pathname === "/Login" || location.pathname === "/Register";
-
-
-import Index from "./compononets/Index/Index";
-
-
-
-
-
-function App() {
   return (
     <>
       {!isIndexPage && <SidePanel />}

@@ -93,7 +93,7 @@ function  InventoryDashboard() {
                         </span>
                       </div>
                     ))
-                  )}
+                  )}  
                 </div>
               </div>
             )}
@@ -101,8 +101,8 @@ function  InventoryDashboard() {
           <Link to="/SparePartsForm">
             <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">+ Add New</button>
           </Link>
-          <Link to="/UsedBikes">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">Notification</button>
+          <Link to="">
+            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">summary</button>
           </Link>
         </div>
       </div>
@@ -112,7 +112,7 @@ function  InventoryDashboard() {
         {/* Spare Parts Count Card (left) */}
         <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900 mb-2">Spare Parts Count</h2>
+            <h2 className="text-2xl font-bold text-blue-900 mb-2">Spare Parts Category</h2>
             <p className="text-gray-600">Number of distinct items</p>
           </div>
           <div className="text-right">
@@ -138,18 +138,18 @@ function  InventoryDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 transition-all min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Inventory</h2>
-          <p className="text-gray-700 text-lg mb-6">Add and manage inventory</p>
+          <p className="text-gray-700 text-lg mb-6">Add and manage Spare Parts inventory</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Spare Parts</h3>
               <p className="text-sm mt-1">Add Spare Parts</p>
               <Link to="/SparePartsForm">
-                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Add</button>
               </Link>
             </div>
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg">Used Bikes</h3>
-              <p className="text-sm mt-1">Add used bikes</p>
+              <h3 className="font-semibold text-lg">Update Details</h3>
+              <p className="text-sm mt-1">Add Any Changes</p>
               <Link to="/SparePartsUpdate">
                 <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
               </Link>
@@ -162,10 +162,10 @@ function  InventoryDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Spare Parts Overview</h2>
-          <p className="text-gray-700 text-lg">Display the all details of spare parts and generate bill.</p>
+          <p className="text-gray-700 text-lg">This page provides a detailed inventory of spare parts, including barcode, name, brand, quantity, and price.The clear layout ensures easy access for monitoring and updating spare parts information.</p>
           <div className="mt-auto flex gap-4">
             <Link to="/SparePartsDisplay" className="flex-1">
-              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Open</button>
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">View</button>
             </Link>
             <Link to="/SparePartBill" className="flex-1">
               <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Generate Bill</button>
@@ -174,13 +174,13 @@ function  InventoryDashboard() {
         </div>
       <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
          <h2 className="text-2xl font-bold mb-4 text-blue-800">Reports & Summary</h2>
-         <p className="text-gray-700 text-lg">Browse all completed service and repair jobs.</p>
+         <p className="text-gray-700 text-lg">This section shows a monthly summary of spare parts, covering stock levels, usage, and pricing trends. A chart overview displays part quantities for quick comparison and smarter restocking decisions."."</p>
          <div className="mt-auto flex gap-4">
             
-              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Service Jobs</button>
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition"> Monthly Summary</button>
             
             
-              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Summary Charts</button>
             
           </div>
       </div>
