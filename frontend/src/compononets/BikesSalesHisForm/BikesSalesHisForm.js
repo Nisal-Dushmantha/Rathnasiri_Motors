@@ -107,7 +107,7 @@ function BikesSalesHisForm() {
             Add Sold bike to the Sales History
           </h2>
           <p className="text-gray-600">
-            Enter the buyer details
+            Enter the Sold Bike Details
           </p>
         </div>
 
@@ -124,7 +124,7 @@ function BikesSalesHisForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="e.g., Sport, Cruiser, Touring"
+                placeholder = "New / Used"
               />
             </div>
 
@@ -139,7 +139,7 @@ function BikesSalesHisForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="e.g., Honda CBR 600RR"
+               placeholder = "Fz, Ray Zr, R-15, MT-15"
               />
             </div>
 
@@ -154,8 +154,8 @@ function BikesSalesHisForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder="250000"
                 min="0"
+                placeholder = "Rs.250000"
               />
             </div>
 
@@ -170,6 +170,7 @@ function BikesSalesHisForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                placeholder = "Name"
               />
             </div>
 
@@ -184,6 +185,7 @@ function BikesSalesHisForm() {
                 onChange={handleChange}
                 required
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                placeholder= "07########"
               />
             </div>
           </div>

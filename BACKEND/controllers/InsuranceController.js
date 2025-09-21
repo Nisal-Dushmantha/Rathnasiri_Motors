@@ -126,8 +126,22 @@ const deleteInsurance = async (req,res,next) => {
 
 };
 
+// controllers/InsuranceController.js
+const getTotalInsurances = async (req, res) => {
+  try {
+    const total = await Insurance.countDocuments(); // count all documents
+    res.status(200).json({ total });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching total insurances", error: err });
+  }
+};
+
+
+
+
 exports.getAllInsurances = getAllInsurances;
 exports.addInsurance = addInsurance;
 exports.getById =getById;
 exports.updateInsurance = updateInsurance;
 exports.deleteInsurance = deleteInsurance;
+exports.getTotalInsurances = getTotalInsurances;
