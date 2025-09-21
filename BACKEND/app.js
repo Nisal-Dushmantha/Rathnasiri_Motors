@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
@@ -14,6 +15,7 @@ const newBsoldHrouter = require("./Routes/newBSoldRoute");
 const Inrouter = require("./Routes/InsuranceRoute");
 const BSrouter = require("./Routes//BikeSalesReportRoute");
 const spbrouter = require("./Routes/SparePartBillRoutes");
+
 
 const registerRouter = require("./Routes/RegisterRoute");
 const serviceDateRouter = require("./Routes/serviceDateRoutes"); // ✅ NEW

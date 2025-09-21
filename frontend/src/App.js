@@ -57,8 +57,8 @@ import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 
 // Other pages
 import Index from "./compononets/Index/Index";
-import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
-import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
+//import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
+//import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
 // Inventory insert form
 import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
@@ -83,15 +83,15 @@ import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
 import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 
-// Main AppContent component that uses useLocation
-function AppContent() {
+function Layout() {
   const location = useLocation();
 
-  // Hide sidebar, header, and footer only on "/"
-  const isIndexPage = location.pathname === "/" || location.pathname === "/Login" 
-  || location.pathname === "/Register" || location.pathname === "/CustomerHomepage" || location.pathname === "/Index" ||
-  location.pathname === "/CustomerBrandNewBikes" || location.pathname === "/CustomerUsedBikes" || location.pathname === "/CustomerSpareParts"
-  || location.pathname === "/CustomerServiceDates" || location.pathname === "/CustomerAboutUs";
+  const isIndexPage = [
+    "/", "/Login", "/Register", "/CustomerHomepage", "/Index",
+     "/CustomerBrandNewBikes", "/CustomerUsedBikes", 
+    "/CustomerSpareParts",
+    "/CustomerServiceDates", "/CustomerAboutUs"
+  ].includes(location.pathname);
 
   return (
     <>
@@ -100,8 +100,17 @@ function AppContent() {
         {!isIndexPage && <Header />}
 
         <Routes>
-          {/* Default index page */}
+          {/* Public pages */}
           <Route path="/" element={<Index />} />
+          <Route path="/Index" element={<Index />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+          <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
+          <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+          <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+          <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
 
           {/* Dashboards */}
           <Route path="/homepage" element={<Homepage />} />
@@ -142,10 +151,14 @@ function AppContent() {
           {/* Sales */}
           <Route path="/BikesSalesHisForm/:id" element={<BikesSalesHisForm />} />
           <Route path="/BikesSalesHistory" element={<BikesSalesHistory />} />
+          <Route path="/SalesBikeForm" element={<SalesBikeForm />} />
+          <Route path="/BikeSalesReport" element={<BikeSalesReport />} />
+          <Route path="/BikeReportView/:id" element={<BikeReportView />} />
+          <Route path="/bikesummery" element={<BikeSummary />} />
 
           {/* Customers */}
-          <Route path="/CustomerDetails" element={<CustomerDetails />} />
-          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
 
           {/* Insurances */}
           <Route path="/NewInsurances" element={<NewInsurances />} />
@@ -159,29 +172,6 @@ function AppContent() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
-
-          {/* Customer & Auth */}
-          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="Index" element={<Index />} />
-
-          {/*Customer Routes */}
-          <Route path="/CustomerHomepage" element={<CustomerHomepage />} /> 
-          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
-          <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes/>} />
-          <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
-          <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
-          <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
-
-
-          {/* Bike Sales Report */}
-          <Route path="/SalesBikeForm" element={<SalesBikeForm />} />
-          <Route path="/BikeSalesReport" element={<BikeSalesReport />} />
-          <Route path="/BikeReportView/:id" element={<BikeReportView />} />
-
-          {/* Bike Summary */}
-          <Route path="/bikesummery" element={<BikeSummary />} />
         </Routes>
 
         {!isIndexPage && <Footer />}
@@ -190,7 +180,10 @@ function AppContent() {
   );
 }
 
-// Main App wrapped in Router
+function AppContent() {
+  return <Layout />;
+}
+
 function App() {
   return (
     <Router>

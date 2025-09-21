@@ -24,7 +24,10 @@
     "react-to-print": "^3.1.1",
     "recharts": "^3.1.2",
     "svg2pdf.js": "^2.6.0",
+<<<<<<< HEAD
     "twilio": "^5.9.0",
+=======
+>>>>>>> d8062b804786560adc6467d808bacad65d4190d7
     "web-vitals": "^2.1.4"
   },
   "scripts": {

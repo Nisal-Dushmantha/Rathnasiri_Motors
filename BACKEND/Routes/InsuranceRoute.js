@@ -14,7 +14,6 @@ router.delete("/:id",InsuranceController.deleteInsurance);
 router.get("/total", InsuranceController.getTotalInsurances);
 
 
-
-
 //export
+module.exports = router;
 module.exports = router;
