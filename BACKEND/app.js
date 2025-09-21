@@ -1,8 +1,10 @@
-//password = It23557574
+require('dotenv').config();
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
+const cors = require("cors");
+
 const servicerouter = require("../BACKEND/Routes/serviceRoute");
 const repairrouter = require("../BACKEND/Routes/repairRoute");
 const router = require("./Routes/UserRoute");
@@ -15,28 +17,36 @@ const BSrouter = require("./Routes//BikeSalesReportRoute");
 const spbrouter = require("./Routes/SparePartBillRoutes");
 
 
-const app = express();
-const cors = require("cors");
+const registerRouter = require("./Routes/RegisterRoute");
+const serviceDateRouter = require("./Routes/serviceDateRoutes"); // ✅ NEW
 
-// Multer configuration for file uploads
+const app = express();
+
+// Multer config
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
-  }
+  },
 });
-
 const upload = multer({ storage: storage });
 
-//Middleware
-
+// Middleware
 app.use(express.json());
 app.use(cors());
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 app.use("/services", servicerouter);
 app.use("/repairs", repairrouter);
+app.use("/users", router);
+app.use("/sp", sprouter);
+app.use("/newBs", newBrouter);
+app.use("/usedBs", usedBrouter);
+app.use("/newBsH", newBsoldHrouter);
+app.use("/insurances", Inrouter);
+app.use("/register", registerRouter);
+app.use("/api", serviceDateRouter); // ✅ NEW
 app.use("/users",router);
 app.use("/sp",sprouter);
 app.use("/newBs",newBrouter);
