@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
 
 function NewBikesForm() {
   const navigate = useNavigate();
@@ -128,7 +130,7 @@ function NewBikesForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       {/* Success Notification */}
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
@@ -143,10 +145,10 @@ function NewBikesForm() {
         </div>
       )}
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
+      <Card className="p-8 w-full max-w-2xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-4 border border-blue-100">
             <svg
               className="w-8 h-8 text-blue-600"
               fill="none"
@@ -161,7 +163,7 @@ function NewBikesForm() {
               />
             </svg>
           </div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-3xl font-bold text-blue-900 mb-2">
             Add New Bike
           </h2>
           <p className="text-gray-600">
@@ -325,52 +327,29 @@ function NewBikesForm() {
 
           {/* Submit Button */}
           <div className="pt-4">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
-              }`}
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full py-3 text-base">
               {isSubmitting ? (
-                <div className="flex flex-col items-center justify-center space-y-2">
+                <div className="flex flex-col items-center justify-center space-y-2 w-full">
                   <div className="flex items-center space-x-2">
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                     <span>Adding Bike...</span>
                   </div>
                   {uploadProgress > 0 && (
-                    <div className="w-full bg-white/20 rounded-full h-2">
-                      <div
-                        className="bg-white h-2 rounded-full transition-all duration-300"
-                        style={{ width: `${uploadProgress}%` }}
-                      ></div>
-                    </div>
-                  )}
-                  {uploadProgress > 0 && (
-                    <span className="text-sm">{uploadProgress}% uploaded</span>
+                    <>
+                      <div className="w-full bg-white/20 rounded-full h-2">
+                        <div
+                          className="bg-white h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-sm">{uploadProgress}% uploaded</span>
+                    </>
                   )}
                 </div>
               ) : (
-                <div className="flex items-center justify-center space-x-2">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                    />
-                  </svg>
-                  <span>Add Bike to Inventory</span>
-                </div>
+                <span>Add Bike</span>
               )}
-            </button>
+            </Button>
           </div>
 
           {/* Back Button */}
@@ -384,7 +363,7 @@ function NewBikesForm() {
             </button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }
