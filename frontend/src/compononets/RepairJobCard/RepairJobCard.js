@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import Card from "../ui/Card";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import PageHeader from "../ui/PageHeader";
 
 function RepairJobCard() {
   const history = useNavigate();
@@ -40,121 +44,54 @@ function RepairJobCard() {
   };
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 min-h-screen p-10">
-      <h1 className="text-3xl font-bold mb-8 text-blue-900 text-center">
-        Add Repair Job
-      </h1>
+    <div className="flex-1 bg-white min-h-screen p-10">
+      <PageHeader
+        title="Add Repair Job"
+        subtitle="Create a new repair job record"
+        icon={
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7h2l2 5 4-2 4 2 2-5h2M12 14v7m-3 0h6" />
+          </svg>
+        }
+      />
 
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 space-y-6"
-      >
-        {/* Customer Name & Phone */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <Card className="max-w-3xl mx-auto p-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Customer Name & Phone */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Input label="Customer Name" type="text" name="customerName" value={formData.customerName} onChange={handleChange} placeholder="Enter customer name" required />
+
+            <Input label="Phone Number" type="tel" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} placeholder="Enter phone number" required />
+          </div>
+
+          {/* Vehicle Details */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Input label="Vehicle Number" type="text" name="vehicleNumber" value={formData.vehicleNumber} onChange={handleChange} placeholder="Vehicle number" required />
+
+            <Input label="Vehicle Type" type="text" name="vehicleType" value={formData.vehicleType} onChange={handleChange} placeholder="Bike / Scooter" required />
+
+            <Input label="Vehicle Model" type="text" name="vehicleModel" value={formData.vehicleModel} onChange={handleChange} placeholder="Vehicle model" required />
+          </div>
+
+          {/* Repair Details */}
           <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Customer Name
-            </label>
-            <input
-              type="text"
-              name="customerName"
-              value={formData.customerName}
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Repair Details</label>
+            <textarea
+              name="repairDetails"
+              value={formData.repairDetails}
               onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter customer name"
-              required
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              rows={4}
+              placeholder="Enter repair details"
             />
           </div>
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Phone Number
-            </label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter phone number"
-              required
-            />
+          {/* Submit Button */}
+          <div className="text-center">
+            <Button type="submit" className="px-6 py-3 rounded-xl">Add to System</Button>
           </div>
-        </div>
-
-        {/* Vehicle Details */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Number
-            </label>
-            <input
-              type="text"
-              name="vehicleNumber"
-              value={formData.vehicleNumber}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Vehicle number"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Type
-            </label>
-            <input
-              type="text"
-              name="vehicleType"
-              value={formData.vehicleType}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Car / Bike / Truck"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Model
-            </label>
-            <input
-              type="text"
-              name="vehicleModel"
-              value={formData.vehicleModel}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Vehicle model"
-              required
-            />
-          </div>
-        </div>
-
-        {/* Repair Details */}
-        <div>
-          <label className="block text-gray-700 font-semibold mb-2">
-            Repair Details
-          </label>
-          <textarea
-            name="repairDetails" // ✅ fixed
-            value={formData.repairDetails} // ✅ fixed
-            onChange={handleChange}
-            className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            rows={4}
-            placeholder="Enter repair details"
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-blue-800 text-white py-3 px-6 rounded-2xl font-semibold hover:bg-blue-700 transition"
-          >
-            Add to System
-          </button>
-        </div>
-      </form>
+        </form>
+      </Card>
     </div>
   );
 }
