@@ -61,7 +61,7 @@ function SparePartsDisplay() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 p-6">
+    <div className="min-h-screen bg-white p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
@@ -69,7 +69,7 @@ function SparePartsDisplay() {
             Spare Parts Inventory
           </h1>
           <Link to="/SparePartsForm">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">
+            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">
               + Add New
             </button>
           </Link>
@@ -88,7 +88,7 @@ function SparePartsDisplay() {
                 setSearchTerm(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full pl-10 pr-4 py-2 border border-blue-200 bg-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none"
             />
           </div>
           
@@ -100,7 +100,7 @@ function SparePartsDisplay() {
                 setSelectedBrand(e.target.value);
                 setCurrentPage(1);
               }}
-              className="w-full p-2 border border-blue-200 bg-white rounded-lg shadow-sm focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              className="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none"
             >
               <option value="">All Brands</option>
               {brands.map((brand) => (
@@ -119,17 +119,17 @@ function SparePartsDisplay() {
         </div>
 
         {/* Table */}
-        <div className="overflow-x-auto bg-white shadow-xl rounded-2xl p-6">
+        <div className="overflow-x-auto bg-white shadow-lg rounded-2xl p-6 border border-gray-100">
           <table className="w-full border-collapse">
             <thead>
-              <tr className="bg-blue-600 text-white text-left">
-                <th className="py-3 px-4 rounded-tl-xl">Barcode</th>
-                <th className="py-3 px-4">Name</th>
-                <th className="py-3 px-4">Brand</th>
-                <th className="py-3 px-4">Rack</th>
-                <th className="py-3 px-4">Quantity</th>
-                <th className="py-3 px-4">Price (Rs.)</th>
-                <th className="py-3 px-4 rounded-tr-xl text-center">Action</th>
+              <tr className="text-left text-blue-900 border-b border-gray-200 bg-gray-50">
+                <th className="py-3 px-4 rounded-tl-xl font-semibold">Barcode</th>
+                <th className="py-3 px-4 font-semibold">Name</th>
+                <th className="py-3 px-4 font-semibold">Brand</th>
+                <th className="py-3 px-4 font-semibold">Rack</th>
+                <th className="py-3 px-4 font-semibold">Quantity</th>
+                <th className="py-3 px-4 font-semibold">Price (Rs.)</th>
+                <th className="py-3 px-4 rounded-tr-xl text-center font-semibold">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -137,7 +137,7 @@ function SparePartsDisplay() {
                 currentParts.map((part) => (
                   <tr
                     key={part._id}
-                    className="border-b hover:bg-blue-50 transition-colors"
+                    className="border-b border-gray-100 hover:bg-blue-50 transition-colors"
                   >
                     <td className="py-3 px-4">{part.barcode}</td>
                     <td className="py-3 px-4">{part.name}</td>
@@ -160,7 +160,7 @@ function SparePartsDisplay() {
                         onClick={() =>
                           navigate(`/SparePartsViewForm/${part._id}`)
                         }
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition"
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition shadow-sm"
                       >
                         View
                       </button>
@@ -187,7 +187,7 @@ function SparePartsDisplay() {
             <button
               onClick={() => goToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              className="px-3 py-1 rounded-md text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              className="px-3 py-1 rounded-md border border-gray-200 bg-white text-blue-700 hover:bg-blue-50 disabled:opacity-50"
             >
               &lt; Previous
             </button>
@@ -196,11 +196,7 @@ function SparePartsDisplay() {
               <button
                 key={i + 1}
                 onClick={() => goToPage(i + 1)}
-                className={`px-3 py-1 rounded-md ${
-                  currentPage === i + 1
-                    ? "bg-blue-600 text-white"
-                    : "text-gray-700 hover:bg-gray-200"
-                }`}
+                className={`px-3 py-1 rounded-md ${currentPage === i + 1 ? 'bg-blue-600 text-white' : 'border border-gray-200 bg-white text-blue-700 hover:bg-blue-50'}`}
               >
                 {i + 1}
               </button>
@@ -209,7 +205,7 @@ function SparePartsDisplay() {
             <button
               onClick={() => goToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 rounded-md text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+              className="px-3 py-1 rounded-md border border-gray-200 bg-white text-blue-700 hover:bg-blue-50 disabled:opacity-50"
             >
               Next &gt;
             </button>

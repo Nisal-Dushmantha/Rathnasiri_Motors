@@ -2,6 +2,10 @@ import React, { useState } from "react";
 //import React from 'react'
 import axios from "axios";
 import { useNavigate } from "react-router";
+import Card from "../ui/Card";
+import Input from "../ui/Input";
+import Button from "../ui/Button";
+import PageHeader from "../ui/PageHeader";
 
 
 function NewInsurances() {
@@ -49,180 +53,47 @@ const sendRequest = async() =>{
 }
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 min-h-screen p-10">
-      <h1 className="text-3xl font-bold mb-8 text-blue-900 text-center">
-        Add New Insurances
-      </h1>
-      <form
-        onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl p-8 space-y-6"
-      >
+    <div className="flex-1 bg-white min-h-screen p-10">
+      <PageHeader
+        title="Add New Insurance"
+        subtitle="Create a new insurance record"
+        icon={
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 2l7 4v6c0 5-3.5 9.5-7 10-3.5-.5-7-5-7-10V6l7-4z" />
+          </svg>
+        }
+      />
+      <Card className="max-w-3xl mx-auto p-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
         {/* Customer Name & Phone */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              name="fullname"
-              value={FormData.fullname}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter Full name"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Address
-            </label>
-            <input
-              type="text"
-              name="Address"
-              value={FormData.Address}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter Address"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Contact Number
-            </label>
-            <input
-              type="text"
-              name="ContactNo"
-              value={FormData.ContactNo}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Enter Contact number"
-              required
-            />
-          </div>
+          <Input label="Full Name" type="text" name="fullname" value={FormData.fullname} onChange={handleChange} placeholder="Enter Full name" required />
+          <Input label="Address" type="text" name="Address" value={FormData.Address} onChange={handleChange} placeholder="Enter Address" required />
+          <Input label="Contact Number" type="text" name="ContactNo" value={FormData.ContactNo} onChange={handleChange} placeholder="Enter Contact number" required />
         </div>
 
         {/* Vehicle Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Number
-            </label>
-            <input
-              type="text"
-              name="RegistrationNo"
-              value={FormData.RegistrationNo}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Vehicle number"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Type
-            </label>
-            <input
-              type="text"
-              name="VehicleType"
-              value={FormData.VehicleType}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Car / Bike / Truck"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Vehicle Model
-            </label>
-            <input
-              type="text"
-              name="VehicleModel"
-              value={FormData.VehicleModel}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Vehicle model"
-              required
-            />
-          </div>
+          <Input label="Vehicle Number" type="text" name="RegistrationNo" value={FormData.RegistrationNo} onChange={handleChange} placeholder="Vehicle number" required />
+          <Input label="Vehicle Type" type="text" name="VehicleType" value={FormData.VehicleType} onChange={handleChange} placeholder="Car / Bike / Truck" required />
+          <Input label="Vehicle Model" type="text" name="VehicleModel" value={FormData.VehicleModel} onChange={handleChange} placeholder="Vehicle model" required />
         </div>
 
-        <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Engine Number
-            </label>
-            <input
-              type="text"
-              name="EngineNo"
-              value={FormData.EngineNo}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Engine Number"
-              required
-            />
-          </div>
+        <Input label="Engine Number" type="text" name="EngineNo" value={FormData.EngineNo} onChange={handleChange} placeholder="Engine Number" required />
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Chassis Number
-            </label>
-            <input
-              type="text"
-              name="ChassisNo"
-              value={FormData.ChassisNo}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="Chassis Number"
-              required
-            />
-          </div>
+        <Input label="Chassis Number" type="text" name="ChassisNo" value={FormData.ChassisNo} onChange={handleChange} placeholder="Chassis Number" required />
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Insurance Start Date
-            </label>
-            <input
-              type="date"
-              name="StartDate"
-              value={FormData.StartDate}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+        <Input label="Insurance Start Date" type="date" name="StartDate" value={FormData.StartDate} onChange={handleChange} required />
 
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">
-              Insurance End Date
-            </label>
-            <input
-              type="date"
-              name="EndDate"
-              value={FormData.EndDate}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              required
-            />
-          </div>
+        <Input label="Insurance End Date" type="date" name="EndDate" value={FormData.EndDate} onChange={handleChange} required />
         
 
         {/* Submit Button */}
         <div className="text-center">
-          <button
-            type="submit"
-            className="bg-blue-800 text-white py-3 px-6 rounded-2xl font-semibold hover:bg-blue-700 transition"
-          >
-            Add to System
-          </button>
+          <Button type="submit" className="px-6 py-3 rounded-xl">Add to System</Button>
         </div>
-      </form>
-      
+        </form>
+      </Card>
     </div>
   )
 }

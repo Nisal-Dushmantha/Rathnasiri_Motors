@@ -21,13 +21,13 @@ function SidePanel() {
   ];
 
   return (
-    <div className="fixed top-0 left-0 w-80 h-screen bg-gradient-to-b from-blue-900 to-blue-800 text-white flex flex-col p-5 shadow-lg">
+    <div className="w-80 min-h-screen bg-white text-blue-900 flex flex-col p-5 border-r border-gray-100 shadow-sm sticky top-0 overflow-y-auto">
       {/* Logo / Title */}
       <div className="mb-10 flex items-center justify-center flex-col">
-        <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mb-3 shadow-md">
-          <span className="text-blue-900 font-bold text-xl">RM</span>
+        <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mb-3 shadow-sm border border-gray-200">
+          <span className="text-blue-800 font-bold text-xl">RM</span>
         </div>
-        <h1 className="text-2xl font-bold text-center">Rathnasiri Motors</h1>
+        <h1 className="text-2xl font-bold text-center text-blue-900">Rathnasiri Motors</h1>
       </div>
 
       {/* Menu */}
@@ -36,10 +36,10 @@ function SidePanel() {
           <li key={index}>
             <Link
               to={item.path}
-              className="cursor-pointer p-3 flex items-center gap-3 rounded-lg transition-all duration-200 hover:bg-white hover:text-blue-800 hover:scale-105"
+              className="group cursor-pointer p-3 flex items-center gap-3 rounded-lg transition-all duration-200 border border-transparent hover:bg-blue-50 hover:text-blue-700 hover:border-blue-100 hover:shadow-sm"
             >
-              <span>{item.icon}</span>
-              <span className="font-medium text-lg">{item.name}</span>
+              <span className="text-blue-600 transition-colors group-hover:text-blue-700">{item.icon}</span>
+              <span className="text-lg text-blue-900 transition-all group-hover:font-semibold">{item.name}</span>
             </Link>
           </li>
         ))}

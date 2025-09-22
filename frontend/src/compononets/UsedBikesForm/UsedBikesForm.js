@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
 
 function UsedBikesForm() {
   const navigate = useNavigate();
@@ -64,7 +66,7 @@ function UsedBikesForm() {
         data.append("image", formData.image);
       }
 
-      const res = await axios.post("http://localhost:5000/usedBs", data, {
+      await axios.post("http://localhost:5000/usedBs", data, {
         headers: { "Content-Type": "multipart/form-data" },
         signal: controller.signal,
         timeout: 30000,
@@ -115,7 +117,7 @@ function UsedBikesForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
+    <div className="min-h-screen bg-white flex items-center justify-center p-6">
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -129,9 +131,9 @@ function UsedBikesForm() {
         </div>
       )}
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
+      <Card className="p-8 w-full max-w-2xl">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-4 border border-blue-100">
             <svg
               className="w-8 h-8 text-blue-600"
               fill="none"
@@ -146,7 +148,7 @@ function UsedBikesForm() {
               />
             </svg>
           </div>
-          <h2 className="text-4xl font-bold text-gray-800 mb-2">Add Used Bike</h2>
+          <h2 className="text-3xl font-bold text-blue-900 mb-2">Add Used Bike</h2>
           <p className="text-gray-600">Enter the details of the used bike to add to inventory</p>
         </div>
 
@@ -306,17 +308,9 @@ function UsedBikesForm() {
 
           {/* Submit */}
           <div className="pt-4">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 ${
-                isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-              }`}
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full py-3 text-base">
               {isSubmitting ? "Adding Used Bike..." : "Add Used Bike"}
-            </button>
+            </Button>
           </div>
 
           {/* Back */}
@@ -330,7 +324,7 @@ function UsedBikesForm() {
             </button>
           </div>
         </form>
-      </div>
+      </Card>
     </div>
   );
 }
