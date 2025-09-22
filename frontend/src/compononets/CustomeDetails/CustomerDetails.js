@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
 
 function CustomerDetails() {
   const [customers, setCustomers] = useState([]);
@@ -103,27 +105,27 @@ function CustomerDetails() {
   }
 
   return (
-    <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 p-10 min-h-screen">
+    <div className="flex-1 bg-white p-10 min-h-screen">
       <h1 className="text-4xl font-bold mb-8 text-blue-900">Customer Details</h1>
 
-      <div className="bg-white rounded-3xl shadow-xl p-8">
+      <Card className="p-8">
         <div className="mb-6">
           <input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search by any field (ID, name, contact, email)"
-            className="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
         </div>
         <div className="overflow-x-auto">
-          <table className="min-w-full border-collapse">
-            <thead>
-              <tr className="bg-blue-50 text-blue-900">
-                <th className="text-left p-3 border-b">Customer ID</th>
-                <th className="text-left p-3 border-b">Customer Name</th>
-                <th className="text-left p-3 border-b">Contact Number</th>
-                <th className="text-left p-3 border-b">Email</th>
-                <th className="text-left p-3 border-b">Actions</th>
+          <table className="min-w-full border-collapse border border-gray-100 rounded-xl overflow-hidden">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr className="text-blue-900">
+                <th className="text-left p-3">Customer ID</th>
+                <th className="text-left p-3">Customer Name</th>
+                <th className="text-left p-3">Contact Number</th>
+                <th className="text-left p-3">Email</th>
+                <th className="text-left p-3">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -157,26 +159,15 @@ function CustomerDetails() {
                 return filtered.map((customer, index) => {
                   const originalIndex = customers.indexOf(customer);
                   return (
-                    <tr key={`${customer.customerId}-${index}`} className="hover:bg-gray-50">
-                      <td className="p-3 border-b">{customer.customerId}</td>
-                      <td className="p-3 border-b">{customer.customerName}</td>
-                      <td className="p-3 border-b">{customer.contactNumber}</td>
-                      <td className="p-3 border-b">{customer.email}</td>
-                      <td className="p-3 border-b">
+                    <tr key={`${customer.customerId}-${index}`} className="hover:bg-blue-50 border-b border-gray-100">
+                      <td className="p-3">{customer.customerId}</td>
+                      <td className="p-3">{customer.customerName}</td>
+                      <td className="p-3">{customer.contactNumber}</td>
+                      <td className="p-3">{customer.email}</td>
+                      <td className="p-3">
                         <div className="flex gap-2">
-                          <button
-                            onClick={() => handleStartEdit(originalIndex)}
-                            className="bg-blue-600 text-white text-sm py-1 px-3 rounded-md hover:bg-blue-700 disabled:opacity-50"
-                            disabled={editingIndex !== null && editingIndex !== originalIndex}
-                          >
-                            Update
-                          </button>
-                          <button
-                            onClick={() => handleDeleteCustomer(customer._id)}
-                            className="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700"
-                          >
-                            Delete
-                          </button>
+                          <Button onClick={() => handleStartEdit(originalIndex)} disabled={editingIndex !== null && editingIndex !== originalIndex} className="py-1 px-3 text-sm">Update</Button>
+                          <button onClick={() => handleDeleteCustomer(customer._id)} className="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700">Delete</button>
                         </div>
                       </td>
                     </tr>
@@ -188,67 +179,26 @@ function CustomerDetails() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input
-            name="customerId"
-            value={form.customerId}
-            onChange={handleChange}
-            placeholder="Customer ID"
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
-          <input
-            name="customerName"
-            value={form.customerName}
-            onChange={handleChange}
-            placeholder="Customer Name"
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
-          <input
-            name="contactNumber"
-            value={form.contactNumber}
-            onChange={handleChange}
-            placeholder="Contact Number"
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
-          <input
-            name="email"
-            type="email"
-            value={form.email}
-            onChange={handleChange}
-            placeholder="Email"
-            className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-300"
-          />
+          <input name="customerId" value={form.customerId} onChange={handleChange} placeholder="Customer ID" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input name="customerName" value={form.customerName} onChange={handleChange} placeholder="Customer Name" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Contact Number" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
         </div>
 
         {error && <p className="text-red-600 mt-3">{error}</p>}
 
         {editingIndex === null ? (
-          <button
-            onClick={handleAddCustomer}
-            className="mt-5 bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition"
-          >
-            Add Customer
-          </button>
+          <Button onClick={handleAddCustomer} className="mt-5">Add Customer</Button>
         ) : (
           <div className="mt-5 flex gap-3">
-            <button
-              onClick={handleSaveUpdate}
-              className="bg-green-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-green-600 transition"
-            >
-              Save Changes
-            </button>
-            <button
-              onClick={handleCancelEdit}
-              className="bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-gray-600 transition"
-            >
-              Cancel
-            </button>
+            <Button onClick={handleSaveUpdate} className="bg-green-600 hover:bg-green-700">Save Changes</Button>
+            <Button variant="outline" onClick={handleCancelEdit}>Cancel</Button>
           </div>
         )}
-      </div>
+      </Card>
     </div>
   );
 }
 
 export default CustomerDetails;
-
 
