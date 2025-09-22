@@ -87,6 +87,11 @@ import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
 import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
 
+// Static pages
+import Privacy from "./compononets/Static/Privacy";
+import Terms from "./compononets/Static/Terms";
+import Support from "./compononets/Static/Support";
+
 function Layout() {
   const location = useLocation();
 
@@ -99,11 +104,13 @@ function Layout() {
 
   return (
     <>
-      {!isIndexPage && <SidePanel />}
-      <div className={!isIndexPage ? "ml-80" : ""}>
-        {!isIndexPage && <Header />}
+      {!isIndexPage && <Header />}
 
-        <Routes>
+      <div className={!isIndexPage ? "flex" : ""}>
+        {!isIndexPage && <SidePanel />}
+
+        <div className={!isIndexPage ? "flex-1" : ""}>
+          <Routes>
           {/* Public pages */}
           <Route path="/" element={<Index />} />
           <Route path="/Index" element={<Index />} />
@@ -186,10 +193,15 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
-        </Routes>
-
-        {!isIndexPage && <Footer />}
+          {/* Static pages */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/support" element={<Support />} />
+          </Routes>
+        </div>
       </div>
+
+      {!isIndexPage && <Footer />}
     </>
   );
 }
