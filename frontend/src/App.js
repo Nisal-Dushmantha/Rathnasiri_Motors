@@ -57,8 +57,8 @@ import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 
 // Other pages
 import Index from "./compononets/Index/Index";
-//import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
-//import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
+import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
+import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
 // Inventory insert form
 import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
@@ -171,8 +171,8 @@ function Layout() {
           <Route path="/Reports" element={<CustomerReports/>}/>
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
-          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
-          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
 
           {/* Insurances */}
           <Route path="/NewInsurances" element={<NewInsurances />} />
