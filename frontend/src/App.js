@@ -1,5 +1,5 @@
 // App.js
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
@@ -99,7 +99,6 @@ function Layout() {
   const headerRef = useRef(null);
   const sideRef = useRef(null);
   const footerRef = useRef(null);
-  const [overlayInset, setOverlayInset] = useState({ top: 0, left: 0, bottom: 0 });
 
   // Determine if current route is one of the index-style pages
   const isIndexPage = [
@@ -109,21 +108,11 @@ function Layout() {
     "/CustomerServiceDates", "/CustomerAboutUs"
   ].includes(location.pathname);
 
-  // Helper to measure and set overlay insets (relative to viewport)
-  const measureOverlayInset = () => {
-    const top = headerRef.current ? headerRef.current.offsetHeight : 0;
-    const left = sideRef.current ? sideRef.current.offsetWidth : 0;
-    // Cover the rest of the viewport; don't subtract footer height since it may be off-screen
-    const bottom = 0;
-    setOverlayInset({ top, left, bottom });
-  };
+  // Sidebar-only overlay; no measurement needed for full-screen overlay
 
   // Show a short watermark overlay on each route change
   useEffect(() => {
     if (sidebarNavRef.current) {
-      // measure immediately and on next frame to avoid jumpiness
-      measureOverlayInset();
-      requestAnimationFrame(measureOverlayInset);
       setRouteLoading(true);
       const timeout = setTimeout(() => setRouteLoading(false), 1000); // increased duration for visibility
       sidebarNavRef.current = false; // reset flag after applying
@@ -131,26 +120,20 @@ function Layout() {
     }
   }, [location.pathname]);
 
-  // Measure header/sidebar/footer insets to keep overlay centered reliably across pages
-  useLayoutEffect(() => {
-    measureOverlayInset();
-    window.addEventListener('resize', measureOverlayInset);
-    window.addEventListener('scroll', measureOverlayInset, { passive: true });
-    return () => {
-      window.removeEventListener('resize', measureOverlayInset);
-      window.removeEventListener('scroll', measureOverlayInset);
-    };
-  }, [isIndexPage]);
-
-  // Re-measure on route change as well (in case layout changes per route)
-  useEffect(() => {
-    measureOverlayInset();
-  }, [location.pathname]);
+  // No measurement effects needed for full-screen overlay
 
   
 
   return (
     <>
+      {routeLoading && (
+        <div
+          className="route-loading-overlay"
+          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+        >
+          <div className="app-watermark">Rathnasiri Motors</div>
+        </div>
+      )}
       {!isIndexPage && (
         <div ref={headerRef}>
           <Header />
@@ -171,22 +154,18 @@ function Layout() {
 
         <div className={!isIndexPage ? "flex-1" : ""}>
           <div className="content-area-overlay-container">
-            {routeLoading && (
-              <div
-                className="route-loading-overlay"
-                style={{ position: 'fixed', top: overlayInset.top, left: overlayInset.left, right: 0, bottom: overlayInset.bottom }}
-              >
-                <div className="app-watermark">Rathnasiri Motors</div>
-              </div>
-            )}
             <Routes>
-          {/* Public pages */}
-          <Route path="/" element={<Index />} />
-          <Route path="/Index" element={<Index />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
-          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+              {/* Public pages */}
+              <Route path="/" element={<Index />} />
+              <Route path="/Index" element={<Index />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+              <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+              <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
+              <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+              <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+              <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
           <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
           <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
           <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
