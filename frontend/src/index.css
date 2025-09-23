@@ -40,37 +40,47 @@ code {
   }
 }
 
+/* Container that bounds the content overlay (wraps Routes in App.js) */
+.content-area-overlay-container {
+  position: relative;
+}
+
 /* Route change loading overlay */
 .route-loading-overlay {
-  position: fixed;
+  position: absolute; /* bound to content container */
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.92); /* even brighter white */
-  backdrop-filter: blur(2px);
-  z-index: 9998; /* just below watermark text */
-  animation: routeLoadingFade 0.5s ease-in-out both;
+  background: #ffffff; /* solid white */
+  backdrop-filter: none; /* no blur */
+  z-index: 9999; /* ensure overlay sits atop content */
+  animation: routeLoadingFade 0.8s ease-in-out both;
   pointer-events: none; /* avoid blocking interactions longer than needed */
 }
 
 @media (prefers-color-scheme: dark) {
   .route-loading-overlay {
-    background: rgba(0, 0, 0, 0.7);
+    background: #ffffff; /* keep solid white in dark mode as requested */
   }
 }
 
 /* Make watermark pop a bit more during overlay */
 .route-loading-overlay .app-watermark {
-  color: rgba(0, 0, 0, 0.12); /* lighter */
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  font-size: clamp(28px, 9vw, 110px); /* smaller */
+  position: static; /* let flexbox center it */
+  transform: none; /* no translate or rotate */
+  color: rgba(0, 0, 0, 0.4); /* more grayish */
+  text-shadow: none; /* sharp */
+  font-weight: 900; /* crisp */
+  letter-spacing: 0.5px;
+  font-size: clamp(28px, 9vw, 110px); /* slightly larger */
+  text-align: center; /* center text within line */
 }
 
 @media (prefers-color-scheme: dark) {
   .route-loading-overlay .app-watermark {
-    color: rgba(255, 255, 255, 0.16);
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, 0.45); /* more grayish even in dark mode since bg is white */
+    text-shadow: none;
   }
 }
 
