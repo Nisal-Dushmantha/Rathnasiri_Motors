@@ -1,5 +1,5 @@
 // App.js
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
@@ -94,6 +94,18 @@ import Support from "./compononets/Static/Support";
 
 function Layout() {
   const location = useLocation();
+  const [routeLoading, setRouteLoading] = useState(false);
+  const sidebarNavRef = useRef(false);
+
+  // Show a short watermark overlay on each route change
+  useEffect(() => {
+    if (sidebarNavRef.current) {
+      setRouteLoading(true);
+      const timeout = setTimeout(() => setRouteLoading(false), 500); // adjust duration as desired
+      sidebarNavRef.current = false; // reset flag after applying
+      return () => clearTimeout(timeout);
+    }
+  }, [location.pathname]);
 
   const isIndexPage = [
     "/", "/Login", "/Register", "/CustomerHomepage", "/Index",
@@ -104,10 +116,22 @@ function Layout() {
 
   return (
     <>
+      {routeLoading && (
+        <div className="route-loading-overlay">
+          <div className="app-watermark">Rathnasiri Motors</div>
+        </div>
+      )}
       {!isIndexPage && <Header />}
 
       <div className={!isIndexPage ? "flex" : ""}>
-        {!isIndexPage && <SidePanel />}
+        {!isIndexPage && (
+          <SidePanel
+            onNavigate={() => {
+              // mark that the next navigation was initiated via the sidebar
+              sidebarNavRef.current = true;
+            }}
+          />
+        )}
 
         <div className={!isIndexPage ? "flex-1" : ""}>
           <Routes>

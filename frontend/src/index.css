@@ -16,3 +16,67 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Global Watermark */
+.app-watermark {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-25deg);
+  z-index: 9999; /* above app layout */
+  color: rgba(0, 0, 0, 0.08);
+  font-weight: 800;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none; /* don't block clicks */
+  text-transform: uppercase;
+  font-size: clamp(32px, 10vw, 120px);
+}
+
+@media (prefers-color-scheme: dark) {
+  .app-watermark {
+    color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* Route change loading overlay */
+.route-loading-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.92); /* even brighter white */
+  backdrop-filter: blur(2px);
+  z-index: 9998; /* just below watermark text */
+  animation: routeLoadingFade 0.5s ease-in-out both;
+  pointer-events: none; /* avoid blocking interactions longer than needed */
+}
+
+@media (prefers-color-scheme: dark) {
+  .route-loading-overlay {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Make watermark pop a bit more during overlay */
+.route-loading-overlay .app-watermark {
+  color: rgba(0, 0, 0, 0.12); /* lighter */
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  font-size: clamp(28px, 9vw, 110px); /* smaller */
+}
+
+@media (prefers-color-scheme: dark) {
+  .route-loading-overlay .app-watermark {
+    color: rgba(255, 255, 255, 0.16);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  }
+}
+
+@keyframes routeLoadingFade {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
