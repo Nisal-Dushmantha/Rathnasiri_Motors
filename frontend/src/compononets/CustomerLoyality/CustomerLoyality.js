@@ -8,7 +8,6 @@ function CustomerLoyality() {
 
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [updatedPoints, setUpdatedPoints] = useState(0);
   const [editForm, setEditForm] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -55,7 +54,6 @@ function CustomerLoyality() {
 
   const handleUpdateClick = (cust) => {
     setSelectedCustomer(cust);
-    setUpdatedPoints(cust.points);
     setEditForm({
       customerId: cust.customerId || "",
       name: cust.name || "",
@@ -89,7 +87,6 @@ function CustomerLoyality() {
       } finally {
         setIsModalOpen(false);
         setSelectedCustomer(null);
-        setUpdatedPoints(0);
         setEditForm(null);
       }
     }
@@ -98,7 +95,6 @@ function CustomerLoyality() {
   const handleCancel = () => {
     setIsModalOpen(false);
     setSelectedCustomer(null);
-    setUpdatedPoints(0);
   };
 
   const closeModal = (e) => {

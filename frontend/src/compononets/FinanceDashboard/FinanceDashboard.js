@@ -1,66 +1,215 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+import { 
+  DollarSign, 
+  CreditCard, 
+  BarChart2, 
+  PlusCircle,
+  ArrowDownCircle,
+  ArrowUpCircle
+} from "lucide-react";
 
 function FinanceDashboard() {
+  const [loading, setLoading] = useState(true);
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [netProfit, setNetProfit] = useState(0);
+  
+  // Helpers
+  const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchTotals = async () => {
+      try {
+        setLoading(true);
+        // In a real implementation, these would be actual API calls
+        // Simulating API response for demonstration
+        setTimeout(() => {
+          setTotalRevenue(1245000);
+          setTotalExpenses(826500);
+          setNetProfit(418500);
+          setLoading(false);
+        }, 800);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          console.error("Error fetching finance data:", e);
+        }
+      }
+    };
+
+    fetchTotals();
+    return () => controller.abort();
+  }, []);
+
+  // UI Components
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
+          </div>
+        </div>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              Rs {fmt(value)}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ActionButton = ({ to, children, primary }) => (
+    <Link to={to || "#"} className="block group">
+      <button 
+        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+          primary 
+            ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
+            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+        } font-semibold py-2 px-6 transition shadow-sm`}
+      >
+        {children}
+      </button>
+    </Link>
+  );
+
   return (
-    <div className="flex-1 bg-white p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Finance Dashboard</h1>
-        <div className="flex gap-3">
-          <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Revenue</button>
-          <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Expenses</button>
-        </div>
-      </div>
-
-      {/* Metric Panel */}
-      <div className="mb-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Band */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600" />
+        <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-8 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-blue-900 mb-2">Monthly Financial Summary</h2>
-              <p className="text-gray-600">Key totals for the current month</p>
+              <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
+                Finance Dashboard
+              </h1>
+              <p className="mt-1 text-white/80">
+                Revenue • Expenses • Analytics
+              </p>
             </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-blue-900">—</div>
-              <p className="text-sm text-gray-500 mt-1">Overview</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Top Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-sky-800">Overview</h2>
-          <p className="text-gray-700 text-lg mb-6">Track revenue and expenses</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Revenue</h3>
-              <p className="text-sm mt-1 text-gray-600">Daily and monthly income</p>
-              <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">View</button>
-            </div>
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Expenses</h3>
-              <p className="text-sm mt-1 text-gray-600">Monitor operational spending</p>
-              <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">View</button>
+            
+            <div className="flex gap-3">
+              <ActionButton to="/AddRevenue" primary>
+                <ArrowUpCircle className="w-5 h-5" />
+                Add Revenue
+              </ActionButton>
+              
+              <ActionButton to="/AddExpense">
+                <ArrowDownCircle className="w-5 h-5" />
+                Add Expense
+              </ActionButton>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Bottom Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-sky-800">Monthly Report</h2>
-          <p className="text-gray-700 text-lg">Export monthly finance summaries.</p>
-          <button className="mt-auto inline-flex items-center justify-center bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition shadow-sm">Generate</button>
-        </div>
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-sky-800">Custom Report</h2>
-          <p className="text-gray-700 text-lg">Build reports by date and type.</p>
-          <button className="mt-auto inline-flex items-center justify-center bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition shadow-sm">Build</button>
-        </div>
-      </div>
+      <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
+        {/* Metrics */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <MetricCard
+            title="Total Revenue"
+            subtitle="Current month"
+            value={totalRevenue}
+            icon={ArrowUpCircle}
+            accent="bg-emerald-500"
+          />
+          <MetricCard
+            title="Total Expenses"
+            subtitle="Current month"
+            value={totalExpenses}
+            icon={ArrowDownCircle}
+            accent="bg-red-500"
+          />
+          <MetricCard
+            title="Net Profit"
+            subtitle="Current month"
+            value={netProfit}
+            icon={DollarSign}
+            accent="bg-blue-500"
+          />
+        </section>
+
+        {/* Finance Management */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Finance Management</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/RevenueManagement" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <ArrowUpCircle className="w-4 h-4 mr-1" />
+                  Revenue
+                </div>
+                <div className="text-slate-600 text-sm">Track all revenue sources</div>
+              </div>
+            </Link>
+            <Link to="/ExpenseManagement" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <ArrowDownCircle className="w-4 h-4 mr-1" />
+                  Expenses
+                </div>
+                <div className="text-slate-600 text-sm">Manage all expenses</div>
+              </div>
+            </Link>
+            <Link to="/CashFlow" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <CreditCard className="w-4 h-4 mr-1" />
+                  Cash Flow
+                </div>
+                <div className="text-slate-600 text-sm">Track money in and out</div>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* Reports Section */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Reports & Analytics</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/MonthlyReport" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <BarChart2 className="w-4 h-4 mr-1" />
+                  Monthly Report
+                </div>
+                <div className="text-slate-600 text-sm">Export monthly finance summaries</div>
+              </div>
+            </Link>
+            <Link to="/CustomReport" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <PlusCircle className="w-4 h-4 mr-1" />
+                  Custom Report
+                </div>
+                <div className="text-slate-600 text-sm">Build reports by date and type</div>
+              </div>
+            </Link>
+            <Link to="/FinancialSummary" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">Financial Summary</div>
+                <div className="text-slate-600 text-sm">Overview of financial performance</div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      </main>
     </div>
   )
 }

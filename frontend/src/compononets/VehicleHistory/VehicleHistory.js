@@ -1,5 +1,5 @@
 // VehicleHistory.js
-import React, { useRef, useEffect, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";

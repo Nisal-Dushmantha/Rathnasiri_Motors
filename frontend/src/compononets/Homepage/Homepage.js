@@ -1,262 +1,288 @@
-import React from 'react'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  CarFront,
+  Wrench,
+  Package,
+  Layers,
+  ShieldCheck,
+  ClipboardList,
+  Gauge,
+  CalendarClock,
+} from "lucide-react";
+
+/**
+ * Modern Admin Dashboard (Vehicle Sales + Service)
+ * - Tailwind-only styling
+ * - No new deps
+ * - Works with your existing endpoints
+ */
 
 function Homepage() {
-  const [loading, setLoading] = useState(true)
-  const [svcCount, setSvcCount] = useState(0)
-  const [repCount, setRepCount] = useState(0)
-  const [catalogTotal, setCatalogTotal] = useState(0)
-  const [storeUnits, setStoreUnits] = useState(0)
-  const [invItemCount, setInvItemCount] = useState(0)
-  const [invTotalUnits, setInvTotalUnits] = useState(0)
-  const [insActive, setInsActive] = useState(0)
+  const [loading, setLoading] = useState(true);
+  const [svcCount, setSvcCount] = useState(0);
+  const [repCount, setRepCount] = useState(0);
+  const [catalogTotal, setCatalogTotal] = useState(0);
+  const [storeUnits, setStoreUnits] = useState(0);
+  const [invItemCount, setInvItemCount] = useState(0);
+  const [invTotalUnits, setInvTotalUnits] = useState(0);
+  const [insActive, setInsActive] = useState(0);
 
-  // Helpers to robustly extract numbers from various API response shapes
+  // Helpers
   const get = (obj, path) => {
     try {
-      return path.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj)
+      return path.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
     } catch {
-      return undefined
+      return undefined;
     }
-  }
+  };
   const toNum = (v) => {
-    const n = Number(v)
-    return Number.isFinite(n) ? n : 0
-  }
+    const n = Number(v);
+    return Number.isFinite(n) ? n : 0;
+  };
+  const fmt = (n) => new Intl.NumberFormat().format(toNum(n));
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchAll = async () => {
       try {
-        setLoading(true)
+        setLoading(true);
         const urls = [
-          'http://localhost:5000/services/count',
-          'http://localhost:5000/repairs/count',
-          'http://localhost:5000/newBs/count',
-          'http://localhost:5000/usedBs/count',
-          'http://localhost:5000/newBs/quantity-sum',
-          'http://localhost:5000/sp',
-          'http://localhost:5000/insurances/total/count',
-        ]
+          "http://localhost:5000/services/count",
+          "http://localhost:5000/repairs/count",
+          "http://localhost:5000/newBs/count",
+          "http://localhost:5000/usedBs/count",
+          "http://localhost:5000/newBs/quantity-sum",
+          "http://localhost:5000/sp",
+          "http://localhost:5000/insurances/total/count",
+        ];
 
-        const responses = await Promise.allSettled(urls.map((u) => fetch(u)))
+        const responses = await Promise.allSettled(
+          urls.map((u) => fetch(u, { signal: controller.signal }))
+        );
 
         const parse = async (entry, label) => {
-          if (entry.status !== 'fulfilled') {
-            console.error(`[Homepage] Fetch failed for ${label}:`, entry.reason)
-            return null
+          if (entry.status !== "fulfilled") {
+            console.error(`[Homepage] Fetch failed for ${label}:`, entry.reason);
+            return null;
           }
-          const res = entry.value
+          const res = entry.value;
           if (!res.ok) {
-            console.error(`[Homepage] Non-OK response for ${label}:`, res.status, res.statusText)
-            return null
+            console.error(`[Homepage] Non-OK response for ${label}:`, res.status, res.statusText);
+            return null;
           }
           try {
-            const j = await res.json()
-            console.log(`[Homepage] ${label} ->`, j)
-            return j
+            const j = await res.json();
+            console.log(`[Homepage] ${label} ->`, j);
+            return j;
           } catch (e) {
-            console.error(`[Homepage] JSON parse failed for ${label}:`, e)
-            return null
+            console.error(`[Homepage] JSON parse failed for ${label}:`, e);
+            return null;
           }
-        }
+        };
 
-        const [svcJson, repJson, newCountJson, usedCountJson, newQtyJson, spJson, insJson] = await Promise.all([
-          parse(responses[0], 'services/count'),
-          parse(responses[1], 'repairs/count'),
-          parse(responses[2], 'newBs/count'),
-          parse(responses[3], 'usedBs/count'),
-          parse(responses[4], 'newBs/quantity-sum'),
-          parse(responses[5], 'sp'),
-          parse(responses[6], 'insurances/total/count'),
-        ])
+        const [
+          svcJson,
+          repJson,
+          newCountJson,
+          usedCountJson,
+          newQtyJson,
+          spJson,
+          insJson,
+        ] = await Promise.all([
+          parse(responses[0], "services/count"),
+          parse(responses[1], "repairs/count"),
+          parse(responses[2], "newBs/count"),
+          parse(responses[3], "usedBs/count"),
+          parse(responses[4], "newBs/quantity-sum"),
+          parse(responses[5], "sp"),
+          parse(responses[6], "insurances/total/count"),
+        ]);
 
-        setSvcCount(toNum(get(svcJson, 'count')) || toNum(get(svcJson, 'total')))
-        setRepCount(toNum(get(repJson, 'count')) || toNum(get(repJson, 'total')))
+        setSvcCount(toNum(get(svcJson, "count")) || toNum(get(svcJson, "total")));
+        setRepCount(toNum(get(repJson, "count")) || toNum(get(repJson, "total")));
 
-        const catTotal = toNum(get(newCountJson, 'count')) + toNum(get(usedCountJson, 'count'))
-        setCatalogTotal(catTotal)
+        const catTotal = toNum(get(newCountJson, "count")) + toNum(get(usedCountJson, "count"));
+        setCatalogTotal(catTotal);
 
-        const units = toNum(get(newQtyJson, 'totalQuantity')) + toNum(get(usedCountJson, 'count'))
-        setStoreUnits(units)
+        const units =
+          toNum(get(newQtyJson, "totalQuantity")) + toNum(get(usedCountJson, "count"));
+        setStoreUnits(units);
 
-        const spItems = Array.isArray(spJson?.sp) ? spJson.sp : (Array.isArray(spJson?.items) ? spJson.items : [])
-        setInvItemCount(spItems.length)
-        const sumUnits = spItems.reduce((acc, it) => acc + (Number(it.Quentity) || 0), 0)
-        setInvTotalUnits(sumUnits)
+        const spItems = Array.isArray(spJson?.sp)
+          ? spJson.sp
+          : Array.isArray(spJson?.items)
+          ? spJson.items
+          : [];
+        setInvItemCount(spItems.length);
+        const sumUnits = spItems.reduce((acc, it) => acc + (Number(it.Quentity) || 0), 0);
+        setInvTotalUnits(sumUnits);
 
-        setInsActive(toNum(get(insJson, 'total')) || toNum(get(insJson, 'count')))
+        setInsActive(toNum(get(insJson, "total")) || toNum(get(insJson, "count")));
       } catch (e) {
-        // keep defaults on error
-        console.error('[Homepage] Unexpected error during fetchAll:', e)
+        if (e.name !== "AbortError") {
+          console.error("[Homepage] Unexpected error during fetchAll:", e);
+        }
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchAll()
-  }, [])
+    };
+    fetchAll();
+    return () => controller.abort();
+  }, []);
 
-  return (
-    <div className="flex-1 bg-white p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-bold text-blue-900">Overview</h1>
-        <div className="flex gap-3">
-          <Link to="/products">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Products</button>
-          </Link>
-          <Link to="/inventory">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Inventory</button>
-          </Link>
-          <Link to="/service">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Service & Repair</button>
-          </Link>
-          <Link to="/insurance">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Insurance</button>
-          </Link>
-        </div>
-      </div>
+  // ----- UI Pieces -----
+  const Pill = ({ children }) => (
+    <span className="inline-flex items-center gap-2 rounded-full bg-white/60 text-slate-700 px-3 py-1 text-xs font-medium border border-slate-200">
+      {children}
+    </span>
+  );
 
-      {/* Metrics Grid */}
-      <div className="mb-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Total Jobs (Service + Repair) */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Total Jobs</h2>
-              <p className="text-gray-600">Service + Repair (completed and ongoing)</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{(svcCount || 0) + (repCount || 0)}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Jobs</p>
-            </div>
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
           </div>
         </div>
-
-        {/* Catalog Bikes */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Bikes in Catalog</h2>
-              <p className="text-gray-600">New + used models</p>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              {fmt(value)}
             </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{catalogTotal}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Models</p>
-            </div>
-          </div>
+          )}
         </div>
-
-        {/* Store Units */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Bikes in Store</h2>
-              <p className="text-gray-600">Total stock units</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{storeUnits}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Units</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Inventory Items */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Inventory Items</h2>
-              <p className="text-gray-600">Spare parts categories</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{invItemCount}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Items</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Inventory Units */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Inventory Units</h2>
-              <p className="text-gray-600">Total quantity</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{invTotalUnits}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Units</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Active Insurances */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-bold text-blue-900 mb-1">Active Insurances</h2>
-              <p className="text-gray-600">Policies & registrations</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{insActive}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Records</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Link to="/NewBikesForm" className="block">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all">
-            <div className="text-blue-900 font-semibold mb-1">Add New Bike</div>
-            <div className="text-gray-600 text-sm">Create a brand new bike entry</div>
-          </div>
-        </Link>
-        <Link to="/SparePartsForm" className="block">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all">
-            <div className="text-blue-900 font-semibold mb-1">Add Spare Part</div>
-            <div className="text-gray-600 text-sm">Update inventory with a new part</div>
-          </div>
-        </Link>
-        <Link to="/ServiceJobCard" className="block">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all">
-            <div className="text-blue-900 font-semibold mb-1">New Service Job</div>
-            <div className="text-gray-600 text-sm">Create a service job card</div>
-          </div>
-        </Link>
-        <Link to="/NewInsurances" className="block">
-          <div className="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all">
-            <div className="text-blue-900 font-semibold mb-1">New Insurance</div>
-            <div className="text-gray-600 text-sm">Add a policy/registration</div>
-          </div>
-        </Link>
       </div>
     </div>
-  )
+  );
+
+  const QuickAction = ({ to, title, desc }) => (
+    <Link to={to} className="block group">
+      <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+        <div className="text-slate-900 font-semibold mb-1">{title}</div>
+        <div className="text-slate-600 text-sm">{desc}</div>
+      </div>
+    </Link>
+  );
+
+  const totalJobs = (svcCount || 0) + (repCount || 0);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Band */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600" />
+        {/* subtle pattern */}
+        <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-8 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-2xl font-bold" style={{ color: "#0B3954" }}>Dashboard Overview</h1>
+              <p style={{ color: "#0B3954" }}>Welcome to your Rathnasiri Motors management dashboard</p>
+              
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Pill>
+                  <Gauge className="h-3.5 w-3.5" />
+                  Live KPIs
+                </Pill>
+                <Pill>
+                  <CalendarClock className="h-3.5 w-3.5" />
+                  Today Snapshot
+                </Pill>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </header>
+
+      {/* Body */}
+      <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
+        {/* KPI Cards */}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <MetricCard
+            title="Total Jobs"
+            subtitle="Service + Repairs (all statuses)"
+            value={totalJobs}
+            icon={Wrench}
+            accent="bg-blue-500"
+          />
+          <MetricCard
+            title="Vehicles in Catalog"
+            subtitle="New + Used models"
+            value={catalogTotal}
+            icon={CarFront}
+            accent="bg-indigo-500"
+          />
+          <MetricCard
+            title="Units in Store"
+            subtitle="Current stock (all)"
+            value={storeUnits}
+            icon={Package}
+            accent="bg-teal-500"
+          />
+          <MetricCard
+            title="Inventory Items"
+            subtitle="Spare parts categories"
+            value={invItemCount}
+            icon={Layers}
+            accent="bg-cyan-500"
+          />
+          <MetricCard
+            title="Inventory Units"
+            subtitle="Total spare-part quantity"
+            value={invTotalUnits}
+            icon={ClipboardList}
+            accent="bg-purple-500"
+          />
+          <MetricCard
+            title="Active Policies"
+            subtitle="Insurance & registrations"
+            value={insActive}
+            icon={ShieldCheck}
+            accent="bg-rose-500"
+          />
+        </section>
+
+        {/* Quick Actions */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Quick Actions</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <QuickAction
+              to="/NewBikesForm"
+              title="Add New Vehicle"
+              desc="Create a fresh catalog entry"
+            />
+            <QuickAction
+              to="/SparePartsForm"
+              title="Add Spare Part"
+              desc="Update inventory with a new part"
+            />
+            <QuickAction
+              to="/ServiceJobCard"
+              title="New Service Job"
+              desc="Create a service/repair job card"
+            />
+            <QuickAction
+              to="/NewInsurances"
+              title="New Insurance"
+              desc="Add a policy / registration"
+            />
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
 
-export default Homepage
+export default Homepage;

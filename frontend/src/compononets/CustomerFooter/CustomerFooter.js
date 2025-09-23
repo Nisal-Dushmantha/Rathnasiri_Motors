@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function CustomerFooter() {
   return (
@@ -17,10 +18,10 @@ function CustomerFooter() {
         <div>
           <h3 className="text-lg font-semibold mb-3">Quick Links</h3>
           <ul className="space-y-2 text-blue-100 text-sm">
-            <li><a href="#" className="hover:text-white transition">Home</a></li>
-            <li><a href="#" className="hover:text-white transition">Services</a></li>
-            <li><a href="#" className="hover:text-white transition">Blog</a></li>
-            <li><a href="#" className="hover:text-white transition">Contact</a></li>
+            <li><Link to="/" className="hover:text-white transition">Home</Link></li>
+            <li><Link to="/ServiceAndRepair" className="hover:text-white transition">Services</Link></li>
+            <li><Link to="/blog" className="hover:text-white transition">Blog</Link></li>
+            <li><Link to="/contact" className="hover:text-white transition">Contact</Link></li>
           </ul>
         </div>
 

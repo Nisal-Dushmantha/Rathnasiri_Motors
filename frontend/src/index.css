@@ -17,74 +17,11 @@ code {
     monospace;
 }
 
-/* Global Watermark */
-.app-watermark {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) rotate(-25deg);
-  z-index: 9999; /* above app layout */
-  color: rgba(0, 0, 0, 0.08);
-  font-weight: 800;
-  letter-spacing: 2px;
-  white-space: nowrap;
-  user-select: none;
-  pointer-events: none; /* don't block clicks */
-  text-transform: uppercase;
-  font-size: clamp(32px, 10vw, 120px);
-}
-
-@media (prefers-color-scheme: dark) {
-  .app-watermark {
-    color: rgba(255, 255, 255, 0.06);
-  }
-}
+/* Watermark removed */
 
 /* Container that bounds the content overlay (wraps Routes in App.js) */
 .content-area-overlay-container {
   position: relative;
 }
 
-/* Route change loading overlay (full-screen, transparent) */
-.route-loading-overlay {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent; /* transparent background */
-  backdrop-filter: none; /* no blur */
-  z-index: 9999; /* on top */
-  animation: routeLoadingFade 0.8s ease-in-out both;
-  pointer-events: none; /* don't block interactions */
-}
-
-/* Make watermark pop a bit more during overlay */
-.route-loading-overlay .app-watermark {
-  position: static; /* let flexbox center it */
-  transform: none; /* no translate or rotate */
-  /* Use blend mode so it auto-contrasts with whatever is behind */
-  mix-blend-mode: difference;
-  color: rgba(255, 255, 255, 0.85); /* bright base that will invert on light bg */
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.5), 0 0 2px rgba(0, 0, 0, 0.35); /* subtle edge for readability */
-  font-weight: 900; /* crisp */
-  letter-spacing: 0.5px;
-  font-size: clamp(20px, 6vw, 64px); /* smaller */
-  text-align: center; /* center text within line */
-}
-
-@media (prefers-color-scheme: dark) {
-  .route-loading-overlay .app-watermark {
-    /* Keep same blend behavior in dark mode */
-    mix-blend-mode: difference;
-    color: rgba(255, 255, 255, 0.9);
-    text-shadow: 0 0 1px rgba(0, 0, 0, 0.6), 0 0 2px rgba(0, 0, 0, 0.4);
-  }
-}
-
-@keyframes routeLoadingFade {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { opacity: 0; }
-}
+/* Route change loading overlay and watermark removed */

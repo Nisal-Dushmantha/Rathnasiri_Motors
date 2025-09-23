@@ -1,11 +1,12 @@
 // App.js
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
 import SidePanel from "./compononets/SidePanel/SidePanel";
 import Header from "./compononets/Header/Header";
 import Footer from "./compononets/Footer/Footer";
+import HomepageNavbar from "./compononets/HomepageNavbar/HomepageNavbar";
 
 // Dashboards
 import Homepage from "./compononets/Homepage/Homepage";
@@ -94,7 +95,7 @@ import Support from "./compononets/Static/Support";
 
 function Layout() {
   const location = useLocation();
-  const [routeLoading, setRouteLoading] = useState(false);
+
   const sidebarNavRef = useRef(false);
   const headerRef = useRef(null);
   const sideRef = useRef(null);
@@ -110,38 +111,24 @@ function Layout() {
 
   // Sidebar-only overlay; no measurement needed for full-screen overlay
 
-  // Show a short watermark overlay on each route change
-  useEffect(() => {
-    if (sidebarNavRef.current) {
-      setRouteLoading(true);
-      const timeout = setTimeout(() => setRouteLoading(false), 1000); // increased duration for visibility
-      sidebarNavRef.current = false; // reset flag after applying
-      return () => clearTimeout(timeout);
-    }
-  }, [location.pathname]);
-
   // No measurement effects needed for full-screen overlay
-
-  
 
   return (
     <>
-      {routeLoading && (
-        <div
-          className="route-loading-overlay"
-          style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
-        >
-          <div className="app-watermark">Rathnasiri Motors</div>
-        </div>
-      )}
-      {!isIndexPage && (
+      {!isIndexPage && location.pathname !== "/homepage" && (
         <div ref={headerRef}>
           <Header />
         </div>
       )}
 
+      {location.pathname === "/homepage" && (
+        <div className="sticky top-0 z-50">
+          <HomepageNavbar />
+        </div>
+      )}
+
       <div className={!isIndexPage ? "flex" : ""}>
-        {!isIndexPage && (
+        {!isIndexPage && location.pathname !== "/homepage" && (
           <div ref={sideRef}>
             <SidePanel
               onNavigate={() => {
