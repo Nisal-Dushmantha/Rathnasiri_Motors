@@ -202,8 +202,8 @@ function Layout() {
           <Route path="/Reports" element={<CustomerReports/>}/>
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
-          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
-          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
 
           {/* Insurances */}
           <Route path="/NewInsurances" element={<NewInsurances />} />
