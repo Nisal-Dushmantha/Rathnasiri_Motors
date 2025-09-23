@@ -9,7 +9,7 @@ import {
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 
-function SidePanel() {
+function SidePanel({ onNavigate }) {
   const menuItems = [
     { name: "HomePage", icon: <AiOutlineHome size={20} />, path: "/homepage" },
     { name: "User Management", icon: <AiOutlineUser size={20} />, path: "/user" },
@@ -37,6 +37,9 @@ function SidePanel() {
             <Link
               to={item.path}
               className="group cursor-pointer p-3 flex items-center gap-3 rounded-lg transition-all duration-200 border border-transparent hover:bg-blue-50 hover:text-blue-700 hover:border-blue-100 hover:shadow-sm"
+              onClick={() => {
+                if (typeof onNavigate === 'function') onNavigate();
+              }}
             >
               <span className="text-blue-600 transition-colors group-hover:text-blue-700">{item.icon}</span>
               <span className="text-lg text-blue-900 transition-all group-hover:font-semibold">{item.name}</span>
