@@ -5,21 +5,29 @@ import React, { useEffect, useState } from 'react';
 import axios from "axios"
 
 function InsuranceAndRegistrationDashboard() {
+  const [insurances, setInsurances] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [totalActive, setTotalActive] = useState(0);
+  useEffect(() => {
+    const fetchInsurances = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/insurances");
+        setInsurances(res.data.insurances || []);
+      } catch (err) {
+        console.error("Error fetching insurances:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchInsurances();
+  }, []);
 
-useEffect(() => {
-  const fetchTotal = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/insurances/total/count");
-      setTotalActive(res.data.total);  // now shows all registrations
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  fetchTotal();
-}, []);
-
+  // Filter active insurances
+  const activeCount = insurances.filter(
+    (item) =>
+      new Date(item.StartDate) <= new Date() &&
+      new Date(item.EndDate) >= new Date()
+  ).length;
 
   return (
     <div className="flex-1 bg-gradient-to-b from-blue-100 to-blue-50 p-10 min-h-screen">
@@ -45,7 +53,7 @@ useEffect(() => {
               <p className="text-gray-600">Track active records at a glance</p>
             </div>
             <div className="text-right">
-              <div className="text-4xl font-bold text-blue-600">{totalActive}</div>
+              <div className="text-4xl font-bold text-blue-600">{loading ? "-" : activeCount}</div>
               <p className="text-sm text-gray-500 mt-1">Records</p>
             </div>
           </div>
@@ -59,10 +67,10 @@ useEffect(() => {
           <p className="text-gray-700 text-lg mb-6">Create and manage Insurances</p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg">Insurance Card</h3>
+              <h3 className="font-semibold text-lg">Add New Insurance</h3>
               <p className="text-sm mt-1">Track Insurances</p>
               <Link to="/NewInsurances">
-                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
+                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Add</button>
               </Link>
             </div>
             {/*<div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
@@ -81,21 +89,34 @@ useEffect(() => {
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">Insurance History</h2>
           <p className="text-gray-700 text-lg">View detailed Insurance history.</p>
-          <Link to="/VehicleHistory">
-            <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Go</button>
-          </Link>
+          {/*<Link to="/InsuranceHistory">
+            <button className="mt-auto bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">View</button>
+          </Link>*/}
+          <div className="mt-auto flex gap-4">
+                        <Link to="/InsuranceHistory" className="flex-1">
+                          <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">View</button>
+                        </Link>
+                        </div>
         </div>
         <div className="flex flex-col justify-between bg-white rounded-3xl shadow-xl p-8 hover:shadow-2xl transition-all hover:scale-105 min-h-[350px]">
           <h2 className="text-2xl font-bold mb-4 text-blue-800">All Insurances</h2>
           <p className="text-gray-700 text-lg">Completed Insurances.</p>
-          <div className="mt-auto space-y-2">
+          {/*<div className="mt-auto space-y-2">
             <Link to="/InsurancesAll">
               <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Insurances</button>
             </Link>
-            {/*<Link to="/AllRepairJobs">
-              <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
-            </Link>*/}
-          </div>
+            <Link to="/BillGenerator">
+              <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Bill</button>
+            </Link>
+            </div>*/}
+             <div className="mt-auto flex gap-4">
+                        <Link to="/InsurancesAll" className="flex-1">
+                          <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Insurances</button>
+                        </Link>
+                        <Link to="/BillGenerator" className="flex-1">
+                          <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Generate Bill</button>
+                        </Link>
+             </div>
         </div>
       </div>
     </div>

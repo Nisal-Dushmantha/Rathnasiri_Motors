@@ -57,8 +57,8 @@ import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 
 // Other pages
 import Index from "./compononets/Index/Index";
-//import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
-//import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
+import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
+import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
 
 // Inventory insert form
 import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
@@ -82,6 +82,11 @@ import NewInsurances from "./compononets/NewInsurances/NewInsurances";
 import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
 import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
+import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
+import BillGenerator from "./compononets/BillGenerator/BillGenerator";
+
+//Fiance
+import Expenses from "./compononets/Expenses/Expenses";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -179,6 +184,11 @@ function Layout() {
           <Route path="/InsurancesAll" element={<InsurancesAll />} />
           <Route path="/UpdateInsurances/:id" element={<UpdateInsurances />} />
           <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+          <Route path="/InsuranceHistory" element={<InsuranceHistory />} />
+          <Route path="/BillGenerator" element={<BillGenerator />} />
+
+          {/*Finance */}
+          <Route path="/Expenses" element={<Expenses />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />

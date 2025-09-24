@@ -26,12 +26,27 @@ const handleChange = (e) =>{
   }));
 };
 
-const handleSubmit = (e)=>{
+{/*const handleSubmit = (e)=>{
   e.preventDefault();
   console.log("New Insurancee Added:", FormData);
   alert("New Insurance addes to system!");
   sendRequest().then(()=>history('/InsurancesAll'))
-}
+}*/}
+   const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // Frontend validation for Contact Number
+  const phoneRegex = /^[0-9]{10}$/; // Example: 10 digits
+  if (!phoneRegex.test(FormData.ContactNo)) {
+    alert("Invalid Contact Number. It must be 10 digits.");
+    return;
+  }
+
+  console.log("New Insurance Added:", FormData);
+  alert("New Insurance added to system!");
+  sendRequest().then(() => history('/InsurancesAll'));
+};
+
 
 const sendRequest = async() =>{
   await axios.post("http://localhost:5000/insurances",{
@@ -122,7 +137,7 @@ const sendRequest = async() =>{
             />
           </div>
 
-          <div>
+          {/*<div>
             <label className="block text-gray-700 font-semibold mb-2">
               Vehicle Type
             </label>
@@ -135,7 +150,26 @@ const sendRequest = async() =>{
               placeholder="Car / Bike / Truck"
               required
             />
-          </div>
+          </div>*/}
+          <div>
+  <label className="block text-gray-700 font-semibold mb-2">
+    Vehicle Type
+  </label>
+  <select
+    name="VehicleType"
+    value={FormData.VehicleType}
+    onChange={handleChange}
+    className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
+    required
+  >
+    <option value="" disabled>Select Vehicle Type</option>
+    <option value="Car">Car</option>
+    <option value="Bike">Bike</option>
+    <option value="Truck">Truck</option>
+    <option value="Van">Van</option>
+    <option value="Bus">Bus</option>
+  </select>
+</div>
 
           <div>
             <label className="block text-gray-700 font-semibold mb-2">
