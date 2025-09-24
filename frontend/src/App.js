@@ -1,11 +1,12 @@
 // App.js
-import React from "react";
+import React, { useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
 import SidePanel from "./compononets/SidePanel/SidePanel";
 import Header from "./compononets/Header/Header";
 import Footer from "./compononets/Footer/Footer";
+import HomepageNavbar from "./compononets/HomepageNavbar/HomepageNavbar";
 
 // Dashboards
 import Homepage from "./compononets/Homepage/Homepage";
@@ -92,9 +93,20 @@ import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
 import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
 
+// Static pages
+import Privacy from "./compononets/Static/Privacy";
+import Terms from "./compononets/Static/Terms";
+import Support from "./compononets/Static/Support";
+
 function Layout() {
   const location = useLocation();
 
+  const sidebarNavRef = useRef(false);
+  const headerRef = useRef(null);
+  const sideRef = useRef(null);
+  const footerRef = useRef(null);
+
+  // Determine if current route is one of the index-style pages
   const isIndexPage = [
     "/", "/Login", "/Register", "/CustomerHomepage", "/Index",
      "/CustomerBrandNewBikes", "/CustomerUsedBikes", 
@@ -102,20 +114,50 @@ function Layout() {
     "/CustomerServiceDates", "/CustomerAboutUs"
   ].includes(location.pathname);
 
+  // Sidebar-only overlay; no measurement needed for full-screen overlay
+
+  // No measurement effects needed for full-screen overlay
+
   return (
     <>
-      {!isIndexPage && <SidePanel />}
-      <div className={!isIndexPage ? "ml-80" : ""}>
-        {!isIndexPage && <Header />}
+      {!isIndexPage && location.pathname !== "/homepage" && (
+        <div ref={headerRef}>
+          <Header />
+        </div>
+      )}
 
-        <Routes>
-          {/* Public pages */}
-          <Route path="/" element={<Index />} />
-          <Route path="/Index" element={<Index />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
-          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+      {location.pathname === "/homepage" && (
+        <div className="sticky top-0 z-50">
+          <HomepageNavbar />
+        </div>
+      )}
+
+      <div className={!isIndexPage ? "flex" : ""}>
+        {!isIndexPage && location.pathname !== "/homepage" && (
+          <div ref={sideRef}>
+            <SidePanel
+              onNavigate={() => {
+                // mark that the next navigation was initiated via the sidebar
+                sidebarNavRef.current = true;
+              }}
+            />
+          </div>
+        )}
+
+        <div className={!isIndexPage ? "flex-1" : ""}>
+          <div className="content-area-overlay-container">
+            <Routes>
+              {/* Public pages */}
+              <Route path="/" element={<Index />} />
+              <Route path="/Index" element={<Index />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+              <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+              <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
+              <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+              <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+              <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
           <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
           <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
           <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
@@ -176,8 +218,8 @@ function Layout() {
           <Route path="/Reports" element={<CustomerReports/>}/>
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
-          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
-          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
 
           {/* Insurances */}
           <Route path="/NewInsurances" element={<NewInsurances />} />
@@ -196,10 +238,20 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
-        </Routes>
-
-        {!isIndexPage && <Footer />}
+          {/* Static pages */}
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/support" element={<Support />} />
+          </Routes>
+          </div>
+        </div>
       </div>
+
+      {!isIndexPage && (
+        <div ref={footerRef}>
+          <Footer />
+        </div>
+      )}
     </>
   );
 }
