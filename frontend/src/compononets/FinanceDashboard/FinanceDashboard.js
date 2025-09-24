@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Link } from "react-router-dom";
 function FinanceDashboard() {
   return (
     <div className="flex-1 bg-gradient-to-b from-sky-100 to-sky-50 p-10 min-h-screen">
@@ -8,7 +8,9 @@ function FinanceDashboard() {
         <h1 className="text-4xl font-bold text-blue-900">Finance Dashboard</h1>
         <div className="flex gap-4">
           <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Revenue</button>
+          <Link to="/Expenses" className="flex-1">
           <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Expenses</button>
+          </Link>
         </div>
       </div>
 
@@ -42,8 +44,11 @@ function FinanceDashboard() {
             <div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
               <h3 className="font-semibold text-lg">Expenses</h3>
               <p className="text-sm mt-1">Monitor operational spending</p>
+              <Link to="/Expenses" className="flex-1">
               <button className="mt-4 bg-white text-sky-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">View</button>
+             </Link>
             </div>
+           
           </div>
         </div>
       </div>
