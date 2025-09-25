@@ -64,6 +64,16 @@ function FinanceDashboard() {
               Rs {fmt(value)}
             </div>
           )}
+  return (
+    <div className="flex-1 bg-gradient-to-b from-sky-100 to-sky-50 p-10 min-h-screen">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-12">
+        <h1 className="text-4xl font-bold text-blue-900">Finance Dashboard</h1>
+        <div className="flex gap-4">
+          <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Revenue</button>
+          <Link to="/Expenses" className="flex-1">
+          <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Expenses</button>
+          </Link>
         </div>
       </div>
     </div>
