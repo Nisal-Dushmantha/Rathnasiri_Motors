@@ -18,7 +18,8 @@ const spbrouter = require("./Routes/SparePartBillRoutes");
 const loyaltyRouter = require("./Routes/LoyaltyRoute");
 const customerRouter = require("./Routes/CustomerRoute");
 const offerRouter = require("./Routes/OfferRoute");
-
+const serviceRepairBillRouter = require("./Routes/ServiceRepairBillRoute");
+const jobStatsRouter = require("./Routes/JobStatisticsRoute");
 
 const registerRouter = require("./Routes/RegisterRoute");
 const serviceDateRouter = require("./Routes/serviceDateRoutes"); // ✅ NEW
@@ -58,10 +59,12 @@ app.use("/newBsH",newBsoldHrouter);
 app.use("/insurances",Inrouter);
 app.use("/spb",spbrouter);
 app.use("/bikeSalesReports",BSrouter);
+app.use("/service-repair-bills", serviceRepairBillRouter);
 
 app.use("/loyalty", loyaltyRouter);
 app.use("/customers", customerRouter);
 app.use("/offers", offerRouter);
+app.use("/job-stats", jobStatsRouter);
 
 
 mongoose

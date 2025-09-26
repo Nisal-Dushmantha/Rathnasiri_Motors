@@ -66,7 +66,10 @@ import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
 import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
-import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
+import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -87,6 +90,9 @@ import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
 import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -175,6 +181,7 @@ function Layout() {
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
+          <Route path="/JobStatistics" element={<JobStatistics />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -228,6 +235,10 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
+          <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+          {/* Renamed billing routes */}
+          <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
+          <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
