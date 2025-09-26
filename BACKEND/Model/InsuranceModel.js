@@ -13,6 +13,7 @@ const InsuranceSchema = new Schema({
     ContactNo:{
         type:String,
         required:true,
+        match: [/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"]
     },
     RegistrationNo:{
         type:String,

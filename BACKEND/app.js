@@ -20,6 +20,8 @@ const customerRouter = require("./Routes/CustomerRoute");
 const offerRouter = require("./Routes/OfferRoute");
 const serviceRepairBillRouter = require("./Routes/ServiceRepairBillRoute");
 const jobStatsRouter = require("./Routes/JobStatisticsRoute");
+const billRoutes = require("./Routes/BillRoutes");
+const expenseRoutes =require("./Routes/expenseRoutes");
 
 const registerRouter = require("./Routes/RegisterRoute");
 const serviceDateRouter = require("./Routes/serviceDateRoutes"); // ✅ NEW
@@ -59,6 +61,8 @@ app.use("/newBsH",newBsoldHrouter);
 app.use("/insurances",Inrouter);
 app.use("/spb",spbrouter);
 app.use("/bikeSalesReports",BSrouter);
+app.use("/api/bills", billRoutes);
+app.use("/api/expenses", expenseRoutes);
 app.use("/service-repair-bills", serviceRepairBillRouter);
 
 app.use("/loyalty", loyaltyRouter);

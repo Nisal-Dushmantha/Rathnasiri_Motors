@@ -17,13 +17,17 @@ const getAllnewBH = async (req, res) => {
 //insert new bike sold details
 const addnewBH = async (req, res, next) => {
   console.log("Request body:", req.body);
-  
-  const { type, model, last_price, buyer_name, contact_no } = req.body;
-  
+  const { type, model, last_price, buyer_name, contact_no, date } = req.body;
   let newBsH;
-
   try {
-    newBsH = new newB({ type, model, last_price, buyer_name, contact_no });
+    newBsH = new newB({
+      type,
+      model,
+      last_price,
+      buyer_name,
+      contact_no,
+      date: date ? new Date(date) : Date.now()
+    });
     await newBsH.save();
     console.log("Sold Bike saved successfully:", newBsH);
     return res.status(201).json({ newBsH, message: " Sold Bike added successfully" });
@@ -47,24 +51,18 @@ const getByID = async (req, res) => {
 
 // Update Sold bike
 const updatenewBH = async (req, res) => {
-  const { type, model, last_price, buyer_name, contact_no } = req.body;
+  const { type, model, last_price, buyer_name, contact_no, date } = req.body;
   const id = req.params.id;
-  
-
   let newBsH;
-
-  try{
-    const updateData = {type : type, model : model, last_price : last_price, buyer_name : buyer_name, contact_no : contact_no};
- 
-    
+  try {
+    const updateData = { type, model, last_price, buyer_name, contact_no };
+    if (date) updateData.date = new Date(date);
     newBsH = await newB.findByIdAndUpdate(id, updateData, { new: true });
-    
     if (!newBsH) {
       return res.status(404).json({ message: "Sold Bike not found" });
     }
-    
     return res.status(200).json({ newBsH, message: "Sold Bike updated successfully" });
-  }catch(err){
+  } catch (err) {
     console.log(err);
     return res.status(500).json({ message: "Unable to update Sold bike" });
   }
