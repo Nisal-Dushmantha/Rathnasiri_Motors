@@ -23,12 +23,12 @@ const getAllSparePartsBill = async (req, res, next) => {
 //Data Insert
 const addSparePartsBill = async (req,res,next) => {
 
-    const {bill_no,name,brand,quantity,price} = req.body;
+    const {bill_no,date,customerName,name,brand,quantity,price} = req.body;
 
     let spb;
 
     try{
-        spb = new SpareB({bill_no,name,brand,quantity,price});
+        spb = new SpareB({bill_no,date,customerName,name,brand,quantity,price});
         await spb.save();
     }
     catch(err){
@@ -66,6 +66,23 @@ if (!spb) {
     return res.status(200).json({spb});
 };
 
+const deleteSparePartbillreports = async (req, res, next) => {
+  const billNo = req.params.id; // now it's bill_no, not _id
+  let spb;
+  try {
+    spb = await SpareB.deleteMany({ bill_no: billNo });
+  } catch (err) {
+    console.log(err);
+  }
+  if (!spb || spb.deletedCount === 0) {
+    return res.status(404).json({ message: "Unable to delete spare parts bill" });
+  }
+  return res.status(200).json({ spb });
+};
+
+
+
 exports.getAllSparePartsBill = getAllSparePartsBill;
 exports.addSparePartsBill = addSparePartsBill;
 exports.getById = getById;
+exports.deleteSparePartbillreports = deleteSparePartbillreports;

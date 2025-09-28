@@ -21,11 +21,11 @@ const getAllBikeSalesReports = async (req, res, next) => {
 
 //data insert
 const addReports = async (req, res, next) => {
-    const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price } = req.body;
+    const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date } = req.body;
 
     let reports;
     try {
-        reports = new Breport({name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price});
+        reports = new Breport({name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date});
         await reports.save();
     }catch (err) {
         console.log(err);
@@ -59,13 +59,13 @@ const getByID = async (req, res, next) => {
 //update report details
 const updateReport = async (req, res, next) => {
     const id = req.params.id;
-    const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price } = req.body;   
+    const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date } = req.body;   
    
     let reports;
 
     try {
         reports = await Breport.findByIdAndUpdate(id, 
-            {name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price});
+            {name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date});
         reports = await reports.save();
     } 
     catch (err) {

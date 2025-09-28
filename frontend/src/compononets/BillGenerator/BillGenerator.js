@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import axios from "axios";
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> ce7305f4aa4e32727fdc25233ec8a9ba3255e93e
 function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bills" }) {
   const [customerName, setCustomerName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
