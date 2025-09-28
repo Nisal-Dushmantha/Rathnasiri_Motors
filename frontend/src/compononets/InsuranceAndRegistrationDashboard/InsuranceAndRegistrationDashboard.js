@@ -11,32 +11,77 @@ import {
   AlertTriangle
 } from "lucide-react";
 
-// UI Components
-const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading, fmt }) => (
-  <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
-    <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
-    <div className="p-5">
-      <div className="flex items-center justify-between">
-        <div>
-          <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
-          <p className="text-xs text-slate-500">{subtitle}</p>
-        </div>
-        <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-          <Icon className="h-5 w-5 text-slate-700" />
-        </div>
-      </div>
-      <div className="mt-4">
-        {loading ? (
-          <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
-        ) : (
-          <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
-            {fmt(value)}
+function InsuranceAndRegistrationDashboard() {
+  const [loading, setLoading] = useState(true);
+  const [totalActive, setTotalActive] = useState(0);
+  const [expiringSoon, setExpiringSoon] = useState(0);
+  const [renewedThisMonth, setRenewedThisMonth] = useState(0);
+  const [insurances, setInsurances] = useState([]);
+  const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchTotals = async () => {
+      try {
+        setLoading(true);
+        // Fetch real API data for total active insurances
+        const res = await axios.get("http://localhost:5000/insurances/total/count", {
+          signal: controller.signal
+        });
+        setTotalActive(res.data.total || 0);
+        
+        // In a real implementation, these would be actual API calls
+        // Simulating API response for demonstration
+        setTimeout(() => {
+          setExpiringSoon(12);
+          setRenewedThisMonth(34);
+          setLoading(false);
+        }, 800);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          console.error("Error fetching insurance data:", e);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTotals();
+    return () => controller.abort();
+  }, []);
+
+  // Filter active insurances
+  const activeCount = insurances.filter(
+    (item) =>
+      new Date(item.StartDate) <= new Date() &&
+      new Date(item.EndDate) >= new Date()
+  ).length;
+
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
           </div>
-        )}
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
+          </div>
+        </div>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              {fmt(value)}
+            </div>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 
 const ActionButton = ({ to, children, primary }) => (
   <Link to={to} className="block group">
@@ -136,7 +181,6 @@ function InsuranceAndRegistrationDashboard() {
           </div>
         </div>
       </header>
-
       <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
         {/* Metrics */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
@@ -168,7 +212,6 @@ function InsuranceAndRegistrationDashboard() {
             fmt={fmt}
           />
         </section>
-
         {/* Insurance Management */}
         <section className="mt-10">
           <div className="flex items-center justify-between mb-4">
@@ -204,7 +247,6 @@ function InsuranceAndRegistrationDashboard() {
             </Link>
           </div>
         </section>
-
         {/* Reports Section */}
         <section className="mt-10">
           <div className="flex items-center justify-between mb-4">

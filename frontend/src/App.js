@@ -66,6 +66,8 @@ import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
 import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+
+import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
 // import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 // import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
@@ -257,6 +259,8 @@ function Layout() {
           {/* Renamed billing routes */}
           <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
           <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
+
+          <Route path="/SparePBReports" element={<SparePBReports />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
