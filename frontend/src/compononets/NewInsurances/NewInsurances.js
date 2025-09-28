@@ -30,13 +30,8 @@ const handleChange = (e) =>{
   }));
 };
 
-{/*const handleSubmit = (e)=>{
-  e.preventDefault();
-  console.log("New Insurancee Added:", FormData);
-  alert("New Insurance addes to system!");
-  sendRequest().then(()=>history('/InsurancesAll'))
-}*/}
-   const handleSubmit = (e) => {
+// Old submit handler removed
+const handleSubmit = (e) => {
   e.preventDefault();
 
   // Frontend validation for Contact Number

@@ -111,6 +111,10 @@ function BikeSummary() {
         <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-800 mx-auto mb-4"></div>
           <p className="text-gray-600 text-lg">Loading bike summary...</p>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-800 mx-auto mb-4"></div>
+          <p className="text-gray-600 text-lg">Loading bike summary...</p>
         </div>
       </div>
     );
@@ -118,6 +122,17 @@ function BikeSummary() {
 
   if (error) {
     return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
+          <h2 className="text-2xl font-bold text-red-800 mb-4">Error Loading Data</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="bg-blue-800 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
+          >
+            Retry
+          </button>
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
           <div className="text-red-500 text-6xl mb-4">⚠️</div>
