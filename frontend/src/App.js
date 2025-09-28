@@ -90,6 +90,7 @@ import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
 import BillGenerator from "./compononets/BillGenerator/BillGenerator";
 import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
 import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
+import ViewBills from "./compononets/ViewBills/ViewBills";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
@@ -240,6 +241,7 @@ function Layout() {
           <Route path="/BillGenerator" element={<BillGenerator />} />
           <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
           <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
+          <Route path="/ViewBills" element={<ViewBills />} />
           
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />

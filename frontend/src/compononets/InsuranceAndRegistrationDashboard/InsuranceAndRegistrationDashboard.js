@@ -220,10 +220,10 @@ function InsuranceAndRegistrationDashboard() {
                 <div className="text-slate-600 text-sm">View detailed policy history</div>
               </div>
             </Link>
-            <Link to="/InsuranceDocumentCenter" className="block group">
+            <Link to="/ViewBills" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
-                <div className="text-slate-900 font-semibold mb-1">Reference and Knowledge Center</div>
-                <div className="text-slate-600 text-sm">Access References and Knowledge</div>
+                <div className="text-slate-900 font-semibold mb-1">Insurance Bill History</div>
+                <div className="text-slate-600 text-sm">Insurance Bill Tracker</div>
               </div>
             </Link>
             <Link to="/BillGenerator" className="block group">
