@@ -85,9 +85,12 @@ import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
 import BillGenerator from "./compononets/BillGenerator/BillGenerator";
+import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
+import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
+import RevenueManagement from "./compononets/RevenueManagement/RevenueManagement";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -228,9 +231,12 @@ function Layout() {
           <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
           <Route path="/InsuranceHistory" element={<InsuranceHistory />} />
           <Route path="/BillGenerator" element={<BillGenerator />} />
-
+          <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
+          <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
+          
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
+          <Route path="/RevenueManagement" element={<RevenueManagement />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />

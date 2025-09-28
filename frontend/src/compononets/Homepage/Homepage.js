@@ -10,6 +10,7 @@ import {
   Gauge,
   CalendarClock,
 } from "lucide-react";
+//import axios from "axios";
 
 /**
  * Modern Admin Dashboard (Vehicle Sales + Service)
@@ -27,6 +28,8 @@ function Homepage() {
   const [invItemCount, setInvItemCount] = useState(0);
   const [invTotalUnits, setInvTotalUnits] = useState(0);
   const [insActive, setInsActive] = useState(0);
+
+  //setInsActive(toNum(get(insJson, "total")) || toNum(get(insJson, "count")));
 
   // Helpers
   const get = (obj, path) => {
@@ -80,6 +83,7 @@ function Homepage() {
             return null;
           }
         };
+        
 
         const [
           svcJson,
@@ -96,7 +100,7 @@ function Homepage() {
           parse(responses[3], "usedBs/count"),
           parse(responses[4], "newBs/quantity-sum"),
           parse(responses[5], "sp"),
-          parse(responses[6], "insurances/total/count"),
+          //parse(responses[6], "insurances/total/count"),
         ]);
 
         setSvcCount(toNum(get(svcJson, "count")) || toNum(get(svcJson, "total")));
@@ -137,6 +141,9 @@ function Homepage() {
       {children}
     </span>
   );
+ // const [insActive, setInsActive] = useState(0);
+
+
 
   const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
     <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
