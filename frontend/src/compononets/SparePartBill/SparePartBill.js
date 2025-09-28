@@ -4,6 +4,7 @@ import jsPDF from "jspdf";
 
 function SparePartBill() {
   const [billNo, setBillNo] = useState("");
+  const [date, setDate] = useState(""); // new date state
   const [customerName, setCustomerName] = useState("");
   const [items, setItems] = useState([
     { name: "", brand: "", quantity: 1, price: "" },
@@ -40,6 +41,8 @@ function SparePartBill() {
       for (const row of totals.rows) {
         await axios.post("http://localhost:5000/spb", {
           bill_no: billNo.trim(),
+          date: date,// use provided date or current date
+          customerName: customerName.trim(), //customer name
           name: row.name.trim(),
           brand: row.brand.trim(),
           quantity: Number(row.quantity) || 0,
@@ -53,22 +56,39 @@ function SparePartBill() {
       const dateStr = now.toLocaleDateString();
       const timeStr = now.toLocaleTimeString();
 
-      // Header band
-      doc.setFillColor(25, 64, 128);
-      doc.rect(0, 0, 210, 28, "F");
-      doc.setTextColor(255, 255, 255);
-      doc.setFontSize(20);
-      doc.text("Rathnasiri Motors", 14, 18);
-      doc.setFontSize(12);
-      doc.text(`Spare Parts Bill`, 160, 12, { align: "right" });
-      doc.text(`Date: ${dateStr}`, 160, 18, { align: "right" });
-      doc.text(`Time: ${timeStr}`, 160, 24, { align: "right" });
+              // ===== HEADER =====
+          doc.setFillColor(37, 99, 235); // blue (fallback for gradient)
+          doc.rect(0, 0, 210, 38, "F"); // header background
+
+          // Title
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(20);
+          doc.text("RATHNASIRI MOTORS", 14, 15);
+
+          // Subtitle
+          doc.setFontSize(12);
+          doc.setTextColor(220, 235, 255);
+          doc.text("Spare Parts Bill", 14, 22);
+
+          // Contact Details
+          doc.setFontSize(10);
+          doc.setTextColor(220, 230, 255);
+          doc.text("📍 123 Main Street, Colombo, Sri Lanka", 14, 29);
+          doc.text("📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com", 14, 34);
+
+          // Date & Time (top-right)
+          doc.setTextColor(255, 255, 255);
+          doc.setFontSize(11);
+          doc.text(`Date: ${dateStr}`, 198, 14, { align: "right" });
+          doc.text(`Time: ${timeStr}`, 198, 20, { align: "right" });
+
 
       // Bill meta
       doc.setTextColor(0, 0, 0);
       doc.setFontSize(12);
-      doc.text(`Bill No: ${billNo || "-"}`, 14, 40);
-      doc.text(`Customer: ${customerName || "-"}`, 14, 47);
+      doc.text(`Bill No: ${billNo || "-"}`, 14, 45);
+      doc.text(`Date: ${date || "-"}`, 198, 45,{ align: "right" });
+      doc.text(`Customer: ${customerName || "-"}`, 14, 52);
 
       // Table header
       const startY = 60;
@@ -111,17 +131,31 @@ function SparePartBill() {
       doc.setFontSize(14);
       doc.text(String(totals.total.toFixed(2)), 198, y, { align: "right" });
 
-      // Footer
-      y += 16;
-      doc.setFontSize(10);
-      doc.setTextColor(120);
-      doc.text("Thank you for your purchase!", 14, y);
-      doc.text("Please retain this bill for your records.", 14, y + 6);
+          // ===== FOOTER =====
+      y += 20; // add space before footer
+      doc.setFontSize(11);
+      doc.setTextColor(60, 60, 60); // dark gray
+      doc.text(
+        "Quality Service | Expert Team | Customer Satisfaction",
+        105,
+        280,
+        { align: "center" }
+      );
 
-      doc.save(`SparePartsBill_${billNo || now.getTime()}.pdf`);
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 100); // lighter gray
+      doc.text(
+        "Thank you for choosing Rathnasiri Motors! We appreciate your business.",
+        105,
+        286,
+        { align: "center" }
+      );
+      // ✅ SAVE PDF HERE
+    doc.save(`SparePartsBill_${billNo || now.getTime()}.pdf`);
 
       // Reset
       setBillNo("");
+      setDate("");// reset date
       setCustomerName("");
       setItems([{ name: "", brand: "", quantity: 1, price: "" }]);
       alert("Spare parts bill saved and PDF downloaded.");
@@ -151,6 +185,19 @@ function SparePartBill() {
                 placeholder="e.g., SPB-00125"
               />
             </div>
+
+             {/* Bill Date */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Bill Date</label>
+              <input
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">Customer Name</label>
               <input

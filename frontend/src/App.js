@@ -68,6 +68,8 @@ import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
 import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 
+import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
+
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
 import Login from "./compononets/Login/Login";
@@ -228,6 +230,8 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
+
+          <Route path="/SparePBReports" element={<SparePBReports />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
