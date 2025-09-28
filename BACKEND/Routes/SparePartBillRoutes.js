@@ -16,4 +16,3 @@ router.delete("/:id",SparePartBillController.deleteSparePartbillreports);
 
 //export
 module.exports = router;
-
