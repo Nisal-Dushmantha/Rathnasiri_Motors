@@ -249,7 +249,7 @@ function ProductsDashboard() {
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <ClipboardCheck className="w-4 h-4 mr-1" />
-                  Monthly Sales History
+                  View Monthly Sales History
                 </div>
                 <div className="text-slate-600 text-sm">View sold bikes history</div>
               </div>
@@ -267,23 +267,23 @@ function ProductsDashboard() {
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <BarChart2 className="w-4 h-4 mr-1" />
-                  Add Sales Report
+                  Generate a Sales Bill
                 </div>
-                <div className="text-slate-600 text-sm">Record new bike sales</div>
+                <div className="text-slate-600 text-sm">Record bike sales</div>
               </div>
             </Link>
             <Link to="/BikeSalesReport" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <ClipboardCheck className="w-4 h-4 mr-1" />
-                  View Sales
+                  View Genarated Sales Bills
                 </div>
                 <div className="text-slate-600 text-sm">See all bike sales records</div>
               </div>
             </Link>
             <Link to="/bikeSummery" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
-                <div className="text-slate-900 font-semibold mb-1">View Summary</div>
+                <div className="text-slate-900 font-semibold mb-1">View Summary of Products</div>
                 <div className="text-slate-600 text-sm">Overview of product performance</div>
               </div>
             </Link>
