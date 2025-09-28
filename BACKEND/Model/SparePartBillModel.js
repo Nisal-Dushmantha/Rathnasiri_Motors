@@ -7,6 +7,17 @@ const sbSchema = new Schema({
     required: true, //validate
   },
 
+  date: {
+    type: Date, // new date field
+    required: true,
+  },
+
+  customerName: {   // <-- add this
+    type: String,
+    required: true,
+  },
+
+  
   name: {
     type: String, //datatype
     required: true, //validate
