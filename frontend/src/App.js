@@ -68,10 +68,9 @@ import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
 
 import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
-// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
-// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
 import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
+import ServiceandRepairChart from "./compononets/ServiceandRepairChart/ServiceandRepairChart"; // JobStatistics component
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -98,12 +97,12 @@ import ViewBills from "./compononets/ViewBills/ViewBills";
 import Expenses from "./compononets/Expenses/Expenses";
 import RevenueManagement from "./compononets/RevenueManagement/RevenueManagement";
 
-import CustomerReports from "./compononets/CustomerReports/CustomerReports";
-
-import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
-import SparePartBill from "./compononets/SparePartBill/SparePartBill";
-import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
-import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
+// Commented out imports for components that don't exist or are not being used
+// import CustomerReports from "./compononets/CustomerReports/CustomerReports";
+// import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+// import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -192,7 +191,7 @@ function Layout() {
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
-          <Route path="/JobStatistics" element={<JobStatistics />} />
+          <Route path="/JobStatistics" element={<ServiceandRepairChart />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -228,9 +227,10 @@ function Layout() {
           <Route path="/Login" element={<Login />} />
           <Route path="/Register" element={<Register />} />
 
-          <Route path="/Reports" element={<CustomerReports/>}/>
+          {/* Routes commented out due to missing components */}
+          {/* <Route path="/Reports" element={<CustomerReports/>}/> */}
           
-          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          {/* <Route path="/CustomerOffers" element={<CustomerOffers/>}/> */}
           <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
 
@@ -254,8 +254,9 @@ function Layout() {
           <Route path="/SparePartsDisplay" element={<SparePartsDisplay />} />
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
-          <Route path="/SparePartBill" element={<SparePartBill />} />
-          <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+          {/* Routes commented out due to missing components */}
+          {/* <Route path="/SparePartBill" element={<SparePartBill />} />
+          <Route path="/SparePartBillList" element={<SparePartBillsList />} /> */}
           {/* Renamed billing routes */}
           <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
           <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
