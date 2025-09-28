@@ -255,7 +255,7 @@ function InventoryDashboard() {
             <h2 className="text-xl font-bold text-slate-900">Reports & Analytics</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link to="/SparePartsReport" className="block group">
+            <Link to="/SparePartBillList" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <BarChart2 className="w-4 h-4 mr-1" />

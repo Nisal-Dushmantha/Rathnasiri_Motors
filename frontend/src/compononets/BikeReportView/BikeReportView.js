@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 function BikeReportView() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [report, setReport] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -40,6 +39,7 @@ function BikeReportView() {
 
     const imgData = canvas.toDataURL("image/png");
 
+    // Dynamic PDF size based on content
     const pdfWidth = canvas.width * 0.264583;
     const pdfHeight = canvas.height * 0.264583;
 
@@ -81,7 +81,7 @@ function BikeReportView() {
             </div>
           </div>
 
-          {/* Invoice Date & Time */}
+          {/* Invoice Date & Time on Right */}
           <div className="text-right bg-white bg-opacity-20 rounded-lg p-2 inline-block mt-2">
             <p className="text-sm text-blue-100 font-medium">Invoice Date & Time</p>
             <p className="text-white font-semibold">{dateStr} ⏰ {timeStr}</p>
@@ -106,12 +106,12 @@ function BikeReportView() {
           <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
             <span className="mr-2">👤</span> Customer Information
           </h2>
-          <div className="space-y-3 text-gray-700">
-            <p><span className="font-bold">Name:</span> {report.name}</p>
-            <p><span className="font-bold">NIC:</span> {report.NIC}</p>
-            <p><span className="font-bold">License No:</span> {report.license_no}</p>
-            <p><span className="font-bold">Contact No:</span> {report.contact_no}</p>
-            <p><span className="font-bold">Address:</span> {report.address}</p>
+          <div className="space-y-2 text-gray-700">
+            <p><span className="font-semibold">Name:</span> {report.name}</p>
+            <p><span className="font-semibold">NIC:</span> {report.NIC}</p>
+            <p><span className="font-semibold">License No:</span> {report.license_no}</p>
+            <p><span className="font-semibold">Contact No:</span> {report.contact_no}</p>
+            <p><span className="font-semibold">Address:</span> {report.address}</p>
           </div>
         </div>
 
@@ -120,18 +120,18 @@ function BikeReportView() {
           <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
             <span className="mr-2">🏍️</span> Bike Details
           </h2>
-          <div className="space-y-3 text-gray-700">
-            <p><span className="font-bold">Model:</span> {report.bike_model}</p>
-            <p><span className="font-bold">Color:</span> {report.color}</p>
-            <p><span className="font-bold">Chassis No:</span> {report.chassis_no}</p>
-            <p><span className="font-bold">Registration Year:</span> {report.reg_year}</p>
+          <div className="space-y-2 text-gray-700">
+            <p><span className="font-semibold">Model:</span> {report.bike_model}</p>
+            <p><span className="font-semibold">Color:</span> {report.color}</p>
+            <p><span className="font-semibold">Chassis No:</span> {report.chassis_no}</p>
+            <p><span className="font-semibold">Registration Year:</span> {report.reg_year}</p>
           </div>
         </div>
 
         {/* Last Price */}
-        <div className="mb-5 flex flex-col items-center">
+        <div className="mb-10 flex flex-col items-center">
           <p className="text-xl text-gray-500 mb-2">Last Price</p>
-          <div className="font-bold text-black-900 text-center text-4xl">
+          <div className="border border-gray-300 rounded-lg px-16 py-3 bg-gray-50 font-bold text-blue-900 text-center text-4xl">
             Rs. {report.last_price}
           </div>
         </div>
@@ -143,15 +143,8 @@ function BikeReportView() {
         </div>
       </div>
 
-      {/* Buttons: Back on left, Download on right */}
-      <div className="mt-6 w-full max-w-4xl flex justify-between">
-        <button
-          onClick={() => navigate("/BikeSalesReport")}
-          className="bg-gray-200 text-gray-800 px-6 py-3 rounded-lg font-semibold shadow hover:bg-gray-300 transition-all"
-        >
-          🔙 Back
-        </button>
-
+      {/* Download PDF Button - Shorter */}
+      <div className="mt-6 flex justify-center">
         <button
           onClick={handleDownloadPDF}
           className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all"

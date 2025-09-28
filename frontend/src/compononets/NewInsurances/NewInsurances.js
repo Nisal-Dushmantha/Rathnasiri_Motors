@@ -30,13 +30,8 @@ const handleChange = (e) =>{
   }));
 };
 
-{/*const handleSubmit = (e)=>{
-  e.preventDefault();
-  console.log("New Insurancee Added:", FormData);
-  alert("New Insurance addes to system!");
-  sendRequest().then(()=>history('/InsurancesAll'))
-}*/}
-   const handleSubmit = (e) => {
+// Old submit handler removed
+const handleSubmit = (e) => {
   e.preventDefault();
 
   // Frontend validation for Contact Number
@@ -90,26 +85,7 @@ const sendRequest = async() =>{
         {/* Vehicle Details */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <Input label="Vehicle Number" type="text" name="RegistrationNo" value={FormData.RegistrationNo} onChange={handleChange} placeholder="Vehicle number" required />
-          {/*<Input label="Vehicle Type" type="text" name="VehicleType" value={FormData.VehicleType} onChange={handleChange} placeholder="Car / Bike / Truck" required />*/}
-          <div>
-    <label className="block text-gray-700 font-semibold mb-2">
-      Vehicle Type
-    </label>
-    <select
-      name="VehicleType"
-      value={FormData.VehicleType}
-      onChange={handleChange}
-      className="w-full border border-gray-300 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-400"
-      required
-    >
-      <option value="" disabled>Select Vehicle Type</option>
-      <option value="Car">Car</option>
-      <option value="Bike">Bike</option>
-      <option value="Truck">Truck</option>
-      <option value="Van">Van</option>
-      <option value="Bus">Bus</option>
-    </select>
-  </div>
+          <Input label="Vehicle Type" type="text" name="VehicleType" value={FormData.VehicleType} onChange={handleChange} placeholder="Car / Bike / Truck" required />
           <Input label="Vehicle Model" type="text" name="VehicleModel" value={FormData.VehicleModel} onChange={handleChange} placeholder="Vehicle model" required />
         </div>
 
