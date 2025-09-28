@@ -23,6 +23,18 @@ function ViewBills({ fetchUrl = "http://localhost:5000/api/bills" }) {
   };
 
   useEffect(() => {
+    const fetchBills = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get(fetchUrl);
+        setBills(res.data.bills || []);
+      } catch (err) {
+        console.error("Error fetching bills:", err);
+        setError("Failed to load bills.");
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchBills();
   }, [fetchUrl]);
 

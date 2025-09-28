@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import Card from "../ui/Card";
-import Button from "../ui/Button";
 
 function BikesSalesHistory() {
   const [sales, setSales] = useState([]);
