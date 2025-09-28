@@ -163,8 +163,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="type"
                   value={formData.type}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   required
                 />
               </div>
@@ -178,8 +178,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="model"
                   value={formData.model}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   required
                 />
               </div>
@@ -193,8 +193,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="color"
                   value={formData.color}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   required
                 />
               </div>
@@ -224,8 +224,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="mileage"
                   value={formData.mileage}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   placeholder="e.g., 15000 km"
                   required
                 />
@@ -240,8 +240,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="year"
                   value={formData.year}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   placeholder="e.g., 2018"
                   required
                 />
@@ -256,8 +256,8 @@ const UpdateUsedBike = () => {
                   type="text"
                   name="owner"
                   value={formData.owner}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed"
                   placeholder="e.g., John Doe"
                   required
                 />
@@ -279,7 +279,6 @@ const UpdateUsedBike = () => {
                   <option value="Available">Available</option>
                   <option value="Sold">Sold</option>
                   <option value="Reserved">Reserved</option>
-
                 </select>
               </div>
             </div>

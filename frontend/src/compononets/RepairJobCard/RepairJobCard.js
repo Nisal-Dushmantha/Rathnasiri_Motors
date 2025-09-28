@@ -38,7 +38,8 @@ function RepairJobCard() {
         VehicleNumber: String(formData.vehicleNumber),
         VehicleType: String(formData.vehicleType),
         Model: String(formData.vehicleModel),
-        Details: String(formData.repairDetails), 
+        Details: String(formData.repairDetails),
+        JobCreatedDate: new Date(), // Automatically add current date
       })
       .then((res) => res.data);
   };

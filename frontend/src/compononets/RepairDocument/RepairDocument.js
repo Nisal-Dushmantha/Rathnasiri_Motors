@@ -83,15 +83,18 @@ function RepairDocument({ id, onClose }) {
                   </div>
                 </div>
               </div>
-            </div>
-
-            {/* Invoice Details */}
+            </div>              {/* Invoice Details */}
             <div className="p-6">
               {/* Invoice Number and Status */}
               <div className="flex justify-between items-center mb-6 p-4 bg-gray-50 rounded-lg">
                 <div>
                   <p className="text-gray-600 text-sm font-medium">INVOICE #</p>
                   <p className="text-xl font-bold text-gray-800">{job?._id || "N/A"}</p>
+                  {job?.JobCreatedDate && (
+                    <p className="text-sm text-gray-500 mt-1">
+                      Job Created: {new Date(job.JobCreatedDate).toLocaleDateString()}
+                    </p>
+                  )}
                 </div>
                 <div className="text-right">
                   <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
