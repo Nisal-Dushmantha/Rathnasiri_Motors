@@ -150,7 +150,7 @@ function BikeSummary() {
           <div className="flex gap-4">
             <button onClick={() => window.location.href = '/NewBikes'} className="bg-blue-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-blue-800 transition">New Bikes</button>
             <button onClick={() => window.location.href = '/UsedBikes'} className="bg-green-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-green-800 transition">Used Bikes</button>
-            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition">Sales History</button>
+            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition"> Monthly Sales History</button>
           </div>
         </div>
 
