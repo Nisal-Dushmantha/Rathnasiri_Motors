@@ -8,6 +8,10 @@ const serviceDateSchema = new mongoose.Schema({
   phoneNumber: { type: String, required: true },
   serviceDate: { type: Date, required: true },
   serviceTime: { type: String, required: true },
+  otp: { type: String },
+  otpExpiry: { type: Date },
+  isVerified: { type: Boolean, default: false },
+  createdAt: { type: Date, default: Date.now }
 });
 
 module.exports = mongoose.model('ServiceDate', serviceDateSchema);

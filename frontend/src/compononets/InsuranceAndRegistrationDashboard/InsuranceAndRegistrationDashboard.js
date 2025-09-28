@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -82,19 +83,70 @@ function InsuranceAndRegistrationDashboard() {
     </div>
   );
 
-  const ActionButton = ({ to, children, primary }) => (
-    <Link to={to} className="block group">
-      <button 
-        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
-          primary 
-            ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
-            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-        } font-semibold py-2 px-6 transition shadow-sm`}
-      >
-        {children}
-      </button>
-    </Link>
-  );
+const ActionButton = ({ to, children, primary }) => (
+  <Link to={to} className="block group">
+    <button 
+      className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+        primary 
+          ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
+          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+      } font-semibold py-2 px-6 transition shadow-sm`}
+    >
+      {children}
+    </button>
+  </Link>
+);
+
+
+function InsuranceAndRegistrationDashboard() {
+  const [loading, setLoading] = useState(true);
+  //const [totalActive, setTotalActive] = useState(0);
+  //const [expiringSoon, setExpiringSoon] = useState(0);
+  //const [renewedThisMonth, setRenewedThisMonth] = useState(0);
+  const [insurances, setInsurances] = useState([]);
+  const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
+
+ useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("http://localhost:5000/insurances", {
+          signal: controller.signal
+        });
+        setInsurances(res.data.insurances || []);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          console.error("Error fetching insurance data:", e);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+    return () => controller.abort();
+  }, []);
+
+  // 🔹 Calculate metrics
+  const today = new Date();
+
+  const activeCount = insurances.filter(
+    (item) => new Date(item.StartDate) <= today && new Date(item.EndDate) >= today
+  ).length;
+
+  const expiringSoon = insurances.filter((item) => {
+    const end = new Date(item.EndDate);
+    const diffDays = Math.ceil((end - today) / (1000 * 60 * 60 * 24));
+    return diffDays > 0 && diffDays <= 30;
+  }).length;
+
+  const renewedThisMonth = insurances.filter((item) => {
+    const start = new Date(item.StartDate);
+    return (
+      start.getMonth() === today.getMonth() &&
+      start.getFullYear() === today.getFullYear()
+    );
+  }).length;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -118,8 +170,12 @@ function InsuranceAndRegistrationDashboard() {
                 Add New Insurance
               </ActionButton>
               <div className="text-right">
-                <div className="text-4xl font-bold text-blue-600">{loading ? "-" : activeCount}</div>
-                <p className="text-sm text-gray-500 mt-1">Records</p>
+                {/*<div className="text-4xl font-bold text-blue-600">{loading ? "-" : insurances.filter(
+                  (item) =>
+                    new Date(item.StartDate) <= new Date() &&
+                    new Date(item.EndDate) >= new Date()
+                ).length}</div>*/}
+                {/*<p className="text-sm text-gray-500 mt-1">Records</p>*/}
               </div>
             </div>
           </div>
@@ -131,9 +187,11 @@ function InsuranceAndRegistrationDashboard() {
           <MetricCard
             title="Active Policies"
             subtitle="Total registrations"
-            value={totalActive}
+            value={activeCount}
             icon={ShieldCheck}
             accent="bg-blue-500"
+            loading={loading}
+            fmt={fmt}
           />
           <MetricCard
             title="Expiring Soon"
@@ -141,6 +199,8 @@ function InsuranceAndRegistrationDashboard() {
             value={expiringSoon}
             icon={AlertTriangle}
             accent="bg-amber-500"
+            loading={loading}
+            fmt={fmt}
           />
           <MetricCard
             title="Renewed"
@@ -148,6 +208,8 @@ function InsuranceAndRegistrationDashboard() {
             value={renewedThisMonth}
             icon={Calendar}
             accent="bg-emerald-500"
+            loading={loading}
+            fmt={fmt}
           />
         </section>
         {/* Insurance Management */}
@@ -174,7 +236,7 @@ function InsuranceAndRegistrationDashboard() {
                 <div className="text-slate-600 text-sm">View all insurance records</div>
               </div>
             </Link>
-            <Link to="/ExpiringInsurances" className="block group">
+            <Link to="/ExpiringInsurancesPage" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <AlertTriangle className="w-4 h-4 mr-1" />
@@ -191,7 +253,7 @@ function InsuranceAndRegistrationDashboard() {
             <h2 className="text-xl font-bold text-slate-900">Reports & History</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link to="/VehicleHistory" className="block group">
+            <Link to="/InsuranceHistory" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <FileText className="w-4 h-4 mr-1" />
@@ -200,27 +262,27 @@ function InsuranceAndRegistrationDashboard() {
                 <div className="text-slate-600 text-sm">View detailed policy history</div>
               </div>
             </Link>
-            <Link to="/InsuranceDocument" className="block group">
+            <Link to="/ViewBills" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
-                <div className="text-slate-900 font-semibold mb-1">Document Center</div>
-                <div className="text-slate-600 text-sm">Access all policy documents</div>
+                <div className="text-slate-900 font-semibold mb-1">Insurance Bill History</div>
+                <div className="text-slate-600 text-sm">Insurance Bill Tracker</div>
               </div>
             </Link>
-            <Link to="/InsuranceReport" className="block group">
+            <Link to="/BillGenerator" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
-                <div className="text-slate-900 font-semibold mb-1">Insurance Reports</div>
+                <div className="text-slate-900 font-semibold mb-1">Bill Generator</div>
                 <div className="text-slate-600 text-sm">Generate insurance analytics</div>
               </div>
             </Link>
           </div>
-          <div className="mt-auto flex gap-4">
+          {/*<div className="mt-auto flex gap-4">
             <Link to="/InsurancesAll" className="flex-1">
               <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Insurances</button>
             </Link>
             <Link to="/BillGenerator" className="flex-1">
               <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Generate Bill</button>
             </Link>
-          </div>
+          </div>*/}
         </section>
       </main>
     </div>

@@ -15,7 +15,7 @@ import UserDashboard from "./compononets/UserDashboard/UserDashboard";
 import ProductsDashboard from "./compononets/ProductsDashboard/ProductsDashboard";
 import InventoryDashboard from "./compononets/InventoryDashboard/InventoryDashboard";
 import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard";
-import InsuranceDashboard from "./compononets/InsuranceAndRegistrationDashboard/InsuranceAndRegistrationDashboard";
+import InsuranceAndRegistrationDashboard from "./compononets/InsuranceAndRegistrationDashboard/InsuranceAndRegistrationDashboard";
 
 // Job cards
 import ServiceJobCard from "./compononets/ServiceJobCard/ServiceJobCard";
@@ -66,7 +66,12 @@ import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
 import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
-import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+
+import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
+// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
+import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -85,13 +90,20 @@ import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
 import BillGenerator from "./compononets/BillGenerator/BillGenerator";
+import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
+import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
+import ViewBills from "./compononets/ViewBills/ViewBills";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
+import RevenueManagement from "./compononets/RevenueManagement/RevenueManagement";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
 import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -170,7 +182,7 @@ function Layout() {
           <Route path="/products" element={<ProductsDashboard />} />
           <Route path="/inventory" element={<InventoryDashboard />} />
           <Route path="/finance" element={<FinanceDashboard />} />
-          <Route path="/insurance" element={<InsuranceDashboard />} />
+          <Route path="/insurance" element={<InsuranceAndRegistrationDashboard />} />
 
           {/* Job cards */}
           <Route path="/ServiceJobCard" element={<ServiceJobCard />} />
@@ -180,6 +192,7 @@ function Layout() {
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
+          <Route path="/JobStatistics" element={<JobStatistics />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -228,9 +241,13 @@ function Layout() {
           <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
           <Route path="/InsuranceHistory" element={<InsuranceHistory />} />
           <Route path="/BillGenerator" element={<BillGenerator />} />
-
+          <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
+          <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
+          <Route path="/ViewBills" element={<ViewBills />} />
+          
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
+          <Route path="/RevenueManagement" element={<RevenueManagement />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />
@@ -238,6 +255,12 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
+          <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+          {/* Renamed billing routes */}
+          <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
+          <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
+
+          <Route path="/SparePBReports" element={<SparePBReports />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

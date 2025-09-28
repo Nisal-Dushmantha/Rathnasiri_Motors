@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Wrench, BarChart2, History, FilePlus2, FileBarChart } from "lucide-react";
+import { Wrench, BarChart2, History, FilePlus2, FileBarChart, Receipt, FileText } from "lucide-react";
 
 function Dashboard() {
   const [serviceCount, setServiceCount] = useState(null);
@@ -97,7 +97,7 @@ function Dashboard() {
               <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 Service & Repair Dashboard
               </h1>
-              <p className="mt-1 text-white/80">
+              <p className="mt-1 text-blue-900">
                 View and manage all service and repair jobs
               </p>
             </div>
@@ -167,6 +167,33 @@ function Dashboard() {
                   Vehicle History
                 </div>
                 <div className="text-slate-600 text-sm">View complete service history</div>
+              </div>
+            </Link>
+            <Link to="/ServiceRepairBill" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Receipt className="w-4 h-4 mr-1" />
+                  Make Bill
+                </div>
+                <div className="text-slate-600 text-sm">Create a service/repair bill</div>
+              </div>
+            </Link>
+            <Link to="/ServiceRepairBills" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <FileText className="w-4 h-4 mr-1" />
+                  View All Bills
+                </div>
+                <div className="text-slate-600 text-sm">Browse and review all bills</div>
+              </div>
+            </Link>
+            <Link to="/JobStatistics" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <BarChart2 className="w-4 h-4 mr-1" />
+                  Job Statistics
+                </div>
+                <div className="text-slate-600 text-sm">View job analytics and reports</div>
               </div>
             </Link>
           </div>

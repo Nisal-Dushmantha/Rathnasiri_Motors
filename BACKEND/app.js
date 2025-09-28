@@ -18,6 +18,8 @@ const spbrouter = require("./Routes/SparePartBillRoutes");
 const loyaltyRouter = require("./Routes/LoyaltyRoute");
 const customerRouter = require("./Routes/CustomerRoute");
 const offerRouter = require("./Routes/OfferRoute");
+const serviceRepairBillRouter = require("./Routes/ServiceRepairBillRoute");
+const jobStatsRouter = require("./Routes/JobStatisticsRoute");
 const billRoutes = require("./Routes/BillRoutes");
 const expenseRoutes =require("./Routes/expenseRoutes");
 
@@ -61,10 +63,12 @@ app.use("/spb",spbrouter);
 app.use("/bikeSalesReports",BSrouter);
 app.use("/api/bills", billRoutes);
 app.use("/api/expenses", expenseRoutes);
+app.use("/service-repair-bills", serviceRepairBillRouter);
 
 app.use("/loyalty", loyaltyRouter);
 app.use("/customers", customerRouter);
 app.use("/offers", offerRouter);
+app.use("/job-stats", jobStatsRouter);
 
 
 mongoose

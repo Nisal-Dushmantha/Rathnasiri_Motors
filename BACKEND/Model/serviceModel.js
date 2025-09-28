@@ -35,6 +35,10 @@ const serviceSchema = new Schema({
         type:String,
         required:true,
     },
+    JobCreatedDate: {
+        type: Date,
+        default: Date.now,
+    },
    
 });
 

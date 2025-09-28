@@ -1,22 +1,33 @@
-const ServiceDate = require('../Model/ServiceDate');
 
-exports.createServiceDate = async (req, res) => {
-  try {
-    const newService = new ServiceDate(req.body);
-    await newService.save();
-    res.status(201).json({ message: 'Service date booked successfully' });
-  } catch (err) {
-    console.error('Error creating service date:', err);
-    res.status(500).json({ error: 'Failed to book service date' });
-  }
+// Create Service Date
+const createServiceDate = (req, res) => {
+	res.status(201).json({ message: 'Service date created (stub)' });
 };
 
-exports.getAllServiceDates = async (req, res) => {
-  try {
-    const serviceDates = await ServiceDate.find();
-    res.status(200).json(serviceDates);
-  } catch (err) {
-    console.error('Error fetching service dates:', err);
-    res.status(500).json({ error: 'Failed to fetch service dates' });
-  }
+// Get All Service Dates
+const getAllServiceDates = (req, res) => {
+	res.status(200).json({ message: 'All service dates (stub)' });
+};
+
+// Initiate Booking (OTP)
+const initiateBooking = (req, res) => {
+	res.status(200).json({ message: 'Booking initiated (stub)' });
+};
+
+// Verify OTP
+const verifyOTP = (req, res) => {
+	res.status(200).json({ message: 'OTP verified (stub)' });
+};
+
+// Resend OTP
+const resendOTP = (req, res) => {
+	res.status(200).json({ message: 'OTP resent (stub)' });
+};
+
+module.exports = {
+	createServiceDate,
+	getAllServiceDates,
+	initiateBooking,
+	verifyOTP,
+	resendOTP
 };

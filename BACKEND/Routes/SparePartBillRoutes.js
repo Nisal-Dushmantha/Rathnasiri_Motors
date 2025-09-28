@@ -8,10 +8,11 @@ const SparePartBillController = require("../controllers/SparePartBillController"
 router.get("/", SparePartBillController.getAllSparePartsBill);
 router.post("/",SparePartBillController.addSparePartsBill);
 router.get("/:id",SparePartBillController.getById);
+router.delete("/:id",SparePartBillController.deleteSparePartbillreports);
+
 
 
 
 
 //export
 module.exports = router;
-

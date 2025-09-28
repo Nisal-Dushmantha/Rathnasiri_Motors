@@ -42,7 +42,8 @@ function ServiceJobCard() {
     Model: String(formData.vehicleModel),
     KiloMeters: Number(formData.kilometers),
     LastServiceDate: formData.lastServiceDate, 
-    Requests: String(formData.additionalRequests), 
+    Requests: String(formData.additionalRequests),
+    JobCreatedDate: new Date(), // Automatically add current date
   }).then((res) => res.data);
 };
 

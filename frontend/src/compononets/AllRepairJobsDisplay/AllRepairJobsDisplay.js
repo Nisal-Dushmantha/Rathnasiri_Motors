@@ -1,16 +1,14 @@
-// AllRepairJobsDisplay.js
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import RepairDocument from "../RepairDocument/RepairDocument";
 
-function AllRepairJobsDisplay({ user, setRepairs }) {
-  const [showDoc, setShowDoc] = useState(false);
-  const navigate = useNavigate();
-
+function AllRepairJobsDisplay({ user, setRepairs, onDelete }) {
+  const [showDoc, setShowDoc] = React.useState(false);
+  
   if (!user) return null;
 
-  const { _id, Name, Phone, VehicleNumber, VehicleType, Model, Details } = user;
+  const { _id, Name, Phone, VehicleNumber, VehicleType, Model, Details, JobCreatedDate } = user;
 
   const deleteHandler = async () => {
     const confirmDelete = window.confirm(
@@ -21,19 +19,19 @@ function AllRepairJobsDisplay({ user, setRepairs }) {
     try {
       await axios.delete(`http://localhost:5000/repairs/${_id}`);
       alert("Repair Job deleted successfully!");
-      setRepairs((prevJobs) => prevJobs.filter((job) => job._id !== _id));
+      if (onDelete) {
+        onDelete(_id); // Use the provided onDelete callback
+      } else if (setRepairs) {
+        setRepairs((prevJobs) => prevJobs.filter((job) => job._id !== _id)); // Fallback to legacy method
+      }
     } catch (err) {
       console.error("Error deleting job:", err);
       alert("Failed to delete the job. Please try again.");
     }
   };
 
-  const updateHandler = () => {
-    navigate(`/AllRepairJobs/${_id}`);
-  };
-
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition">
+    <div className="bg-white p-7 rounded-2xl shadow-md hover:shadow-lg transition">
       {/* Header */}
       <div className="flex items-start justify-between mb-4">
         <div>
@@ -44,7 +42,7 @@ function AllRepairJobsDisplay({ user, setRepairs }) {
       </div>
 
       {/* Details grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="bg-gray-50 p-3 rounded-xl border">
           <p className="text-xs text-gray-500">Vehicle</p>
           <p className="font-semibold text-gray-800">{VehicleType} ({Model})</p>
@@ -52,6 +50,10 @@ function AllRepairJobsDisplay({ user, setRepairs }) {
         <div className="bg-gray-50 p-3 rounded-xl border">
           <p className="text-xs text-gray-500">Vehicle No</p>
           <p className="font-semibold text-gray-800">{VehicleNumber}</p>
+        </div>
+        <div className="bg-gray-50 p-3 rounded-xl border">
+          <p className="text-xs text-gray-500">Job Created On</p>
+          <p className="font-semibold text-gray-800">{JobCreatedDate ? new Date(JobCreatedDate).toLocaleDateString() : "Not Available"}</p>
         </div>
       </div>
 
@@ -65,12 +67,11 @@ function AllRepairJobsDisplay({ user, setRepairs }) {
 
       {/* Actions */}
       <div className="mt-4 flex flex-col md:flex-row gap-3">
-        <button
-          onClick={updateHandler}
-          className="md:flex-1 w-full bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition"
-        >
-          Update Job
-        </button>
+        <Link to={`/AllRepairJobs/${_id}`} className="md:flex-1">
+          <button className="w-full bg-green-600 text-white px-5 py-2.5 rounded-xl hover:bg-green-700 transition">
+            Update Job
+          </button>
+        </Link>
         <button
           onClick={deleteHandler}
           className="md:flex-1 w-full bg-red-600 text-white px-5 py-2.5 rounded-xl hover:bg-red-700 transition"

@@ -79,10 +79,10 @@ function AllServiceJobs() {
         <div className="max-w-7xl mx-auto px-6 py-8 text-white">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight">
+              <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 Service Jobs Management
               </h1>
-              <p className="mt-1 text-white/80">
+              <p className="mt-1 text-blue-900">
                 View, Update, and Manage All Service Requests
               </p>
               <div className="mt-3 flex flex-wrap gap-2">
