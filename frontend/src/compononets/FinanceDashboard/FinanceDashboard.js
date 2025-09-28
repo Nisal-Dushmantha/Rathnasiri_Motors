@@ -8,90 +8,108 @@ import {
   ArrowDownCircle,
   ArrowUpCircle
 } from "lucide-react";
+import axios from "axios";
+
+
+// UI Components
+const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading, fmt }) => (
+  <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+    <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+    <div className="p-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+          <p className="text-xs text-slate-500">{subtitle}</p>
+        </div>
+        <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+          <Icon className="h-5 w-5 text-slate-700" />
+        </div>
+      </div>
+      <div className="mt-4">
+        {loading ? (
+          <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+        ) : (
+          <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+            Rs {fmt(value)}
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+);
+
+const ActionButton = ({ to, children, primary }) => (
+  <Link to={to || "#"} className="block group">
+    <button 
+      className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+        primary 
+          ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
+          : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+      } font-semibold py-2 px-6 transition shadow-sm`}
+    >
+      {children}
+    </button>
+  </Link>
+);
 
 function FinanceDashboard() {
   const [loading, setLoading] = useState(true);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [netProfit, setNetProfit] = useState(0);
-  
-  // Helpers
   const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
 
+ 
   useEffect(() => {
     const controller = new AbortController();
-    const fetchTotals = async () => {
+
+    const fetchFinanceData = async () => {
       try {
         setLoading(true);
-        // In a real implementation, these would be actual API calls
-        // Simulating API response for demonstration
-        setTimeout(() => {
-          setTotalRevenue(1245000);
-          setTotalExpenses(826500);
-          setNetProfit(418500);
-          setLoading(false);
-        }, 800);
+
+        // Fetch expenses from backend
+        const res = await axios.get("http://localhost:5000/api/expenses", {
+          signal: controller.signal,
+        });
+        const allExpenses = res.data || [];
+
+        // Current month and year
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        // Filter expenses for current month
+        const monthlyExpenses = allExpenses.filter((exp) => {
+          const date = new Date(exp.date);
+          return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
+        });
+
+        // Total expenses
+        const totalExpensesThisMonth = monthlyExpenses.reduce(
+          (sum, exp) => sum + Number(exp.amount),
+          0
+        );
+
+        setTotalExpenses(totalExpensesThisMonth);
+
+        // For demo: total revenue (you can fetch dynamically later)
+        const totalRevenueThisMonth = 1245000; 
+        setTotalRevenue(totalRevenueThisMonth);
+
+        // Net profit = revenue - expenses
+        setNetProfit(totalRevenueThisMonth - totalExpensesThisMonth);
+
+        setLoading(false);
       } catch (e) {
-        if (e.name !== "AbortError") {
-          console.error("Error fetching finance data:", e);
-        }
+        if (e.name !== "AbortError") console.error(e);
+        setLoading(false);
       }
     };
 
-    fetchTotals();
+    fetchFinanceData();
+
     return () => controller.abort();
   }, []);
-
-  // UI Components
-  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
-    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
-      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
-      <div className="p-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
-            <p className="text-xs text-slate-500">{subtitle}</p>
-          </div>
-          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-            <Icon className="h-5 w-5 text-slate-700" />
-          </div>
-        </div>
-        <div className="mt-4">
-          {loading ? (
-            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
-          ) : (
-            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
-              Rs {fmt(value)}
-            </div>
-          )}
-  return (
-    <div className="flex-1 bg-gradient-to-b from-sky-100 to-sky-50 p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Finance Dashboard</h1>
-        <div className="flex gap-4">
-          <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Revenue</button>
-          <Link to="/Expenses" className="flex-1">
-          <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-sky-600 transition">Expenses</button>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-
-  const ActionButton = ({ to, children, primary }) => (
-    <Link to={to || "#"} className="block group">
-      <button 
-        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
-          primary 
-            ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
-            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
-        } font-semibold py-2 px-6 transition shadow-sm`}
-      >
-        {children}
-      </button>
-    </Link>
-  );
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
@@ -109,14 +127,12 @@ function FinanceDashboard() {
                 Revenue • Expenses • Analytics
               </p>
             </div>
-            
             <div className="flex gap-3">
-              <ActionButton to="/AddRevenue" primary>
+              <ActionButton to="/RevenueManagement" primary>
                 <ArrowUpCircle className="w-5 h-5" />
                 Add Revenue
               </ActionButton>
-              
-              <ActionButton to="/AddExpense">
+              <ActionButton to="/Expenses">
                 <ArrowDownCircle className="w-5 h-5" />
                 Add Expense
               </ActionButton>
@@ -134,6 +150,8 @@ function FinanceDashboard() {
             value={totalRevenue}
             icon={ArrowUpCircle}
             accent="bg-emerald-500"
+            loading={loading}
+            fmt={fmt}
           />
           <MetricCard
             title="Total Expenses"
@@ -141,6 +159,8 @@ function FinanceDashboard() {
             value={totalExpenses}
             icon={ArrowDownCircle}
             accent="bg-red-500"
+            loading={loading}
+            fmt={fmt}
           />
           <MetricCard
             title="Net Profit"
@@ -148,6 +168,8 @@ function FinanceDashboard() {
             value={netProfit}
             icon={DollarSign}
             accent="bg-blue-500"
+            loading={loading}
+            fmt={fmt}
           />
         </section>
 
@@ -166,7 +188,7 @@ function FinanceDashboard() {
                 <div className="text-slate-600 text-sm">Track all revenue sources</div>
               </div>
             </Link>
-            <Link to="/ExpenseManagement" className="block group">
+            <Link to="/Expenses" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <ArrowDownCircle className="w-4 h-4 mr-1" />
@@ -220,8 +242,10 @@ function FinanceDashboard() {
           </div>
         </section>
       </main>
+
+
     </div>
-  )
+  );
 }
 
-export default FinanceDashboard
+export default FinanceDashboard;
