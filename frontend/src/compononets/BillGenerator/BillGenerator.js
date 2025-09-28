@@ -3,10 +3,6 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import axios from "axios";
 
-<<<<<<< HEAD
-
-=======
->>>>>>> ce7305f4aa4e32727fdc25233ec8a9ba3255e93e
 function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bills" }) {
   const [customerName, setCustomerName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
@@ -124,15 +120,19 @@ function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bi
       setSaving(true);
       try {
         const payload = {
-          customerName,
-          vehicleNumber,
-          amount,
-          serviceCharge,
-          total,
-          paymentMethod,
-        };
-        const res = await axios.post(saveUrl, payload);
-        const billId = res.data.bill?._id || null;
+  customerName,
+  vehicleNumber,
+  amount,
+  serviceCharge,
+  total,
+  paymentMethod,
+  insuranceRef: "", // optional
+  cashier: "", // optional
+};
+
+const res = await axios.post("http://localhost:5000/api/bills/create", payload);
+const billId = res.data.bill?._id || null;
+
         generateReceiptPdf({ customerName, vehicleNumber, amount, serviceCharge, total, method: paymentMethod, billId });
         resetForm();
       } catch (err) {

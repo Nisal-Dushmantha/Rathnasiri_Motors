@@ -3,18 +3,18 @@ const Bill = require("../Model/BillModel");
 // Create and save a bill record
 const createBill = async (req, res) => {
   try {
-    const { amount, paymentMethod, insuranceRef, cashier } = req.body;
+    const { customerName, vehicleNumber, amount, serviceCharge, total, paymentMethod, insuranceRef, cashier } = req.body;
 
-    if (typeof amount !== "number" || isNaN(amount) || amount <= 0) {
-      return res.status(400).json({ message: "Invalid amount" });
-    }
-
-    if (!["Cash", "Card"].includes(paymentMethod)) {
-      return res.status(400).json({ message: "Invalid payment method" });
+    if (!customerName || !vehicleNumber || !amount || !total) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
     const bill = new Bill({
+      customerName,
+      vehicleNumber,
       amount,
+      serviceCharge,
+      total,
       paymentMethod,
       insuranceRef: insuranceRef || null,
       cashier: cashier || null,
@@ -39,4 +39,17 @@ const getBills = async (req, res) => {
   }
 };
 
-module.exports = { createBill, getBills };
+// Delete a bill
+const deleteBill = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Bill.findByIdAndDelete(id);
+    return res.status(200).json({ message: "Bill deleted" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+module.exports = { createBill, getBills ,deleteBill};
