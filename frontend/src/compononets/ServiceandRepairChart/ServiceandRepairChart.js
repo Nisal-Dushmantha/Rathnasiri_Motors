@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import JobsChart from './JobsChart';
 import EconomyChart from './EconomyChart';
-import { BarChart2, PieChart, LayoutDashboard } from 'lucide-react';
+import { BarChart2, LayoutDashboard } from 'lucide-react';
 
 function ServiceandRepairChart() {
   const [activeTab, setActiveTab] = useState('jobs');
@@ -46,7 +46,7 @@ function ServiceandRepairChart() {
                 : 'text-slate-600 hover:text-blue-600'
             }`}
           >
-            <PieChart className="w-4 h-4" />
+            <BarChart2 className="w-4 h-4" />
             Jobs Analysis
           </button>
           <button

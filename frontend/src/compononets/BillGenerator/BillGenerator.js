@@ -120,15 +120,19 @@ function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bi
       setSaving(true);
       try {
         const payload = {
-          customerName,
-          vehicleNumber,
-          amount,
-          serviceCharge,
-          total,
-          paymentMethod,
-        };
-        const res = await axios.post(saveUrl, payload);
-        const billId = res.data.bill?._id || null;
+  customerName,
+  vehicleNumber,
+  amount,
+  serviceCharge,
+  total,
+  paymentMethod,
+  insuranceRef: "", // optional
+  cashier: "", // optional
+};
+
+const res = await axios.post("http://localhost:5000/api/bills/create", payload);
+const billId = res.data.bill?._id || null;
+
         generateReceiptPdf({ customerName, vehicleNumber, amount, serviceCharge, total, method: paymentMethod, billId });
         resetForm();
       } catch (err) {

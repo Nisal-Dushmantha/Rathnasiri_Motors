@@ -187,6 +187,15 @@ function Dashboard() {
                 <div className="text-slate-600 text-sm">Browse and review all bills</div>
               </div>
             </Link>
+            <Link to="/JobStatistics" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <BarChart2 className="w-4 h-4 mr-1" />
+                  Job Statistics
+                </div>
+                <div className="text-slate-600 text-sm">View job analytics and reports</div>
+              </div>
+            </Link>
           </div>
         </section>
       </main>

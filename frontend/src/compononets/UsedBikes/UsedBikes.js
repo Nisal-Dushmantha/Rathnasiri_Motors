@@ -254,7 +254,10 @@ function UsedBikes() {
                     Delete
                   </button>
                   <Link
-                    to={`/BikesSalesHisForm/${bike._id}`}
+                    to={{
+                      pathname: `/BikesSalesHisForm/${bike._id}`,
+                    }}
+                    state={{ bike }}
                     className="flex-1 bg-green-500 text-white py-2 px-4 rounded-xl hover:bg-green-600 transition text-center font-semibold"
                   >
                     Sold

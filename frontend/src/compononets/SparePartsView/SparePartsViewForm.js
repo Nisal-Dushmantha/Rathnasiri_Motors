@@ -130,35 +130,36 @@ function SparePartsViewForm() {
   };
 
   // Download barcode as PDF
-  const handleDownloadPDF = () => {
-    if (!barcodeRef.current) return;
-    const svgElement = barcodeRef.current;
+ const handleDownloadPDF = () => {
+  if (!barcodeRef.current) return;
+  const svgElement = barcodeRef.current;
+  const serializer = new XMLSerializer();
+  const svgString = serializer.serializeToString(svgElement);
 
-    // Prefer viewBox dimensions if present
-    const viewBox = svgElement.getAttribute("viewBox");
-    let width = 320;
-    let height = 120;
-    if (viewBox) {
-      const parts = viewBox.split(" ").map(Number);
-      if (parts.length === 4) {
-        width = parts[2];
-        height = parts[3];
-      }
-    } else {
-      const bbox = svgElement.getBoundingClientRect();
-      width = Math.ceil(bbox.width) || width;
-      height = Math.ceil(bbox.height) || height;
-    }
+  // Create a canvas and draw SVG onto it
+  const canvas = document.createElement("canvas");
+  const width = svgElement.width.baseVal.value || 320;
+  const height = svgElement.height.baseVal.value || 120;
+  canvas.width = width;
+  canvas.height = height;
 
+  const ctx = canvas.getContext("2d");
+  const img = new window.Image();
+  img.onload = function () {
+    ctx.clearRect(0, 0, width, height);
+    ctx.drawImage(img, 0, 0, width, height);
+
+    const pngData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
       orientation: width >= height ? "landscape" : "portrait",
       unit: "pt",
       format: [width, height],
     });
-    pdf.svg(svgElement, { x: 0, y: 0 }).then(() => {
-      pdf.save(`barcode-${part?.barcode || "label"}.pdf`);
-    });
+    pdf.addImage(pngData, "PNG", 0, 0, width, height);
+    pdf.save(`barcode-${part?.barcode || "label"}.pdf`);
   };
+  img.src = "data:image/svg+xml;base64," + window.btoa(unescape(encodeURIComponent(svgString)));
+};
 
   if (loading) {
     return (

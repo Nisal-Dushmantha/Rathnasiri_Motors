@@ -141,7 +141,7 @@ function BikeSummary() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
           <div>
             <h1 className="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">
-              🏍️ Bike Inventory Summary
+              🏍 Bike Inventory Summary
             </h1>
             <p className="text-gray-600 text-lg">
               Overview of available and sold bikes in your inventory
@@ -150,7 +150,7 @@ function BikeSummary() {
           <div className="flex gap-4">
             <button onClick={() => window.location.href = '/NewBikes'} className="bg-blue-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-blue-800 transition">New Bikes</button>
             <button onClick={() => window.location.href = '/UsedBikes'} className="bg-green-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-green-800 transition">Used Bikes</button>
-            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition">Sales History</button>
+            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition"> Monthly Sales History</button>
           </div>
         </div>
 
@@ -203,7 +203,7 @@ function BikeSummary() {
             </div>
           </div>
           <div className="bg-white rounded-2xl p-8 shadow-lg flex flex-col gap-4">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">� Insights</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">  Insights</h3>
             <ul className="list-disc pl-6 text-gray-600 space-y-2">
               <li>Keep your available bikes above 20% for healthy inventory.</li>
               <li>Monitor sales trends to optimize stock levels.</li>
