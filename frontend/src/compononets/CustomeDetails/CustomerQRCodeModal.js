@@ -3,7 +3,25 @@ import { QRCodeCanvas } from "qrcode.react";
 
 const CustomerQRCodeModal = ({ customer, onClose }) => {
   if (!customer) return null;
-  const qrValue = JSON.stringify(customer);
+  const fullName = customer.customerName || "";
+  const [lastName, ...rest] = fullName.split(" ");
+  const firstName = rest.join(" ");
+  const phone = customer.contactNumber || "";
+  const email = customer.email || "";
+  const note = `Customer ID: ${customer.customerId || ""}`;
+
+  const vcard = [
+    "BEGIN:VCARD",
+    "VERSION:3.0",
+    `FN:${fullName}`,
+    `N:${lastName};${firstName};;;`,
+    `TEL;TYPE=CELL:${phone}`,
+    `EMAIL;TYPE=INTERNET:${email}`,
+    `NOTE:${note}`,
+    "END:VCARD",
+  ].join("\n");
+
+  const qrValue = vcard;
   return (
     <div style={{ position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh", background: "rgba(0,0,0,0.4)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000 }}>
       <div style={{ background: "#fff", padding: 32, borderRadius: 16, boxShadow: "0 2px 16px #333", textAlign: "center", minWidth: 320 }}>
