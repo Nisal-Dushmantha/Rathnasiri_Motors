@@ -23,7 +23,7 @@ const getAllBikeSalesReports = async (req, res, next) => {
 const addReports = async (req, res, next) => {
     const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date } = req.body;
 
-    // Backend validation: date must be today only
+    // Backend validation= date must be today only
     const today = new Date();
     today.setHours(0,0,0,0);
     let submittedDate = date ? new Date(date) : today;

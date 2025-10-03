@@ -103,7 +103,7 @@ function BikeReportView() {
 
         {/* Customer Information - Modern UI */}
         <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-10 shadow-sm">
-            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-400 decoration-4 underline-offset-4">Customer Information</h2>
+            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Customer Information</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
             <div>
               <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Name</div>
@@ -130,7 +130,7 @@ function BikeReportView() {
 
         {/* Bike Details - Modern UI */}
         <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-5 shadow-sm">
-            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-400 decoration-4 underline-offset-4">Bike Details</h2>
+            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Bike Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
             <div>
               <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Model</div>
