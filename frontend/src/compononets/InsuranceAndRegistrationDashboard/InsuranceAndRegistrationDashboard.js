@@ -10,63 +10,32 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
-function InsuranceAndRegistrationDashboard() {
-  const [loading, setLoading] = useState(true);
-  const [insuranceCount, setInsuranceCount] = useState(0);
-  const [registrationCount, setRegistrationCount] = useState(0);
-  const [upcomingRenewals, setUpcomingRenewals] = useState(0);
-  
-  useEffect(() => {
-    const controller = new AbortController();
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // Simulate API fetch
-        setTimeout(() => {
-          setInsuranceCount(85);
-          setRegistrationCount(112);
-          setUpcomingRenewals(14);
-          setLoading(false);
-        }, 800);
-      } catch (e) {
-        if (e.name !== "AbortError") {
-          console.error("Error fetching insurance and registration data:", e);
-        }
-      }
-    };
-
-    fetchData();
-    return () => controller.abort();
-  }, []);
-
-  // UI Components
-  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
-    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
-      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
-      <div className="p-5">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
-            <p className="text-xs text-slate-500">{subtitle}</p>
-          </div>
-          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
-            <Icon className="h-5 w-5 text-slate-700" />
-          </div>
+const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading }) => (
+  <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+    <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+    <div className="p-5">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+          <p className="text-xs text-slate-500">{subtitle}</p>
         </div>
-        <div className="mt-4">
-          {loading ? (
-            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
-          ) : (
-            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
-              {value}
-            </div>
-          )}
+        <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+          <Icon className="h-5 w-5 text-slate-700" />
         </div>
       </div>
+      <div className="mt-4">
+        {loading ? (
+          <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+        ) : (
+          <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+            {value}
+          </div>
+        )}
+      </div>
     </div>
-  );
+  </div>
+);
 
-// Action button used in header
 const ActionButton = ({ to, children, primary }) => (
   <Link to={to} className="block group">
     <button
