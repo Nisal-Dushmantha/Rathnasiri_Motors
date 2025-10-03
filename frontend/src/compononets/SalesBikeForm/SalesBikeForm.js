@@ -7,6 +7,12 @@ import PageHeader from "../ui/PageHeader";
 
 function SalesBikeForm() {
   const navigate = useNavigate();
+  // Get current date in yyyy-mm-dd format
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  const currentDate = `${yyyy}-${mm}-${dd}`;
   const [formData, setFormData] = useState({
     name: "",
     license_no: "",
@@ -18,7 +24,7 @@ function SalesBikeForm() {
     chassis_no: "",
     reg_year: "",
     last_price: "",
-    date: "",
+    date: currentDate,
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
