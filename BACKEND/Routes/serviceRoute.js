@@ -5,12 +5,14 @@ const router = express.Router();
 const service = require("../Model/serviceModel");
 //insert controller
 const serviceController = require("../controllers/serviceController");
+// Import validation middleware
+const { validateService, validateResult } = require("../middleware/validationMiddleware");
 
 router.get("/", serviceController.getAllservice);
 router.get("/count", serviceController.getServiceCount);
-router.post("/", serviceController.addServices);
+router.post("/", validateService, validateResult, serviceController.addServices);
 router.get("/:id", serviceController.getById);
-router.put("/:id", serviceController.updateService);
+router.put("/:id", validateService, validateResult, serviceController.updateService);
 router.delete("/:id", serviceController.deleteService);
 
 //export

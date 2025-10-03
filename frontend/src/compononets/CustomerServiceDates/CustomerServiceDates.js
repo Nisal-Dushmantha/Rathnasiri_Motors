@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import CustomerNavBar from '../CustomerNavBar/CustomerNavBar';
 import CustomerFooter from '../CustomerFooter/CustomerFooter';
@@ -9,6 +9,20 @@ function CustomerServiceDates() {
   const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState({});
+  
+  // Get today's date in YYYY-MM-DD format for min date attribute
+  const today = new Date().toISOString().split('T')[0];
+  
+  // Create a ref for the date input to directly set its min attribute
+  const dateInputRef = useRef(null);
+  
+  // Use effect to ensure the min attribute is set when component mounts
+  useEffect(() => {
+    if (dateInputRef.current) {
+      dateInputRef.current.min = today;
+    }
+  }, [today]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -16,12 +30,33 @@ function CustomerServiceDates() {
     vehicleModel: '',
     plateNumber: '',
     phoneNumber: '',
-    serviceDate: '',
+    serviceDate: today, // Default to today's date
     serviceTime: '',
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    if (name === 'serviceDate') {
+      // Validate date is today or future
+      const selectedDate = new Date(value);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Reset time to start of day
+      
+      if (selectedDate < today) {
+        setFormErrors(prev => ({ 
+          ...prev, 
+          [name]: 'Service date must be today or in the future' 
+        }));
+        // Still update the form to show the invalid selection
+        setFormData(prev => ({ ...prev, [name]: value }));
+        return;
+      } else {
+        setFormErrors(prev => ({ ...prev, [name]: undefined }));
+      }
+    }
+    
+    setFormData({ ...formData, [name]: value });
   };
   
   const handleOtpChange = (e) => {
@@ -33,6 +68,20 @@ function CustomerServiceDates() {
   
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate date before submission
+    const selectedDate = new Date(formData.serviceDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      setFormErrors({
+        ...formErrors,
+        serviceDate: 'Service date must be today or in the future'
+      });
+      return;
+    }
+    
     setLoading(true);
     
     try {
@@ -142,9 +191,10 @@ function CustomerServiceDates() {
       vehicleModel: '',
       plateNumber: '',
       phoneNumber: '',
-      serviceDate: '',
+      serviceDate: today, // Reset to today's date
       serviceTime: '',
     });
+    setFormErrors({});
   };
 
   return (
@@ -213,14 +263,23 @@ function CustomerServiceDates() {
               </p>
             </div>
 
-            <input
-              type="date"
-              name="serviceDate"
-              value={formData.serviceDate}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-2 border rounded-xl"
-            />
+            <div className="space-y-2">
+              <input
+                ref={dateInputRef}
+                type="date"
+                name="serviceDate"
+                value={formData.serviceDate}
+                onChange={handleChange}
+                required
+                min={today} // This ensures past dates are grayed out
+                className={`w-full px-4 py-2 border rounded-xl ${
+                  formErrors.serviceDate ? 'border-red-500' : 'border-gray-300'
+                }`}
+              />
+              {formErrors.serviceDate && (
+                <p className="text-red-500 text-xs mt-1">{formErrors.serviceDate}</p>
+              )}
+            </div>
 
             <input
               type="time"
