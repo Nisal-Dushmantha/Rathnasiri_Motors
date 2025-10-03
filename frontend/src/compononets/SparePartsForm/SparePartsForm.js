@@ -15,7 +15,7 @@ function SparePartsForm() {
     name: "",
     brand: "",
     rack: "",
-    Quentity: "",
+    quantity: "",
     price: "",
     description: ""
   });
@@ -112,6 +112,47 @@ function SparePartsForm() {
       );
     } finally {
       setIsSubmitting(false);
+    }
+  };
+  
+  const sendRequest = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/sp", {
+        barcode: String(formData.barcode),
+        name: String(formData.name),
+        brand: String(formData.brand),
+        rack: String(formData.rack),
+        Quentity: Number(formData.quantity),
+        price: String(formData.price),
+        description: formData.description ? String(formData.description) : undefined
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.data && error.response.data.errors) {
+        // Map backend field names to frontend field names if needed
+        const fieldMap = {
+          'barcode': 'barcode',
+          'name': 'name',
+          'brand': 'brand',
+          'rack': 'rack',
+          'Quentity': 'quantity',
+          'price': 'price',
+          'description': 'description'
+        };
+        
+        // Create a new errors object for frontend fields
+        const formattedErrors = {};
+        error.response.data.errors.forEach(err => {
+          const frontendField = fieldMap[err.param] || err.param;
+          formattedErrors[frontendField] = err.msg;
+        });
+        
+        setErrors(formattedErrors);
+        setSubmitError("Please correct the errors below");
+      } else {
+        setSubmitError("Failed to submit spare part. Please try again.");
+      }
+      throw error; // Re-throw to let the calling function know there was an error
     }
   };
 
