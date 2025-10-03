@@ -121,7 +121,7 @@ function InventoryDashboard() {
                 Add New Part
               </ActionButton>
               
-              <ActionButton to="/spc">
+              <ActionButton to="/SparePartsDisplay">
                 <Package className="w-5 h-5" />
                 View All Parts
               </ActionButton>
@@ -184,7 +184,7 @@ function InventoryDashboard() {
             </div>
           )}
           <div className="mt-3 text-right">
-            <Link to="/spc">
+            <Link to="/SparePartsDisplay">
               <button className="inline-flex items-center gap-2 justify-center rounded-xl border border-blue-600 bg-blue-50 text-blue-700 font-semibold py-2 px-4 hover:bg-blue-100 transition">
                 <Package className="h-4 w-4" />
                 Manage Parts
@@ -232,7 +232,7 @@ function InventoryDashboard() {
                 <div className="text-slate-600 text-sm">Browse and manage parts inventory</div>
               </div>
             </Link>
-            <Link to="/spc" className="block group">
+            <Link to="/SparePartCategory" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1">Parts Catalog</div>
                 <div className="text-slate-600 text-sm">Search and filter parts</div>
@@ -256,7 +256,7 @@ function InventoryDashboard() {
             <h2 className="text-xl font-bold text-slate-900">Reports & Analytics</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link to="/SparePartBillList" className="block group">
+            <Link to="/SparePBReports" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <BarChart2 className="w-4 h-4 mr-1" />

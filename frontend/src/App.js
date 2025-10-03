@@ -68,6 +68,11 @@ import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
 import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
+
+import SparePartCategory from "./compononets/SparePartCategory/SparePartCategory";
+
+
+import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
 // import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 // import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
@@ -90,9 +95,13 @@ import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
 import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
 import BillGenerator from "./compononets/BillGenerator/BillGenerator";
+import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
+import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
+import ViewBills from "./compononets/ViewBills/ViewBills";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
+import MonthlyIncomeReport from "./compononets/MonthlyIncomeReport/MonthlyIncomeReport";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -259,9 +268,13 @@ function Layout() {
           <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
           <Route path="/InsuranceHistory" element={<InsuranceHistory />} />
           <Route path="/BillGenerator" element={<BillGenerator />} />
-
+          <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
+          <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
+          <Route path="/ViewBills" element={<ViewBills />} />
+          
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
+          <Route path="/MonthlyIncomeReport" element={<MonthlyIncomeReport />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />
@@ -270,9 +283,14 @@ function Layout() {
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
           <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+
+          {/*spare part category*/}
+          <Route path="/SparePartCategory" element={<SparePartCategory/>}/>
           {/* Renamed billing routes */}
           <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
           <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
+
+          <Route path="/SparePBReports" element={<SparePBReports />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />

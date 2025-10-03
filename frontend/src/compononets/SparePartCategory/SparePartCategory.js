@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { FaSearch } from "react-icons/fa";
 
 function SparePartsDisplay() {
   const [spareParts, setSpareParts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
   const partsPerPage = 10;
-
-  const navigate = useNavigate();
 
   // Fetch spare parts
   useEffect(() => {
@@ -27,11 +28,21 @@ function SparePartsDisplay() {
     fetchSpareParts();
   }, []);
 
-  // Pagination logic
+  // Get unique brands for dropdown
+  const brands = [...new Set(spareParts.map(part => part.brand))].sort();
+
+  // Filter spare parts
+  const filteredParts = spareParts.filter((part) => {
+    const matchesSearch = part.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesBrand = selectedBrand === "" || part.brand === selectedBrand;
+    return matchesSearch && matchesBrand;
+  });
+
+  // Pagination
   const indexOfLastPart = currentPage * partsPerPage;
   const indexOfFirstPart = indexOfLastPart - partsPerPage;
-  const currentParts = spareParts.slice(indexOfFirstPart, indexOfLastPart);
-  const totalPages = Math.ceil(spareParts.length / partsPerPage);
+  const currentParts = filteredParts.slice(indexOfFirstPart, indexOfLastPart);
+  const totalPages = Math.ceil(filteredParts.length / partsPerPage);
 
   const goToPage = (pageNumber) => {
     if (pageNumber >= 1 && pageNumber <= totalPages) {
@@ -62,9 +73,47 @@ function SparePartsDisplay() {
           </Link>
         </div>
 
+        {/* Search and Filter */}
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          {/* Search */}
+          <div className="relative w-full md:w-1/2">
+            <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-500" />
+            <input
+              type="text"
+              placeholder="Search by part name..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full pl-10 pr-4 py-3 border border-gray-200 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none"
+            />
+          </div>
+
+          {/* Brand Filter */}
+          <div className="w-full md:w-1/4">
+            <select
+              value={selectedBrand}
+              onChange={(e) => {
+                setSelectedBrand(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none"
+            >
+              <option value="">All Brands</option>
+              {brands.map((brand) => (
+                <option key={brand} value={brand}>
+                  {brand}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
         {/* Results Count */}
         <div className="mb-4 text-sm text-gray-600">
-          Showing {spareParts.length} parts
+          Showing {filteredParts.length} of {spareParts.length} parts
+          {selectedBrand && ` for brand: ${selectedBrand}`}
         </div>
 
         {/* Table */}
@@ -77,8 +126,7 @@ function SparePartsDisplay() {
                 <th className="py-3 px-4 font-semibold">Brand</th>
                 <th className="py-3 px-4 font-semibold">Rack</th>
                 <th className="py-3 px-4 font-semibold">Quantity</th>
-                <th className="py-3 px-4 font-semibold">Price (Rs.)</th>
-                <th className="py-3 px-4 rounded-tr-xl text-center font-semibold">Action</th>
+                <th className="py-3 px-4 rounded-tr-xl font-semibold">Price (Rs.)</th>
               </tr>
             </thead>
             <tbody>
@@ -106,22 +154,12 @@ function SparePartsDisplay() {
                       </span>
                     </td>
                     <td className="py-3 px-4">Rs. {part.price}</td>
-                    <td className="py-3 px-4 text-center">
-                      <button
-                        onClick={() =>
-                          navigate(`/SparePartsViewForm/${part._id}`)
-                        }
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition shadow-sm"
-                      >
-                        View
-                      </button>
-                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
                   <td
-                    colSpan="7"
+                    colSpan="6"
                     className="text-center py-6 text-gray-500 italic"
                   >
                     No spare parts found

@@ -280,7 +280,7 @@ const topCategory = Object.keys(categoryTotals).reduce((a, b) => categoryTotals[
         <div className="flex gap-3">
           <button
            onClick={exportPDF}
-            className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition"
+            className="px-6 py-2 bg-gradient-to-r from-green-500 to-green-700 text-white font-semibold rounded-lg shadow-md hover:from-green-600 hover:to-green-800 transition"
           >
             📄 Export PDF
           </button>

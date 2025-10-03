@@ -12,9 +12,10 @@ import {
   Trash2,
   Edit,
   Printer,
+  User,
 } from "lucide-react";
 
-function AllInsurancesDisplay(props) {
+function AllInsurancesDisplay({ user }) {
   const {
     _id,
     fullname,
@@ -27,97 +28,107 @@ function AllInsurancesDisplay(props) {
     ChassisNo,
     StartDate,
     EndDate,
-  } = props.user;
+  } = user;
 
-  const history = useNavigate();
+  const navigate = useNavigate();
   const [showDocument, setShowDocument] = useState(false);
 
   const deleteHandler = async () => {
-    await axios
-      .delete(`http://localhost:5000/insurances/${_id}`)
-      .then(() => history("/InsurancesAll"));
+    if (!window.confirm("Are you sure you want to delete this insurance?")) return;
+    await axios.delete(`http://localhost:5000/insurances/${_id}`);
     alert("Insurance Deleted!");
+    navigate("/InsurancesAll");
   };
 
   const isActive =
     new Date(StartDate) <= new Date() && new Date(EndDate) >= new Date();
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-100 p-6">
-      <div className="bg-white w-full max-w-3xl rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6 flex items-center justify-between">
+    <div className="min-h-screen bg-gray-100 py-8 px-4 md:px-12">
+      {/* Header */}
+      <div className="max-w-6xl mx-auto mb-8">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-white">
-              {fullname || "Unknown"}
-            </h2>
-            <p className="text-blue-100 text-sm mt-1">ID: {_id}</p>
+            <h1 className="text-3xl font-bold text-gray-800">{fullname || "Unknown"}</h1>
+            <p className="text-gray-500 mt-1 text-sm">Insurance ID: {_id}</p>
           </div>
           <span
-            className={`px-3 py-1 text-sm font-semibold rounded-full ${
-              isActive
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+            className={`px-4 py-2 rounded-full text-sm font-semibold ${
+              isActive ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
             }`}
           >
             {isActive ? "Active" : "Expired"}
           </span>
         </div>
+      </div>
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-          <DetailCard icon={<Phone size={18} />} label="Contact No" value={ContactNo} />
-          <DetailCard icon={<MapPin size={18} />} label="Address" value={Address} />
-          <DetailCard icon={<Car size={18} />} label="Vehicle No" value={RegistrationNo} />
-          <DetailCard icon={<Car size={18} />} label="Vehicle Type" value={VehicleType} />
-          <DetailCard icon={<Car size={18} />} label="Vehicle Model" value={VehicleModel} />
-          <DetailCard icon={<Hash size={18} />} label="Engine No" value={EngineNo} />
-          <DetailCard icon={<Hash size={18} />} label="Chassis No" value={ChassisNo} />
-          <DetailCard icon={<Calendar size={18} />} label="Start Date" value={StartDate} />
-          <DetailCard icon={<Calendar size={18} />} label="End Date" value={EndDate} />
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Left Column - Personal Info */}
+        <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Owner Info</h2>
+          <InfoRow icon={<User />} label="Full Name" value={fullname} />
+          <InfoRow icon={<Phone />} label="Contact Number" value={ContactNo} />
+          <InfoRow icon={<MapPin />} label="Address" value={Address} />
         </div>
 
-        {/* Actions */}
-        <div className="bg-gray-50 px-6 py-4 flex flex-col md:flex-row gap-3 border-t">
-          <Link to={`/UpdateInsurances/${_id}`} className="flex-1">
-            <button className="w-full flex items-center justify-center gap-2 bg-green-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow hover:bg-green-700 transition">
-              <Edit size={18} />
-              Update
+        {/* Middle Column - Vehicle Info */}
+        <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col gap-6">
+          <h2 className="text-xl font-semibold text-gray-700 mb-4">Vehicle Info</h2>
+          <InfoRow icon={<Car />} label="Vehicle No" value={RegistrationNo} />
+          <InfoRow icon={<Car />} label="Vehicle Type" value={VehicleType} />
+          <InfoRow icon={<Car />} label="Vehicle Model" value={VehicleModel} />
+          <InfoRow icon={<Hash />} label="Engine No" value={EngineNo} />
+          <InfoRow icon={<Hash />} label="Chassis No" value={ChassisNo} />
+        </div>
+
+        {/* Right Column - Policy Info + Actions */}
+        <div className="bg-white shadow-lg rounded-2xl p-6 flex flex-col justify-between gap-6">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Policy Info</h2>
+            <InfoRow icon={<Calendar />} label="Start Date" value={StartDate} />
+            <InfoRow icon={<Calendar />} label="End Date" value={EndDate} />
+            <div className="mt-4">
+              <span
+                className={`inline-block px-3 py-1 rounded-full text-sm font-medium ${
+                  isActive ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+                }`}
+              >
+                {isActive ? "Active" : "Expired"}
+              </span>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col gap-3 mt-6">
+            <Link to={`/UpdateInsurances/${_id}`}>
+              <button className="w-full flex items-center justify-center gap-2 bg-blue-500 text-white py-3 rounded-xl font-semibold shadow hover:bg-blue-700 transition">
+                <Edit size={18} />
+                Update Policy
+              </button>
+            </Link>
+            <button
+              onClick={deleteHandler}
+              className="w-full flex items-center justify-center gap-2 bg-red-500 text-white py-3 rounded-xl font-semibold shadow hover:bg-red-700 transition"
+            >
+              <Trash2 size={18} />
+              Delete Policy
             </button>
-          </Link>
-          <button
-            onClick={deleteHandler}
-            className="flex-1 w-full flex items-center justify-center gap-2 bg-red-600 text-white px-5 py-2.5 rounded-xl font-semibold shadow hover:bg-red-700 transition"
-          >
-            <Trash2 size={18} />
-            Delete
-          </button>
-          <button
-            onClick={() => setShowDocument(true)}
-            className="flex-1 w-full flex items-center justify-center gap-2 bg-blue-700 text-white px-5 py-2.5 rounded-xl font-semibold shadow hover:bg-blue-800 transition"
-          >
-            <Printer size={18} />
-            Print
-          </button>
+            <button
+              onClick={() => setShowDocument(true)}
+              className="w-full flex items-center justify-center gap-2 bg-green-500 text-white py-3 rounded-xl font-semibold shadow hover:bg-green-700 transition"
+            >
+              <Printer size={18} />
+              Print Document
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Show PDF Preview Modal */}
+      {/* PDF Preview Modal */}
       {showDocument && (
         <InsuranceDocument
-          user={{
-            _id,
-            fullname,
-            Address,
-            ContactNo,
-            RegistrationNo,
-            VehicleType,
-            VehicleModel,
-            EngineNo,
-            ChassisNo,
-            StartDate,
-            EndDate,
-          }}
+          user={user}
           onClose={() => setShowDocument(false)}
         />
       )}
@@ -125,11 +136,12 @@ function AllInsurancesDisplay(props) {
   );
 }
 
-const DetailCard = ({ icon, label, value }) => (
-  <div className="bg-white shadow-sm border rounded-xl p-4 flex items-start gap-3 hover:shadow-md transition">
+// Info Row Component
+const InfoRow = ({ icon, label, value }) => (
+  <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-xl border border-gray-200 hover:shadow-sm transition">
     <div className="text-blue-600">{icon}</div>
     <div>
-      <p className="text-xs text-gray-500">{label}</p>
+      <p className="text-sm text-gray-500">{label}</p>
       <p className="font-semibold text-gray-800">{value || "N/A"}</p>
     </div>
   </div>

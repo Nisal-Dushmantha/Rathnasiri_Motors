@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 import PageHeader from "../ui/PageHeader";
 
 function BikesSalesHisForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     type: "",
     model: "",
@@ -15,6 +16,33 @@ function BikesSalesHisForm() {
     contact_no: "",
     date: ""
   });
+
+  // Autofill form if bike data is passed via navigation state
+  useEffect(() => {
+    if (location.state && location.state.bike) {
+      const bike = location.state.bike;
+      // Get current date in yyyy-mm-dd format
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      const currentDate = `${yyyy}-${mm}-${dd}`;
+      // Determine type: if bike.type is 'Scooter' or 'Motor Bike', treat as New, else Used
+      let typeValue = '';
+      if (bike.type === 'Scooter' || bike.type === 'Motor Bike') {
+        typeValue = 'New';
+      } else {
+        typeValue = 'Used';
+      }
+      setFormData((prev) => ({
+        ...prev,
+        type: typeValue,
+        model: bike.model || '',
+        last_price: bike.price ? String(bike.price) : '',
+        date: currentDate,
+      }));
+    }
+  }, [location.state]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -136,23 +164,14 @@ function BikesSalesHisForm() {
 
             <div className="space-y-2">
               <label className="block text-sm font-semibold text-gray-700">Model</label>
-              <select
+              <input
+                type="text"
                 name="model"
                 value={formData.model}
-                onChange={handleChange}
+                readOnly
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Select Model</option>
-                <option value="Ray Zr-Street Rally">Ray Zr-Street Rally</option>
-                <option value="Fz S Version 4.0">Fz S Version 4.0</option>
-                <option value="Ray Zr Disc-113cc">Ray Zr Disc-113cc</option>
-                <option value="Ray Zr-125cc">Ray Zr-125cc</option>
-                <option value="MT-15 Version 2.0">MT-15 Version 2.0</option>
-                <option value="R-15 Version 4.0">R-15 Version 4.0</option>
-                <option value="Ray Zr Street Rally-125cc">Ray Zr Street Rally-125cc</option>
-                <option value="Fz Version 2.0">Fz Version 2.0</option>
-              </select>
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
             </div>
 
             <div className="space-y-2">

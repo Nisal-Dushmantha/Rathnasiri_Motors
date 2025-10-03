@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title, SubTitle } from 'chart.js';
+import { Bar } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title, SubTitle } from 'chart.js';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import FallbackChart from './FallbackChart';
 
 // Register the required chart components
-ChartJS.register(ArcElement, Tooltip, Legend, Title, SubTitle);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title, SubTitle);
 
 function JobsChart() {
   const [loading, setLoading] = useState(true);
@@ -83,6 +83,7 @@ function JobsChart() {
     labels: ['Service Jobs', 'Repair Jobs'],
     datasets: [
       {
+        label: 'Number of Jobs',
         data: shouldUsePlaceholders ? [1, 1] : chartDataValues,
         backgroundColor: [
           'rgba(54, 162, 235, 0.7)', // Blue for Service Jobs
@@ -92,7 +93,8 @@ function JobsChart() {
           'rgba(54, 162, 235, 1)',
           'rgba(255, 99, 132, 1)',
         ],
-        borderWidth: 1
+        borderWidth: 1,
+        borderRadius: 6
       }
     ]
   };
@@ -119,11 +121,35 @@ function JobsChart() {
         }
       },
       legend: {
-        position: 'bottom'
+        display: false // Hide legend since we have labels on X axis
       }
     },
     responsive: true,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0 // Only show integer values
+        },
+        title: {
+          display: true,
+          text: 'Number of Jobs',
+          font: {
+            weight: 'bold'
+          }
+        }
+      },
+      x: {
+        title: {
+          display: true,
+          text: 'Job Type',
+          font: {
+            weight: 'bold'
+          }
+        }
+      }
+    }
   };
 
   return (
@@ -180,11 +206,11 @@ function JobsChart() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-2 h-[400px] relative flex justify-center items-center bg-white p-4 rounded-xl border border-slate-200">
-            {/* Try to render the Pie chart first */}
-            <div style={{ height: '350px', width: '350px', position: 'relative' }} className="chart-container">
+            {/* Bar chart for job distribution */}
+            <div style={{ height: '350px', width: '100%', position: 'relative' }} className="chart-container">
               {(chartDataValues[0] > 0 || chartDataValues[1] > 0) ? (
                 <>
-                  <Pie data={chartData} options={chartOptions} />
+                  <Bar data={chartData} options={chartOptions} />
                   <div className="absolute bottom-0 left-0 text-xs text-slate-500 p-1 bg-white/50">
                     Service: {jobsData?.serviceCount || 0}, Repair: {jobsData?.repairCount || 0}
                   </div>
