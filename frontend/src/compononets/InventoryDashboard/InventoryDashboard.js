@@ -141,12 +141,7 @@ function InventoryDashboard() {
               </button>
             </div>
           </div>
-          <Link to="/SparePartsForm">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">+ Add New</button>
-          </Link>
-          <Link to="">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">summary</button>
-          </Link>
+
         </div>
       </header>
       

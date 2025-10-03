@@ -187,9 +187,6 @@ function Dashboard() {
                 <div className="text-slate-600 text-sm">Browse and review all bills</div>
               </div>
             </Link>
-            <Link to="/AllRepairJobs" className="flex-1">
-              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
-            </Link>
           </div>
         </section>
       </main>
