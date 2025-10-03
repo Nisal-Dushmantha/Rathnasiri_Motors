@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Home } from "lucide-react"; // Import home icon for returning to index
 
 function CustomerHeader() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen((prev) => !prev);
+  };
+  
+  const navigateToIndexPage = () => {
+    // Redirect to the main index page
+    navigate("/");
   };
 
   return (
@@ -19,7 +26,7 @@ function CustomerHeader() {
         </div>
 
         {/* Center: Navigation Links */}
-        <nav>
+        <nav className="flex-grow flex justify-center">
           <ul className="flex items-center space-x-6 text-gray-700 font-medium relative">
 
             <li>
@@ -83,6 +90,17 @@ function CustomerHeader() {
             </li>
           </ul>
         </nav>
+
+        {/* Right: Leave Button */}
+        <div>
+          <button 
+            onClick={navigateToIndexPage}
+            className="flex items-center px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
+          >
+            <Home className="h-4 w-4 mr-2" />
+            Leave
+          </button>
+        </div>
       </div>
     </header>
   );
