@@ -103,11 +103,11 @@ import Expenses from "./compononets/Expenses/Expenses";
 import MonthlyIncomeReport from "./compononets/MonthlyIncomeReport/MonthlyIncomeReport";
 
 // Commented out imports for components that don't exist or are not being used
-// import CustomerReports from "./compononets/CustomerReports/CustomerReports";
-// import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
-// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
-// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
-// import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
+import CustomerReports from "./compononets/CustomerReports/CustomerReports";
+ import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+ import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+ import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+ import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
