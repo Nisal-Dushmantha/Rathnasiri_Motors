@@ -25,14 +25,13 @@ const addSparePartsBill = async (req,res,next) => {
 
   const {bill_no, date, customerName, name, brand, quantity, price} = req.body;
 
-  // Backend validation: Only allow today or past dates
+  // Backend validation: Only allow today's date
   const inputDate = new Date(date);
   const today = new Date();
-  // Set time to 00:00:00 for both dates to compare only the date part
   inputDate.setHours(0,0,0,0);
   today.setHours(0,0,0,0);
-  if (inputDate > today) {
-    return res.status(400).json({ message: "Future dates are not allowed for the bill date." });
+  if (inputDate.getTime() !== today.getTime()) {
+    return res.status(400).json({ message: "Only today's date is allowed for the bill date." });
   }
 
   let spb;

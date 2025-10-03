@@ -200,7 +200,7 @@ function SparePartBill() {
       alert("Spare parts bill saved and PDF downloaded.");
     } catch (err) {
       console.error(err);
-      alert("Failed to save bill. Please check the server and try again.");
+      alert("Only today's date is allowed for the bill date." );
     } finally {
       setSubmitting(false);
     }
@@ -233,7 +233,6 @@ function SparePartBill() {
                 onChange={(e) => setDate(e.target.value)}
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min={getToday()}
-                max={getToday()}
               />
               {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
             </div>
