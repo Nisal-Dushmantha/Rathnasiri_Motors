@@ -141,7 +141,7 @@ function BikeSummary() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
           <div>
             <h1 className="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">
-              🏍️ Bike Inventory Summary
+              🏍 Bike Inventory Summary
             </h1>
             <p className="text-gray-600 text-lg">
               Overview of available and sold bikes in your inventory

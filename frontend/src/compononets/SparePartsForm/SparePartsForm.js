@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../ui/Card";
@@ -9,7 +9,7 @@ import { AlertTriangle } from "lucide-react";
 
 function SparePartsForm() {
   const navigate = useNavigate();
-  
+  const [brands, setBrands] = useState([]);
   const [formData, setFormData] = useState({
     barcode: "",
     name: "",
@@ -17,47 +17,99 @@ function SparePartsForm() {
     rack: "",
     quantity: "",
     price: "",
-    description: "" // Optional field for description
+    description: ""
   });
-  
-  // Add state for handling validation errors
   const [errors, setErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  // Fetch all brands for dropdown
+  useEffect(() => {
+    const fetchBrands = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/sp");
+        const uniqueBrands = [
+          ...new Set(res.data.sp.map((part) => part.brand)),
+        ].sort();
+        setBrands(uniqueBrands);
+      } catch (err) {
+        console.error("Error fetching brands:", err);
+      }
+    };
+    fetchBrands();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Client-side validation
-    if (name === 'quantity' || name === 'price') {
-      // Only allow positive numbers
-      if (value && parseFloat(value) < 0) {
-        return; // Don't update if negative
-      }
+    if ((name === "Quentity" || name === "price") && value && parseFloat(value) < 0) {
+      return;
     }
-    
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error for this field when user starts typing again
     if (errors[name]) {
-      setErrors(prev => ({ ...prev, [name]: undefined }));
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
     }
+  };
+
+  // Frontend validation
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.barcode.trim()) newErrors.barcode = "Barcode is required";
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.brand) newErrors.brand = "Brand must be selected";
+    if (!formData.rack.trim()) newErrors.rack = "Rack is required";
+    if (!formData.Quentity) {
+      newErrors.Quentity = "Quantity is required";
+    } else if (formData.Quentity <= 0) {
+      newErrors.Quentity = "Quantity must be greater than 0";
+    }
+    if (!formData.price) {
+      newErrors.price = "Price is required";
+    } else if (formData.price < 0) {
+      newErrors.price = "Price cannot be negative";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Reset errors
     setErrors({});
     setSubmitError("");
+    if (!validateForm()) return;
     setIsSubmitting(true);
-    
     try {
-      await sendRequest();
-      console.log("Spare Part Added:", formData);
-      alert("Spare Part added to system!");
-      navigate("/SparePartsDisplay");
-    } catch (error) {
-      console.error("Error submitting form:", error);
-      // Error handling is done in sendRequest
+      await axios.post("http://localhost:5000/sp", {
+        barcode: String(formData.barcode),
+        name: String(formData.name),
+        brand: String(formData.brand),
+        rack: String(formData.rack),
+        Quentity: Number(formData.Quentity),
+        price: String(formData.price),
+        description: formData.description ? String(formData.description) : undefined,
+      }, {
+        headers: { "Content-Type": "application/json" },
+        timeout: 30000,
+      });
+      setShowSuccess(true);
+      setTimeout(() => {
+        setFormData({
+          barcode: "",
+          name: "",
+          brand: "",
+          rack: "",
+          Quentity: "",
+          price: "",
+          description: "",
+        });
+        setShowSuccess(false);
+        navigate("/SparePartsDisplay");
+      }, 1500);
+    } catch (err) {
+      console.error("Error details:", err);
+      setSubmitError(
+        err.response?.data?.message || "Failed to add item. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -107,8 +159,8 @@ function SparePartsForm() {
   return (
     <div className="flex-1 bg-white min-h-screen p-10">
       <PageHeader
-        title="Add Spare Part"
-        subtitle="Create a new spare part record"
+        title="Add New Spare Part"
+        subtitle="Enter the detsils of the spare part to add it to the inventory."
         icon={
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
@@ -119,6 +171,12 @@ function SparePartsForm() {
         }
       />
 
+      {showSuccess && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
+          ✅ <span>Item added successfully!</span>
+        </div>
+      )}
+
       <Card className="max-w-3xl mx-auto p-8">
         {submitError && (
           <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded">
@@ -128,106 +186,120 @@ function SparePartsForm() {
             </div>
           </div>
         )}
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Barcode & Name */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input 
-              label="Barcode" 
-              type="text" 
-              name="barcode" 
-              value={formData.barcode} 
-              onChange={handleChange} 
-              placeholder="Enter barcode" 
-              required 
+            <Input
+              label="Barcode"
+              type="text"
+              name="barcode"
+              value={formData.barcode}
+              onChange={handleChange}
+              placeholder="Enter barcode"
+              required
               error={errors.barcode}
             />
 
-            <Input 
-              label="Part Name" 
-              type="text" 
-              name="name" 
-              value={formData.name} 
-              onChange={handleChange} 
-              placeholder="Enter part name" 
-              required 
+            <Input
+              label="Name"
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              placeholder="Enter part name"
+              required
               error={errors.name}
             />
           </div>
 
           {/* Brand & Rack */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input 
-              label="Brand" 
-              type="text" 
-              name="brand" 
-              value={formData.brand} 
-              onChange={handleChange} 
-              placeholder="Enter brand name" 
-              required 
-              error={errors.brand}
-            />
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Brand
+              </label>
+              <div className="relative">
+                <select
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border border-gray-200 bg-white rounded-xl shadow-sm 
+                             focus:ring-2 focus:ring-blue-500 focus:border-transparent focus:outline-none
+                             text-gray-700 appearance-none pr-[2.5cm]"
+                >
+                  <option value="" className="text-gray-400">
+                    Select Brand
+                  </option>
+                  {brands.map((brand) => (
+                    <option key={brand} value={brand} className="text-gray-700">
+                      {brand}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-[0.2cm] flex items-center pr-3">
+                  <svg
+                    className="h-5 w-5 text-gray-500"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 12a1 1 0 01-.707-.293l-3-3a1 1 0 111.414-1.414L10 9.586l2.293-2.293a1 1 0 111.414 1.414l-3 3A1 1 0 0110 12z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+              {errors.brand && (
+                <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
+              )}
+            </div>
 
-            <Input 
-              label="Rack Location" 
-              type="text" 
-              name="rack" 
-              value={formData.rack} 
-              onChange={handleChange} 
-              placeholder="Enter rack location" 
-              required 
+            <Input
+              label="Rack"
+              type="text"
+              name="rack"
+              value={formData.rack}
+              onChange={handleChange}
+              placeholder="Enter rack location"
+              required
               error={errors.rack}
             />
           </div>
 
           {/* Quantity & Price */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Input 
-              label="Quantity" 
-              type="number" 
-              name="quantity" 
-              value={formData.quantity} 
-              onChange={handleChange} 
-              placeholder="Enter quantity" 
-              required 
-              error={errors.quantity}
+            <Input
+              label="Quantity"
+              type="number"
+              name="Quentity"
+              value={formData.Quentity}
+              onChange={handleChange}
+              placeholder="Enter quantity"
+              required
+              error={errors.Quentity}
+              min="1"
+            />
+
+            <Input
+              label="Price (Rs.)"
+              type="number"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              placeholder="Enter price"
+              required
+              error={errors.price}
               min="0"
             />
-
-            <Input 
-              label="Price (Rs.)" 
-              type="text" 
-              name="price" 
-              value={formData.price} 
-              onChange={handleChange} 
-              placeholder="Enter price" 
-              required 
-              error={errors.price}
-            />
           </div>
-
-          {/* Description (Optional) */}
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Description (Optional)</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className={`w-full px-4 py-3 border ${
-                errors.description ? 'border-red-500' : 'border-gray-200'
-              } rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
-              rows={4}
-              placeholder="Enter part description, specifications, etc."
-            />
-            {errors.description && (
-              <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-            )}
-          </div>
-
           {/* Submit Button */}
           <div className="text-center">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="px-6 py-3 rounded-xl"
               disabled={isSubmitting}
             >

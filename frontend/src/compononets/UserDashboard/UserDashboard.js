@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios";
 import { 
   Users, 
   Award, 
@@ -12,33 +13,44 @@ function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [totalCustomers, setTotalCustomers] = useState(0);
   const [loyaltyMembers, setLoyaltyMembers] = useState(0);
-  const [activeCustomers, setActiveCustomers] = useState(0);
 
   // Helpers
   const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
 
   useEffect(() => {
+    let isMounted = true;
     const controller = new AbortController();
     const fetchTotals = async () => {
       try {
         setLoading(true);
-        // In a real implementation, these would be actual API calls
-        // Simulating API response for demonstration
-        setTimeout(() => {
-          setTotalCustomers(246);
-          setLoyaltyMembers(128);
-          setActiveCustomers(98);
-          setLoading(false);
-        }, 800);
+        const res = await axios.get("http://localhost:5000/customers", { signal: controller.signal });
+        if (!isMounted) return;
+        const list = Array.isArray(res.data) ? res.data : [];
+        setTotalCustomers(list.length);
+        // Optionally fetch loyalty summary here if backend supports it
+        setLoyaltyMembers((prev) => prev);
       } catch (e) {
-        if (e.name !== "AbortError") {
+        if (e.name !== "CanceledError" && e.name !== "AbortError") {
           console.error("Error fetching customer data:", e);
         }
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchTotals();
-    return () => controller.abort();
+
+    // Refresh count on tab focus and periodically
+    const onFocus = () => fetchTotals();
+    window.addEventListener("focus", onFocus);
+    const interval = setInterval(fetchTotals, 10000);
+
+    return () => {
+      isMounted = false;
+      controller.abort();
+      window.removeEventListener("focus", onFocus);
+      clearInterval(interval);
+    };
   }, []);
 
   // UI Components
@@ -100,12 +112,12 @@ function UserDashboard() {
             </div>
             
             <div className="flex gap-3">
-              <ActionButton to="/CustomerDetails" primary>
+              <ActionButton to="/AddCustomer" primary>
                 <UserPlus className="w-5 h-5" />
                 Add Customer
               </ActionButton>
               
-              <ActionButton to="/CustomerLoyalty">
+              <ActionButton to="/AddLoyalty">
                 <Award className="w-5 h-5" />
                 Loyalty Program
               </ActionButton>
@@ -130,13 +142,6 @@ function UserDashboard() {
             value={loyaltyMembers}
             icon={Award}
             accent="bg-emerald-500"
-          />
-          <MetricCard
-            title="Active Now"
-            subtitle="Recent activity"
-            value={activeCustomers}
-            icon={Users}
-            accent="bg-purple-500"
           />
         </section>
 
