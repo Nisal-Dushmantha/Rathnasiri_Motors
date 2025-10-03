@@ -96,7 +96,7 @@ import ViewBills from "./compononets/ViewBills/ViewBills";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
-import RevenueManagement from "./compononets/RevenueManagement/RevenueManagement";
+import MonthlyIncomeReport from "./compononets/MonthlyIncomeReport/MonthlyIncomeReport";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -247,7 +247,7 @@ function Layout() {
           
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
-          <Route path="/RevenueManagement" element={<RevenueManagement />} />
+          <Route path="/MonthlyIncomeReport" element={<MonthlyIncomeReport />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />

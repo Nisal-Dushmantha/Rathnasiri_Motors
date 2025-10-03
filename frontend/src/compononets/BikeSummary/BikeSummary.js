@@ -141,7 +141,7 @@ function BikeSummary() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
           <div>
             <h1 className="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">
-              🏍️ Bike Inventory Summary
+              🏍 Bike Inventory Summary
             </h1>
             <p className="text-gray-600 text-lg">
               Overview of available and sold bikes in your inventory
@@ -203,7 +203,7 @@ function BikeSummary() {
             </div>
           </div>
           <div className="bg-white rounded-2xl p-8 shadow-lg flex flex-col gap-4">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">� Insights</h3>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">  Insights</h3>
             <ul className="list-disc pl-6 text-gray-600 space-y-2">
               <li>Keep your available bikes above 20% for healthy inventory.</li>
               <li>Monitor sales trends to optimize stock levels.</li>
