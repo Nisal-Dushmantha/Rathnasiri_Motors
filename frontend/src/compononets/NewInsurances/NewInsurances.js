@@ -30,12 +30,22 @@ const handleChange = (e) =>{
   }));
 };
 
-const handleSubmit = (e)=>{
+// Old submit handler removed
+const handleSubmit = (e) => {
   e.preventDefault();
-  console.log("New Insurancee Added:", FormData);
-  alert("New Insurance addes to system!");
-  sendRequest().then(()=>history('/InsurancesAll'))
-}
+
+  // Frontend validation for Contact Number
+  const phoneRegex = /^[0-9]{10}$/; // Example: 10 digits
+  if (!phoneRegex.test(FormData.ContactNo)) {
+    alert("Invalid Contact Number. It must be 10 digits.");
+    return;
+  }
+
+  console.log("New Insurance Added:", FormData);
+  alert("New Insurance added to system!");
+  sendRequest().then(() => history('/InsurancesAll'));
+};
+
 
 const sendRequest = async() =>{
   await axios.post("http://localhost:5000/insurances",{

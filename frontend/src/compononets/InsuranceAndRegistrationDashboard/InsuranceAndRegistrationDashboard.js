@@ -1,103 +1,215 @@
-//import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
-import React, { useEffect, useState } from 'react';
-//import { Link } from "react-router-dom";
-import axios from "axios"
+import { 
+  Shield, 
+  FileText, 
+  Calendar, 
+  Bell,
+  PlusCircle,
+  RefreshCw,
+  Clock
+} from "lucide-react";
 
 function InsuranceAndRegistrationDashboard() {
+  const [loading, setLoading] = useState(true);
+  const [insuranceCount, setInsuranceCount] = useState(0);
+  const [registrationCount, setRegistrationCount] = useState(0);
+  const [upcomingRenewals, setUpcomingRenewals] = useState(0);
+  
+  useEffect(() => {
+    const controller = new AbortController();
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        // Simulate API fetch
+        setTimeout(() => {
+          setInsuranceCount(85);
+          setRegistrationCount(112);
+          setUpcomingRenewals(14);
+          setLoading(false);
+        }, 800);
+      } catch (e) {
+        if (e.name !== "AbortError") {
+          console.error("Error fetching insurance and registration data:", e);
+        }
+      }
+    };
 
-  const [totalActive, setTotalActive] = useState(0);
+    fetchData();
+    return () => controller.abort();
+  }, []);
 
-useEffect(() => {
-  const fetchTotal = async () => {
-    try {
-      const res = await axios.get("http://localhost:5000/insurances/total/count");
-      setTotalActive(res.data.total);  // now shows all registrations
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  fetchTotal();
-}, []);
+  // UI Components
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
+          </div>
+        </div>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              {value}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 
+  const ActionButton = ({ to, children, primary }) => (
+    <Link to={to || "#"} className="block group">
+      <button 
+        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+          primary 
+            ? "bg-purple-600 border-purple-700 text-white hover:bg-purple-700" 
+            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+        } font-semibold py-2 px-6 transition shadow-sm`}
+      >
+        {children}
+      </button>
+    </Link>
+  );
 
   return (
-    <div className="flex-1 bg-white p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Insurance & Registration Dashboard</h1>
-        <div className="flex gap-3">
-          <Link to="/NewInsurances">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">+ Add New Insurances</button>
-          </Link>
-          {/*<Link to="/RepairJobCard">
-            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">Repair Card</button>
-          </Link>*/}
-        </div>
-      </div>
-
-      {/* Metric Panel */}
-      <div className="mb-8">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Band */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-purple-700 via-indigo-700 to-indigo-600" />
+        <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-8 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-blue-900 mb-2">Active Policies & Registrations</h2>
-              <p className="text-gray-600">Track active records at a glance</p>
+              <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
+                Insurance & Registration
+              </h1>
+              <p className="mt-1 text-white/80">
+                Manage vehicle documentation and renewals
+              </p>
             </div>
-            <div className="text-right">
-              <div className="text-4xl font-bold text-blue-900">{totalActive}</div>
-              <p className="text-sm text-gray-500 mt-1">Records</p>
+            
+            <div className="flex gap-3">
+              <ActionButton to="/AddInsurance" primary>
+                <PlusCircle className="w-5 h-5" />
+                New Insurance
+              </ActionButton>
+              
+              <ActionButton to="/AddRegistration">
+                <FileText className="w-5 h-5" />
+                New Registration
+              </ActionButton>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Top Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Insurances</h2>
-          <p className="text-gray-700 text-lg mb-6">Create and manage Insurances</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Insurance Card</h3>
-              <p className="text-sm mt-1 text-gray-600">Track Insurances</p>
-              <Link to="/NewInsurances">
-                <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">Go</button>
-              </Link>
-            </div>
-            {/*<div className="flex flex-col justify-between bg-blue-800 text-white p-6 rounded-xl shadow hover:shadow-lg hover:scale-105 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg">Repair Job Card</h3>
-              <p className="text-sm mt-1">Track repair jobs</p>
-              <Link to="/RepairJobCard">
-                <button className="mt-4 bg-white text-blue-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-200 transition">Go</button>
-              </Link>
-            </div>*/}
+      <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
+        {/* Metrics */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <MetricCard
+            title="Insurance Policies"
+            subtitle="Active policies"
+            value={insuranceCount}
+            icon={Shield}
+            accent="bg-purple-500"
+          />
+          <MetricCard
+            title="Vehicle Registrations"
+            subtitle="Registered vehicles"
+            value={registrationCount}
+            icon={FileText}
+            accent="bg-blue-500"
+          />
+          <MetricCard
+            title="Upcoming Renewals"
+            subtitle="Next 30 days"
+            value={upcomingRenewals}
+            icon={Calendar}
+            accent="bg-amber-500"
+          />
+        </section>
+
+        {/* Management Section */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Document Management</h2>
           </div>
-        </div>
-      </div>
-
-      {/* Bottom Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Insurance History</h2>
-          <p className="text-gray-700 text-lg">View detailed Insurance history.</p>
-          <Link to="/VehicleHistory">
-            <button className="mt-auto inline-flex items-center justify-center bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition shadow-sm">Go</button>
-          </Link>
-        </div>
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">All Insurances</h2>
-          <p className="text-gray-700 text-lg">Completed Insurances.</p>
-          <div className="mt-auto space-y-2">
-            <Link to="/InsurancesAll">
-              <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition shadow-sm">Insurances</button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/InsuranceManagement" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Shield className="w-4 h-4 mr-1" />
+                  Insurance Management
+                </div>
+                <div className="text-slate-600 text-sm">View and manage insurance policies</div>
+              </div>
             </Link>
-            {/*<Link to="/AllRepairJobs">
-              <button className="w-full bg-blue-800 text-white py-2 px-4 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
-            </Link>*/}
+            <Link to="/RegistrationManagement" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <FileText className="w-4 h-4 mr-1" />
+                  Registration Management
+                </div>
+                <div className="text-slate-600 text-sm">Track vehicle registrations</div>
+              </div>
+            </Link>
+            <Link to="/RenewalCalendar" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Calendar className="w-4 h-4 mr-1" />
+                  Renewal Calendar
+                </div>
+                <div className="text-slate-600 text-sm">View upcoming renewal deadlines</div>
+              </div>
+            </Link>
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* Reports & Notifications */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Reports & Notifications</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/RenewalReminders" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Bell className="w-4 h-4 mr-1" />
+                  Renewal Reminders
+                </div>
+                <div className="text-slate-600 text-sm">Configure customer notifications</div>
+              </div>
+            </Link>
+            <Link to="/ExpirationReport" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Clock className="w-4 h-4 mr-1" />
+                  Expiration Report
+                </div>
+                <div className="text-slate-600 text-sm">View and export expiration dates</div>
+              </div>
+            </Link>
+            <Link to="/RenewalHistory" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-purple-400 group-hover:shadow-md group-hover:bg-purple-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <RefreshCw className="w-4 h-4 mr-1" />
+                  Renewal History
+                </div>
+                <div className="text-slate-600 text-sm">Track historical renewals</div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

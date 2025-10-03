@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
+import PageHeader from "../ui/PageHeader";
 
 function BikesSalesHisForm() {
   const navigate = useNavigate();
@@ -10,6 +13,7 @@ function BikesSalesHisForm() {
     last_price: "",
     buyer_name: "",
     contact_no: "",
+    date: ""
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -33,6 +37,7 @@ function BikesSalesHisForm() {
         last_price: formData.last_price.trim(),
         buyer_name: formData.buyer_name,
         contact_no: formData.contact_no.trim(),
+        date: formData.date ? formData.date : undefined
       };
 
       console.log("Submitting form data...");
@@ -53,6 +58,7 @@ function BikesSalesHisForm() {
           last_price: "",
           buyer_name: "",
           contact_no: "",
+          date: ""
         });
         setShowSuccess(false);
         navigate("/BikesSalesHistory");
@@ -72,7 +78,7 @@ function BikesSalesHisForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 flex items-center justify-center p-6">
+    <div className="flex-1 bg-white min-h-screen p-10">
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -86,128 +92,117 @@ function BikesSalesHisForm() {
         </div>
       )}
 
-      <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 w-full max-w-2xl border border-white/20">
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <svg
-              className="w-8 h-8 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Add Sold bike to the Sales History
-          </h2>
-          <p className="text-gray-600">
-            Enter the Sold Bike Details
-          </p>
-        </div>
+      <PageHeader
+        title="Add Sold Bike to Sales History"
+        subtitle="Enter the Sold Bike Details"
+        icon={
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        }
+        actions={
+          <Button variant="outline" onClick={() => navigate('/BikesSalesHistory')}>All Sales History</Button>
+        }
+      />
 
+      <Card className="max-w-3xl mx-auto p-8">
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Bike Type
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Date of Sale</label>
               <input
-                type="text"
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={handleChange}
+                required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-gray-700">Bike Type</label>
+              <select
                 name="type"
                 value={formData.type}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-                placeholder = "New / Used"
-              />
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select Type</option>
+                <option value="New">New</option>
+                <option value="Used">Used</option>
+              </select>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Model
-              </label>
-              <input
-                type="text"
+              <label className="block text-sm font-semibold text-gray-700">Model</label>
+              <select
                 name="model"
                 value={formData.model}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
-               placeholder = "Fz, Ray Zr, R-15, MT-15"
-              />
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Select Model</option>
+                <option value="Ray Zr-Street Rally">Ray Zr-Street Rally</option>
+                <option value="Fz S Version 4.0">Fz S Version 4.0</option>
+                <option value="Ray Zr Disc-113cc">Ray Zr Disc-113cc</option>
+                <option value="Ray Zr-125cc">Ray Zr-125cc</option>
+                <option value="MT-15 Version 2.0">MT-15 Version 2.0</option>
+                <option value="R-15 Version 4.0">R-15 Version 4.0</option>
+                <option value="Ray Zr Street Rally-125cc">Ray Zr Street Rally-125cc</option>
+                <option value="Fz Version 2.0">Fz Version 2.0</option>
+              </select>
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Last Price (Rs.)
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Last Price (Rs.)</label>
               <input
                 type="number"
                 name="last_price"
                 value={formData.last_price}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 min="0"
                 placeholder = "Rs.250000"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Buyer Name
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Buyer Name</label>
               <input
                 type="text"
                 name="buyer_name"
                 value={formData.buyer_name}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder = "Name"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-semibold text-gray-700 uppercase tracking-wide">
-                Contact Number
-              </label>
+              <label className="block text-sm font-semibold text-gray-700">Contact Number</label>
               <input
                 type="text"
                 name="contact_no"
                 value={formData.contact_no}
                 onChange={handleChange}
                 required
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-white/50 backdrop-blur-sm"
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder= "07########"
               />
             </div>
           </div>
 
           <div className="pt-4">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className={`w-full py-4 px-6 rounded-xl font-semibold text-white transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
-                isSubmitting
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl"
-              }`}
-            >
+            <Button type="submit" disabled={isSubmitting} className="w-full py-3 text-base">
               {isSubmitting ? "Adding Bike..." : "Add Bike to Sales History"}
-            </button>
+            </Button>
           </div>
-          
-
-
         </form>
-      </div>
+      </Card>
     </div>
   );
 }

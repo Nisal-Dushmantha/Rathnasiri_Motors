@@ -44,78 +44,71 @@ function BikeSalesReport() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 p-6">
-      <div className="max-w-6xl mx-auto bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-6 border border-white/20">
-        <h2 className="text-2xl font-bold text-blue-800 mb-6 text-center">
-          Bike Sales Reports
-        </h2>
-
-        {loading ? (
-          <p className="text-center text-gray-600">Loading reports...</p>
-        ) : error ? (
-          <p className="text-center text-red-500">{error}</p>
-        ) : reports.length === 0 ? (
-          <p className="text-center text-gray-600">No reports found.</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white rounded-xl overflow-hidden">
-              <thead className="bg-blue-200">
-                <tr>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    Name
-                  </th>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    NIC
-                  </th>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    License No
-                  </th>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    Contact
-                  </th>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    Bike Model
-                  </th>
-                  <th className="py-3 px-4 text-left text-gray-700 font-bold uppercase tracking-wide">
-                    Chassis No
-                  </th>
-                  <th className="py-3 px-4 text-center text-gray-700 font-bold uppercase tracking-wide">
-                    Action
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {reports.map((report) => (
-                  <tr
-                    key={report._id}
-                    className="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200"
-                  >
-                    <td className="py-3 px-4 text-gray-700">{report.name}</td>
-                    <td className="py-3 px-4 text-gray-700">{report.NIC}</td>
-                    <td className="py-3 px-4 text-gray-700">{report.license_no}</td>
-                    <td className="py-3 px-4 text-gray-700">{report.contact_no}</td>
-                    <td className="py-3 px-4 text-gray-700">{report.bike_model}</td>
-                    <td className="py-3 px-4 text-gray-700">{report.chassis_no}</td>
-                    <td className="py-3 px-4 text-center flex justify-center gap-2">
-                      <button
-                        onClick={() => handleView(report._id)}
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => handleDelete(report._id, report.name)}
-                        className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200"
-                      >
-                        Delete
-                      </button>
-                    </td>
+    <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
+      <div className="flex-1 w-full flex flex-col items-center">
+        <div className="w-full max-w-7xl bg-white rounded-2xl shadow-2xl border border-gray-200">
+          <h2 className="text-2xl font-bold text-blue-700 mb-4 px-8 pt-8 text-left">
+            Bike Sales Reports
+          </h2>
+          {loading ? (
+            <p className="text-center text-gray-600">Loading reports...</p>
+          ) : error ? (
+            <p className="text-center text-red-500">{error}</p>
+          ) : reports.length === 0 ? (
+            <p className="text-center text-gray-600">No reports found.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white rounded-xl table-auto">
+                <thead className="bg-gray-50 text-gray-700">
+                  <tr>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">Name</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">NIC</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">License No</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">Contact</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">Bike Model</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">Chassis No</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-left">Date</th>
+                    <th className="py-4 px-6 text-base font-semibold border-b border-gray-200 text-center">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+                </thead>
+                <tbody>
+                  {reports.map((report) => (
+                    <tr
+                      key={report._id}
+                      className="border-b border-gray-200 hover:bg-blue-50 transition-colors duration-200"
+                    >
+                      <td className="py-3 px-6 text-gray-700">{report.name}</td>
+                      <td className="py-3 px-6 text-gray-700">{report.NIC}</td>
+                      <td className="py-3 px-6 text-gray-700">{report.license_no}</td>
+                      <td className="py-3 px-6 text-gray-700">{report.contact_no}</td>
+                      <td className="py-3 px-6 text-gray-700">{report.bike_model}</td>
+                      <td className="py-3 px-6 text-gray-700">{report.chassis_no}</td>
+                      <td className="py-3 px-6 text-gray-700">
+                        {report.date
+                          ? new Date(report.date).toLocaleDateString()
+                          : "-"}
+                      </td>
+                      <td className="py-3 px-6 text-center flex justify-center gap-2">
+                        <button
+                          onClick={() => handleView(report._id)}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleDelete(report._id, report.name)}
+                          className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-all duration-200"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

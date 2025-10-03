@@ -1,191 +1,294 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from "react-router-dom"; 
-import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
+import { 
+  Package, 
+  AlertTriangle,
+  PlusCircle,
+  Layers,
+  FileText,
+  BarChart2,
+  ShoppingCart,
 
-function  InventoryDashboard() {
-  const [totalUnits, setTotalUnits] = useState(null);
-  const [loadingTotal, setLoadingTotal] = useState(true);
-  const [itemCount, setItemCount] = useState(null);
+} from "lucide-react";
+
+function InventoryDashboard() {
+  const [totalUnits, setTotalUnits] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [itemCount, setItemCount] = useState(0);
   const [lowStockCount, setLowStockCount] = useState(0);
   const [lowStockItems, setLowStockItems] = useState([]);
   const [showLowStock, setShowLowStock] = useState(false);
 
+  // Helpers
+  const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
+
   useEffect(() => {
-    let isMounted = true;
+    const controller = new AbortController();
     const fetchTotals = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/sp');
-        const items = res?.data?.sp || [];
-        const sum = items.reduce((acc, item) => acc + (Number(item.Quentity) || 0), 0);
-        if (isMounted) {
+        setLoading(true);
+        const [itemsRes, lowStockRes] = await Promise.all([
+          fetch('http://localhost:5000/sp', { signal: controller.signal }),
+          fetch('http://localhost:5000/sp/low-stock?threshold=5', { signal: controller.signal })
+        ]);
+
+        if (itemsRes.ok && lowStockRes.ok) {
+          const itemsData = await itemsRes.json();
+          const lowStockData = await lowStockRes.json();
+          
+          const items = itemsData?.sp || [];
+          const sum = items.reduce((acc, item) => acc + (Number(item.Quentity) || 0), 0);
+          
           setTotalUnits(sum);
           setItemCount(items.length);
+          setLowStockCount(lowStockData?.count || 0);
+          setLowStockItems(lowStockData?.items || []);
         }
       } catch (e) {
-        if (isMounted) {
-          setTotalUnits(null);
-          setItemCount(null);
+        if (e.name !== "AbortError") {
+          console.error("Error fetching inventory data:", e);
         }
       } finally {
-        if (isMounted) setLoadingTotal(false);
+        setLoading(false);
       }
     };
-    const fetchLowStock = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/sp/low-stock?threshold=5');
-        if (isMounted) {
-          setLowStockCount(res?.data?.count || 0);
-          setLowStockItems(res?.data?.items || []);
-        }
-      } catch (e) {
-        if (isMounted) {
-          setLowStockCount(0);
-          setLowStockItems([]);
-        }
-      }
-    };
+
     fetchTotals();
-    fetchLowStock();
-    return () => { isMounted = false; };
+    return () => controller.abort();
   }, []);
-  return (
-    <div className="flex-1 bg-white p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-12">
-        <div className="relative">
-          <h1 className="text-4xl font-bold text-blue-900">Inventory Dashboard</h1>
-        </div>
-        <div className="flex gap-3 items-center">
-          {/* Low-stock notification control placed near the Add New button */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => setShowLowStock((v) => !v)}
-              className="w-10 h-10 rounded-full bg-white shadow border border-gray-200 flex items-center justify-center hover:bg-gray-50"
-              aria-label="Low stock notifications"
-            >
-              {/* Bell emoji as requested */}
-              <span className="text-2xl" aria-hidden="true">🔔</span>
-              {lowStockCount > 0 && (
-                <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-red-600 rounded-full">
-                  {lowStockCount}
-                </span>
-              )}
-            </button>
-            {showLowStock && (
-              <div className="absolute right-0 mt-2 w-80 bg-white border border-gray-200 rounded-xl shadow-lg z-20">
-                <div className="p-3 border-b border-gray-100 flex items-center justify-between">
-                  <span className="font-semibold text-gray-800">Low Stock</span>
-                  <span className="text-xs text-gray-500">Below 5</span>
-                </div>
-                <div className="max-h-64 overflow-auto">
-                  {lowStockItems.length === 0 ? (
-                    <div className="p-4 text-sm text-gray-500">No low stock items</div>
-                  ) : (
-                    lowStockItems.map((item) => (
-                      <div key={item._id} className="px-4 py-3 flex items-center justify-between hover:bg-gray-50">
-                        <div className="min-w-0">
-                          <div className="text-sm font-medium text-gray-900 truncate">{item.name}</div>
-                          <div className="text-xs text-gray-500 truncate">Brand: {item.brand} • Rack: {item.rack}</div>
-                        </div>
-                        <span className="ml-3 inline-flex items-center justify-center px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">
-                          Qty: {item.Quentity}
-                        </span>
-                      </div>
-                    ))
-                  )}  
-                </div>
-              </div>
-            )}
-          </div>
-          <Link to="/SparePartsForm">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">+ Add New</button>
-          </Link>
-          <Link to="">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Summary</button>
-          </Link>
-        </div>
-      </div>
 
-      {/* Metric Panel */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Spare Parts Count Card (left) */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600 flex items-center justify-between">
+  // UI Components
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-blue-900 mb-2">Spare Parts Category</h2>
-            <p className="text-gray-600">Number of distinct items</p>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
           </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-blue-900">{loadingTotal ? '—' : (itemCount ?? '—')}</div>
-            <p className="text-sm text-gray-500 mt-1">Items</p>
-          </div>
-        </div>
-
-        {/* Total Units Card (right) */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-blue-900 mb-2">Total Items in Inventory</h2>
-            <p className="text-gray-600">Sum of all quantities</p>
-          </div>
-          <div className="text-right">
-            <div className="text-4xl font-bold text-blue-900">{loadingTotal ? '—' : (totalUnits ?? '—')}</div>
-            <p className="text-sm text-gray-500 mt-1">Total Units</p>
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
           </div>
         </div>
-      </div>
-
-      {/* Top Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Inventory</h2>
-          <p className="text-gray-700 text-lg mb-6">Add and manage Spare Parts inventory</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Spare Parts</h3>
-              <p className="text-sm mt-1 text-gray-600">Add Spare Parts</p>
-              <Link to="/SparePartsForm">
-                <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">Add</button>
-              </Link>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              {fmt(value)}
             </div>
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Update Details</h3>
-              <p className="text-sm mt-1 text-gray-600">Add Any Changes</p>
-              <Link to="/SparePartsUpdate">
-                <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">Go</button>
-              </Link>
-            </div>
-          </div>
+          )}
         </div>
-      </div>
-
-      {/* Bottom Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Spare Parts Overview</h2>
-          <p className="text-gray-700 text-lg">This page provides a detailed inventory of spare parts, including barcode, name, brand, quantity, and price.The clear layout ensures easy access for monitoring and updating spare parts information.</p>
-          <div className="mt-auto flex gap-4">
-            <Link to="/SparePartsDisplay" className="flex-1">
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm">View</button>
-            </Link>
-            <Link to="/SparePartBill" className="flex-1">
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm">Generate Bill</button>
-            </Link>
-          </div>
-        </div>
-      <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-         <h2 className="text-2xl font-bold mb-4 text-blue-800">Reports & Summary</h2>
-         <p className="text-gray-700 text-lg">This section shows a monthly summary of spare parts, covering stock levels, usage, and pricing trends. A chart overview displays part quantities for quick comparison and smarter restocking decisions."."</p>
-         <div className="mt-auto flex gap-4">
-            
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm"> Monthly Summary</button>
-            
-            
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm">Summary Charts</button>
-            
-          </div>
       </div>
     </div>
-  </div>
+  );
+
+  const ActionButton = ({ to, children, primary }) => (
+    <Link to={to} className="block group">
+      <button 
+        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+          primary 
+            ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
+            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+        } font-semibold py-2 px-6 transition shadow-sm`}
+      >
+        {children}
+      </button>
+    </Link>
+  );
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Band */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600" />
+        <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-8 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
+                Inventory Dashboard
+              </h1>
+              <p className="mt-1 text-white/80">
+                Spare Parts • Stock Levels • Inventory Management
+              </p>
+            </div>
+            
+            <div className="flex gap-3">
+              <ActionButton to="/SparePartsForm" primary>
+                <PlusCircle className="w-5 h-5" />
+                Add New Part
+              </ActionButton>
+              
+              <ActionButton to="/spc">
+                <Package className="w-5 h-5" />
+                View All Parts
+              </ActionButton>
+              
+              <button
+                className="relative w-10 h-10 rounded-full bg-white shadow-md border border-slate-200 flex items-center justify-center hover:bg-slate-50"
+                onClick={() => setShowLowStock((s) => !s)}
+                title="Low Stock Alerts"
+                aria-label="Low stock notifications"
+              >
+                <AlertTriangle className="h-5 w-5 text-slate-700" />
+                {!loading && lowStockCount > 0 && (
+                  <span className="absolute -top-1 -right-1 inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-red-500 rounded-full">
+                    {lowStockCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          </div>
+          <Link to="/SparePartsForm">
+            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">+ Add New</button>
+          </Link>
+          <Link to="">
+            <button className="bg-blue-800 text-white font-semibold py-2 px-6 rounded-xl hover:bg-blue-700 transition">summary</button>
+          </Link>
+        </div>
+      </header>
+      
+      {/* Low Stock Alert Popup */}
+      {showLowStock && (
+        <div className="fixed right-8 top-32 z-20 w-[28rem] bg-white rounded-xl shadow-2xl border border-slate-200 p-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-red-100">
+                <AlertTriangle className="h-5 w-5 text-red-600" />
+              </div>
+              <h3 className="text-lg font-semibold text-slate-800">Low Stock Alerts</h3>
+            </div>
+            <button 
+              className="text-slate-500 hover:text-slate-700" 
+              onClick={() => setShowLowStock(false)}
+            >
+              <span className="sr-only">Close</span>
+              ✕
+            </button>
+          </div>
+          {loading ? (
+            <div className="p-4 text-slate-600">Loading...</div>
+          ) : lowStockItems.length === 0 ? (
+            <div className="p-4 text-slate-600">No low stock items.</div>
+          ) : (
+            <div className="max-h-64 overflow-auto -mx-2">
+              {lowStockItems.map((item) => (
+                <div key={item._id} className="px-2 py-2 border-t border-slate-100 first:border-t-0 flex items-center justify-between">
+                  <div>
+                    <div className="font-medium text-slate-800">{item.name}</div>
+                    <div className="text-sm text-slate-500">Brand: {item.brand} • Rack: {item.rack}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-sm text-slate-500">Qty</div>
+                    <div className="text-base font-semibold text-red-600">{item.Quentity}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="mt-3 text-right">
+            <Link to="/spc">
+              <button className="inline-flex items-center gap-2 justify-center rounded-xl border border-blue-600 bg-blue-50 text-blue-700 font-semibold py-2 px-4 hover:bg-blue-100 transition">
+                <Package className="h-4 w-4" />
+                Manage Parts
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
+      
+      <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
+        {/* Metrics */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <MetricCard
+            title="Total Parts"
+            subtitle="Distinct part categories"
+            value={itemCount}
+            icon={Package}
+            accent="bg-blue-500"
+          />
+          <MetricCard
+            title="Total Units"
+            subtitle="Sum of all quantities" 
+            value={totalUnits}
+            icon={Layers}
+            accent="bg-emerald-500"
+          />
+          <MetricCard
+            title="Low Stock Items"
+            subtitle="Items below threshold"
+            value={lowStockCount}
+            icon={AlertTriangle}
+            accent={lowStockCount > 0 ? "bg-red-500" : "bg-slate-500"}
+          />
+        </section>
+
+        {/* Parts Management */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Parts Management</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/SparePartsDisplay" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">View All Parts</div>
+                <div className="text-slate-600 text-sm">Browse and manage parts inventory</div>
+              </div>
+            </Link>
+            <Link to="/spc" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">Parts Catalog</div>
+                <div className="text-slate-600 text-sm">Search and filter parts</div>
+              </div>
+            </Link>
+            <Link to="/SparePartBill" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <ShoppingCart className="w-4 h-4 mr-1" />
+                  Generate Bill
+                </div>
+                <div className="text-slate-600 text-sm">Create invoices for parts</div>
+              </div>
+            </Link>
+          </div>
+        </section>
+
+        {/* Reports Section */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Reports & Analytics</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/SparePartBillList" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <BarChart2 className="w-4 h-4 mr-1" />
+                  Monthly Report
+                </div>
+                <div className="text-slate-600 text-sm">Generate inventory reports</div>
+              </div>
+            </Link>
+            <Link to="/SparePartsReport" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <FileText className="w-4 h-4 mr-1" />
+                  Usage Analysis
+                </div>
+                <div className="text-slate-600 text-sm">Track part usage trends</div>
+              </div>
+            </Link>
+            <Link to="/SparePartsReport" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">Summary Charts</div>
+                <div className="text-slate-600 text-sm">Visual inventory analytics</div>
+              </div>
+            </Link>
+          </div>
+        </section>
+      </main>
+    </div>
   );
 }
 

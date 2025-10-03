@@ -22,7 +22,7 @@ function Login() {
       if (response.status === 200) {
         setSuccess('Login successful! Redirecting...');
         setTimeout(() => {
-          navigate('/Homepage');
+          navigate('/homepage');
         }, 1500);
       }
     } catch (err) {

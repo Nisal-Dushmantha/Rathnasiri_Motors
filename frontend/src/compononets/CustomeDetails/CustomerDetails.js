@@ -196,6 +196,8 @@ function CustomerDetails() {
           <div className="mt-5 flex gap-3">
             <Button onClick={handleSaveUpdate} className="bg-green-600 hover:bg-green-700">Save Changes</Button>
             <Button variant="outline" onClick={handleCancelEdit}>Cancel</Button>
+            <Button onClick={handleSaveUpdate} className="bg-green-600 hover:bg-green-700">Save Changes</Button>
+            <Button variant="outline" onClick={handleCancelEdit}>Cancel</Button>
           </div>
         )}
       </Card>
@@ -208,5 +210,4 @@ function CustomerDetails() {
 }
 
 export default CustomerDetails;
-
 
