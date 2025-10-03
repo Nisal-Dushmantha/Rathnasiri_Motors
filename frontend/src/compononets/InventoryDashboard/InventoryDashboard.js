@@ -121,7 +121,7 @@ function InventoryDashboard() {
                 Add New Part
               </ActionButton>
               
-              <ActionButton to="/spc">
+              <ActionButton to="/SparePartsDisplay">
                 <Package className="w-5 h-5" />
                 View All Parts
               </ActionButton>
@@ -231,7 +231,7 @@ function InventoryDashboard() {
                 <div className="text-slate-600 text-sm">Browse and manage parts inventory</div>
               </div>
             </Link>
-            <Link to="/spc" className="block group">
+            <Link to="/SparePartCategory" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1">Parts Catalog</div>
                 <div className="text-slate-600 text-sm">Search and filter parts</div>

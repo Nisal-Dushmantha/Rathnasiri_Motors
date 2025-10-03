@@ -114,17 +114,24 @@ function SparePBReports() {
   }, []);
 
 
-  const handleDelete = async (billNo) => {
-  if (!window.confirm("Are you sure you want to delete this bill?")) return;
-  try {
-    await axios.delete(`http://localhost:5000/spb/${billNo}`);
-    // Optionally, refresh data or update billsByMonth here
-    alert("Bill deleted successfully.");
-  } catch (err) {
-    console.error(err);
-    alert("Failed to delete bill.");
-  }
-};
+  const handleDelete = async (billNo, monthKey) => {
+    if (!window.confirm("Are you sure you want to delete this bill?")) return;
+    try {
+      await axios.delete(`http://localhost:5000/spb/${billNo}`);
+      alert("Bill deleted successfully.");
+      setBillsByMonth(prev => {
+        const updated = { ...prev };
+        updated[monthKey] = updated[monthKey].filter(bill => bill.bill_no !== billNo);
+        if (updated[monthKey].length === 0) {
+          delete updated[monthKey];
+        }
+        return updated;
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete bill.");
+    }
+  };
 
 
   return (
@@ -184,7 +191,7 @@ function SparePBReports() {
                         <td className="border px-4 py-2 font-semibold">{total.toFixed(2)}</td>
                         <td className="border px-4 py-2 text-center">
                           <button
-                            onClick={() => handleDelete(bill.bill_no)}
+                            onClick={() => handleDelete(bill.bill_no, monthKey)}
                             className="px-3 py-1 bg-red-500 text-white rounded-lg hover:bg-red-600"
                           >
                             Delete
