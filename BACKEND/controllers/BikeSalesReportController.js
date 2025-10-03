@@ -23,9 +23,18 @@ const getAllBikeSalesReports = async (req, res, next) => {
 const addReports = async (req, res, next) => {
     const { name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date } = req.body;
 
+    // Backend validation: date must be today only
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    let submittedDate = date ? new Date(date) : today;
+    submittedDate.setHours(0,0,0,0);
+    if (submittedDate.getTime() !== today.getTime()) {
+        return res.status(400).json({ message: "Date of sale must be today only." });
+    }
+
     let reports;
     try {
-        reports = new Breport({name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date});
+        reports = new Breport({name, license_no, NIC, address, contact_no, bike_model, color, chassis_no, reg_year, last_price, date: today});
         await reports.save();
     }catch (err) {
         console.log(err);
