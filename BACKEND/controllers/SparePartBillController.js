@@ -23,23 +23,31 @@ const getAllSparePartsBill = async (req, res, next) => {
 //Data Insert
 const addSparePartsBill = async (req,res,next) => {
 
-    const {bill_no,date,customerName,name,brand,quantity,price} = req.body;
+  const {bill_no, date, customerName, name, brand, quantity, price} = req.body;
 
-    let spb;
+  // Backend validation: Only allow today or past dates
+  const inputDate = new Date(date);
+  const today = new Date();
+  // Set time to 00:00:00 for both dates to compare only the date part
+  inputDate.setHours(0,0,0,0);
+  today.setHours(0,0,0,0);
+  if (inputDate > today) {
+    return res.status(400).json({ message: "Future dates are not allowed for the bill date." });
+  }
 
-    try{
-        spb = new SpareB({bill_no,date,customerName,name,brand,quantity,price});
-        await spb.save();
-    }
-    catch(err){
-        console.log(err);
-    }
+  let spb;
+  try {
+    spb = new SpareB({ bill_no, date, customerName, name, brand, quantity, price });
+    await spb.save();
+  } catch (err) {
+    console.log(err);
+  }
 
-    // not insert spare parts
-    if(!spb){
-        return res.status(404).json({message:"unable to add spare parts bill"});
-    }
-    return res.status(200).json({ spb });
+  // not insert spare parts
+  if (!spb) {
+    return res.status(404).json({ message: "unable to add spare parts bill" });
+  }
+  return res.status(200).json({ spb });
 
 };
 
