@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import axios from "axios";
 import Card from "../ui/Card";
 import Input from "../ui/Input";
@@ -8,7 +8,7 @@ import PageHeader from "../ui/PageHeader";
 import { AlertTriangle } from "lucide-react";
 
 function SparePartsForm() {
-  const navigate = useNavigate();
+  const history = useNavigate();
   
   const [formData, setFormData] = useState({
     barcode: "",
@@ -54,15 +54,15 @@ function SparePartsForm() {
       await sendRequest();
       console.log("Spare Part Added:", formData);
       alert("Spare Part added to system!");
-      navigate("/SparePartsDisplay");
+      history("/SparePartsDisplay");
     } catch (error) {
       console.error("Error submitting form:", error);
       // Error handling is done in sendRequest
     } finally {
       setIsSubmitting(false);
     }
-  };
-  
+  }
+
   const sendRequest = async () => {
     try {
       const response = await axios.post("http://localhost:5000/sp", {
@@ -76,27 +76,10 @@ function SparePartsForm() {
       });
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        // Map backend field names to frontend field names if needed
-        const fieldMap = {
-          'barcode': 'barcode',
-          'name': 'name',
-          'brand': 'brand',
-          'rack': 'rack',
-          'Quentity': 'quantity',
-          'price': 'price',
-          'description': 'description'
-        };
-        
-        // Create a new errors object for frontend fields
-        const formattedErrors = {};
-        error.response.data.errors.forEach(err => {
-          const frontendField = fieldMap[err.param] || err.param;
-          formattedErrors[frontendField] = err.msg;
-        });
-        
-        setErrors(formattedErrors);
-        setSubmitError("Please correct the errors below");
+      // Handle errors from backend
+      if (error.response && error.response.data) {
+        const errorMessage = error.response.data.message || "Failed to add spare part";
+        setSubmitError(errorMessage);
       } else {
         setSubmitError("Failed to submit spare part. Please try again.");
       }
@@ -115,7 +98,7 @@ function SparePartsForm() {
           </svg>
         }
         actions={
-          <Button variant="outline" onClick={() => navigate('/SparePartsDisplay')}>All Spare Parts</Button>
+          <Button variant="outline" onClick={() => history('/SparePartsDisplay')}>All Spare Parts</Button>
         }
       />
 

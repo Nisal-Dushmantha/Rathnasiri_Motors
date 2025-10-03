@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+// Consolidated Login Component with inline styles
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import background1 from '../uploads/background1.mp4';
-import { User, Lock, LogIn, Eye, EyeOff, AlertTriangle, CheckCircle, CarFront } from 'lucide-react';
+import { User, Lock, Eye, EyeOff, AlertTriangle, CheckCircle, ArrowLeft, LogIn, CarFront } from 'lucide-react';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -12,30 +13,66 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setLoading(true);
-    
-    try {
-      const response = await axios.post('http://localhost:5000/register/login', {
-        Email: email,
-        Password: password,
-      });
-      if (response.status === 200) {
-        setSuccess('Login successful! Redirecting...');
-        setTimeout(() => {
-          navigate('/homepage');
-        }, 1500);
+  
+  // Add animation styles directly to the document head
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
       }
-    } catch (err) {
-      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
-    } finally {
-      setLoading(false);
-    }
-  };
+      
+      @keyframes blob {
+        0%, 100% { transform: scale(1) translate(0, 0); }
+        25% { transform: scale(1.05) translate(10px, 10px); }
+        50% { transform: scale(0.95) translate(-10px, 15px); }
+        75% { transform: scale(1.05) translate(5px, -10px); }
+      }
+      
+      .animation-delay-2000 { animation-delay: 2s; }
+      .animation-delay-4000 { animation-delay: 4s; }
+      .animate-blob { animation: blob 10s infinite; }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    `;
+    document.head.appendChild(style);
+    
+    // Clean up function to remove the style when component unmounts
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setLoading(true);
+    
+    try {
+      const response = await axios.post('http://localhost:5000/register/login', {
+        Email: email,
+        Password: password,
+      });
+      if (response.status === 200) {
+        setSuccess('Login successful! Redirecting...');
+        setTimeout(() => {
+          navigate('/homepage');
+        }, 1500);
+      }
+    } catch (err) {
+      // Use optional chaining for safe access to error message
+      setError(err.response?.data?.message || 'Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 flex items-center justify-center p-4 relative overflow-hidden">
@@ -59,6 +96,14 @@ function Login() {
         <div className="absolute top-1/3 -right-24 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         <div className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
       </div>
+      
+      {/* Back to home button */}
+      <div className="absolute top-6 left-6">
+        <Link to="/" className="inline-flex items-center gap-2 text-white hover:text-blue-200 transition-colors bg-white/10 backdrop-filter backdrop-blur-lg px-4 py-2 rounded-lg shadow-lg hover:bg-white/20">
+          <ArrowLeft className="h-4 w-4" />
+          <span className="font-medium">Back to Home</span>
+        </Link>
+      </div>
 
       {/* Login card */}
       <div className="w-full max-w-md relative z-10">
@@ -69,7 +114,7 @@ function Login() {
             </div>
           </div>
           <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-md">Welcome Back</h1>
-          <p className="text-white/90 text-lg">Sign in to your Rathnasiri Motors account</p>
+          <p className="text-white/90 text-lg">Sign in to your account</p>
         </div>
         
         <div className="bg-white/95 backdrop-filter backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20 transform transition-all duration-300 hover:shadow-blue-500/10">
@@ -88,7 +133,7 @@ function Login() {
             </div>
           )}
           
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center">
                 <span>Email Address</span>
@@ -100,9 +145,9 @@ function Login() {
                 </div>
                 <input
                   type="email"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
                   required
                   className="pl-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
                 />
@@ -120,11 +165,11 @@ function Login() {
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
                   required
-                  className="pl-10 w-full pr-10 px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
+                  className="pl-10 pr-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
                 />
                 <button 
                   type="button"
@@ -140,20 +185,24 @@ function Login() {
               </div>
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex items-center justify-between">
+              <label className="flex items-center gap-2">
+                <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
+                <span className="text-sm text-gray-600">Remember me</span>
+              </label>
               <button 
                 type="button" 
-                className="text-sm text-blue-600 hover:text-blue-800 hover:underline transition-colors"
-                onClick={() => alert('Password reset functionality will be available soon!')}
+                onClick={()=>alert('Password reset coming soon')} 
+                className="text-sm font-medium text-blue-600 hover:text-blue-800 hover:underline transition-colors"
               >
-                Forgot password?
+                Forgot Password?
               </button>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-70 transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full flex justify-center items-center py-3 px-4 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-70 mt-4 transform hover:-translate-y-0.5 active:translate-y-0"
             >
               {loading ? (
                 <>
@@ -161,7 +210,7 @@ function Login() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Signing in...
+                  Signing In...
                 </>
               ) : (
                 <>
@@ -182,8 +231,16 @@ function Login() {
           </div>
         </div>
       </div>
+
+      {/* Footer info */}
+      <div className="absolute bottom-4 text-center w-full text-white/70 text-sm">
+        <div>Rathnasiri Motors © 2025</div>
+        <div className="text-xs">support@rathnasirimotors.com</div>
+      </div>
     </div>
   );
 }
+
+// Animation styles are handled inline
 
 export default Login;
