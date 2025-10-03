@@ -18,6 +18,16 @@ const getAllnewBH = async (req, res) => {
 const addnewBH = async (req, res, next) => {
   console.log("Request body:", req.body);
   const { type, model, last_price, buyer_name, contact_no, date } = req.body;
+
+  // Backend validation: date must be today only
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  let submittedDate = date ? new Date(date) : today;
+  submittedDate.setHours(0,0,0,0);
+  if (submittedDate.getTime() !== today.getTime()) {
+    return res.status(400).json({ message: "Date of sale must be today only." });
+  }
+
   let newBsH;
   try {
     newBsH = new newB({
@@ -26,7 +36,7 @@ const addnewBH = async (req, res, next) => {
       last_price,
       buyer_name,
       contact_no,
-      date: date ? new Date(date) : Date.now()
+      date: today
     });
     await newBsH.save();
     console.log("Sold Bike saved successfully:", newBsH);
