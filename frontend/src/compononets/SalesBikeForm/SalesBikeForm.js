@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
+import PageHeader from "../ui/PageHeader";
 
 function SalesBikeForm() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ function SalesBikeForm() {
     chassis_no: "",
     reg_year: "",
     last_price: "",
+    date: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,6 +53,7 @@ function SalesBikeForm() {
           chassis_no: "",
           reg_year: "",
           last_price: "",
+          date: "",
         });
         setShowSuccess(false);
         navigate("/BikeSalesReport");
@@ -66,8 +69,7 @@ function SalesBikeForm() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-6">
-      {/* Success Notification */}
+    <div className="flex-1 bg-white min-h-screen p-10">
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-xl shadow-lg z-50 flex items-center space-x-2">
           <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -81,33 +83,36 @@ function SalesBikeForm() {
         </div>
       )}
 
-      <Card className="p-8 w-full max-w-3xl">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full mb-4 border border-blue-100">
-            <svg
-              className="w-8 h-8 text-blue-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-          </div>
-          <h2 className="text-3xl font-bold text-blue-900 mb-2">
-            Report Details
-          </h2>
-          <p className="text-gray-600">
-            Enter the details to the Report
-          </p>
-        </div>
+      <PageHeader
+        title="Create Sales Report"
+        subtitle="Enter the details to the Report"
+        icon={
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        }
+        actions={
+          <Button variant="outline" onClick={() => navigate('/BikeSalesReport')}>All Sales Reports</Button>
+        }
+      />
 
+      <Card className="max-w-3xl mx-auto p-8">
         <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Date Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-gray-700">
+              Date of Sale
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              required
+              className="w-1/2 px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
+            />
+          </div>
+
           {/* Customer Details Section */}
           <div>
             <h3 className="text-2xl font-bold text-blue-800 mb-4">
@@ -208,15 +213,23 @@ function SalesBikeForm() {
                 <label className="block text-sm font-semibold text-gray-700">
                   Bike Model
                 </label>
-                <input
-                  type="text"
+                <select
                   name="bike_model"
                   value={formData.bike_model}
                   onChange={handleChange}
                   required
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
-                  placeholder="e.g., Yamaha R15"
-                />
+                >
+                  <option value="">Select Model</option>
+                  <option value="Ray Zr-Street Rally">Ray Zr-Street Rally</option>
+                  <option value="Fz S Version 4.0">Fz S Version 4.0</option>
+                  <option value="Ray Zr Disc-113cc">Ray Zr Disc-113cc</option>
+                  <option value="Ray Zr-125cc">Ray Zr-125cc</option>
+                  <option value="MT-15 Version 2.0">MT-15 Version 2.0</option>
+                  <option value="R-15 Version 4.0">R-15 Version 4.0</option>
+                  <option value="Ray Zr Street Rally-125cc">Ray Zr Street Rally-125cc</option>
+                  <option value="Fz Version 2.0">Fz Version 2.0</option>
+                </select>
               </div>
 
               {/* Color */}
@@ -256,17 +269,18 @@ function SalesBikeForm() {
                 <label className="block text-sm font-semibold text-gray-700">
                   Registration Year
                 </label>
-                <input
-                  type="number"
+                <select
                   name="reg_year"
                   value={formData.reg_year}
                   onChange={handleChange}
                   required
-                  min="1900"
-                  max={new Date().getFullYear()}
                   className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white/50"
-                  placeholder="e.g., 2020"
-                />
+                >
+                  <option value="">Select Year</option>
+                  {Array.from({length: 2026-2015+1}, (_,i) => 2015+i).map((yr) => (
+                    <option key={yr} value={yr}>{yr}</option>
+                  ))}
+                </select>
               </div>
 
               {/* Last Price */}

@@ -17,6 +17,7 @@ function AllServiceJobsDisplay({ user, onDelete }) {
     KiloMeters,
     LastServiceDate,
     Requests,
+    JobCreatedDate,
   } = user;
 
   const deleteHandler = async () => {
@@ -47,7 +48,7 @@ function AllServiceJobsDisplay({ user, onDelete }) {
       </div>
 
       {/* Details grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div className="bg-gray-50 p-3 rounded-xl border">
           <p className="text-xs text-gray-500">Vehicle</p>
           <p className="font-semibold text-gray-800">{VehicleType} ({Model})</p>
@@ -57,12 +58,16 @@ function AllServiceJobsDisplay({ user, onDelete }) {
           <p className="font-semibold text-gray-800">{VehicleNumber}</p>
         </div>
         <div className="bg-gray-50 p-3 rounded-xl border">
+          <p className="text-xs text-gray-500">Job Created On</p>
+          <p className="font-semibold text-gray-800">{JobCreatedDate ? new Date(JobCreatedDate).toLocaleDateString() : "Not Available"}</p>
+        </div>
+        <div className="bg-gray-50 p-3 rounded-xl border">
           <p className="text-xs text-gray-500">Kilometers</p>
           <p className="font-semibold text-gray-800">{KiloMeters}</p>
         </div>
         <div className="bg-gray-50 p-3 rounded-xl border">
           <p className="text-xs text-gray-500">Last Service Date</p>
-          <p className="font-semibold text-gray-800">{LastServiceDate}</p>
+          <p className="font-semibold text-gray-800">{LastServiceDate ? new Date(LastServiceDate).toLocaleDateString() : "Not Available"}</p>
         </div>
       </div>
 

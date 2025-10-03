@@ -28,6 +28,13 @@ const addInsurance = async (req,res,next) => {
         ChassisNo,
         StartDate,
         EndDate} = req.body;
+
+        const phoneRegex = /^[0-9]{10}$/;
+  if (!phoneRegex.test(ContactNo)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid Contact Number. Must be 10 digits." });
+  }
     let insurances;
     try{
         insurances = new Insurance({
@@ -84,6 +91,13 @@ const updateInsurance = async (req,res,next) => {
         ChassisNo,
         StartDate,
         EndDate} = req.body;
+
+        const phoneRegex = /^[0-9]{10}$/;
+  if (!phoneRegex.test(ContactNo)) {
+    return res
+      .status(400)
+      .json({ message: "Invalid Contact Number. Must be 10 digits." });
+  }
 
         let insurances;
         try{
@@ -186,6 +200,10 @@ const sendExpiryReminders = async (req, res) => {
 
 
 exports.getAllInsurances = getAllInsurances;
+exports.addInsurance = addInsurance;
+exports.getById =getById;
+//exports.updateInsurance = updateInsurance;
+//exports.deleteInsurance = deleteInsurance;
 exports.addInsurance = addInsurance;
 exports.getById =getById;
 exports.updateInsurance = updateInsurance;

@@ -51,6 +51,11 @@ const BRSchema = new Schema({
     last_price : {
         type: String,//data type
         required: true,//validate
+    },
+
+    date: {
+        type: Date,
+        required: true
     }
 });
 

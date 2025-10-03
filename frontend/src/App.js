@@ -1,11 +1,12 @@
 // App.js
-import React from "react";
+import React, { useRef } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 // Common components
 import SidePanel from "./compononets/SidePanel/SidePanel";
 import Header from "./compononets/Header/Header";
 import Footer from "./compononets/Footer/Footer";
+import HomepageNavbar from "./compononets/HomepageNavbar/HomepageNavbar";
 
 // Dashboards
 import Homepage from "./compononets/Homepage/Homepage";
@@ -14,7 +15,7 @@ import UserDashboard from "./compononets/UserDashboard/UserDashboard";
 import ProductsDashboard from "./compononets/ProductsDashboard/ProductsDashboard";
 import InventoryDashboard from "./compononets/InventoryDashboard/InventoryDashboard";
 import FinanceDashboard from "./compononets/FinanceDashboard/FinanceDashboard";
-import InsuranceDashboard from "./compononets/InsuranceAndRegistrationDashboard/InsuranceAndRegistrationDashboard";
+import InsuranceAndRegistrationDashboard from "./compononets/InsuranceAndRegistrationDashboard/InsuranceAndRegistrationDashboard";
 
 // Job cards
 import ServiceJobCard from "./compononets/ServiceJobCard/ServiceJobCard";
@@ -65,7 +66,10 @@ import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
 import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
-import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+// import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
+import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -82,10 +86,18 @@ import NewInsurances from "./compononets/NewInsurances/NewInsurances";
 import InsurancesAll from "./compononets/InsurancesAll/InsurancesAll";
 import UpdateInsurances from "./compononets/UpdateInsurances/UpdateInsurances";
 import InsuranceDocument from "./compononets/InsuranceDocument/InsuranceDocument";
+import InsuranceHistory from "./compononets/InsuranceHistory/InsuranceHistory";
+import BillGenerator from "./compononets/BillGenerator/BillGenerator";
+
+//Fiance
+import Expenses from "./compononets/Expenses/Expenses";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
 import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -95,6 +107,12 @@ import Support from "./compononets/Static/Support";
 function Layout() {
   const location = useLocation();
 
+  const sidebarNavRef = useRef(false);
+  const headerRef = useRef(null);
+  const sideRef = useRef(null);
+  const footerRef = useRef(null);
+
+  // Determine if current route is one of the index-style pages
   const isIndexPage = [
     "/", "/Login", "/Register", "/CustomerHomepage", "/Index",
      "/CustomerBrandNewBikes", "/CustomerUsedBikes", 
@@ -102,22 +120,50 @@ function Layout() {
     "/CustomerServiceDates", "/CustomerAboutUs"
   ].includes(location.pathname);
 
+  // Sidebar-only overlay; no measurement needed for full-screen overlay
+
+  // No measurement effects needed for full-screen overlay
+
   return (
     <>
-      {!isIndexPage && <Header />}
+      {!isIndexPage && location.pathname !== "/homepage" && (
+        <div ref={headerRef}>
+          <Header />
+        </div>
+      )}
+
+      {location.pathname === "/homepage" && (
+        <div className="sticky top-0 z-50">
+          <HomepageNavbar />
+        </div>
+      )}
 
       <div className={!isIndexPage ? "flex" : ""}>
-        {!isIndexPage && <SidePanel />}
+        {!isIndexPage && location.pathname !== "/homepage" && (
+          <div ref={sideRef}>
+            <SidePanel
+              onNavigate={() => {
+                // mark that the next navigation was initiated via the sidebar
+                sidebarNavRef.current = true;
+              }}
+            />
+          </div>
+        )}
 
         <div className={!isIndexPage ? "flex-1" : ""}>
-          <Routes>
-          {/* Public pages */}
-          <Route path="/" element={<Index />} />
-          <Route path="/Index" element={<Index />} />
-          <Route path="/Login" element={<Login />} />
-          <Route path="/Register" element={<Register />} />
-          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
-          <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+          <div className="content-area-overlay-container">
+            <Routes>
+              {/* Public pages */}
+              <Route path="/" element={<Index />} />
+              <Route path="/Index" element={<Index />} />
+              <Route path="/Login" element={<Login />} />
+              <Route path="/Register" element={<Register />} />
+              <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+              <Route path="/CustomerBrandNewBikes" element={<CustomerBrandNewBikes />} />
+              <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
+              <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
+              <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
+              <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
           <Route path="/CustomerUsedBikes" element={<CustomerUsedBikes />} /> 
           <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
           <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
@@ -130,7 +176,7 @@ function Layout() {
           <Route path="/products" element={<ProductsDashboard />} />
           <Route path="/inventory" element={<InventoryDashboard />} />
           <Route path="/finance" element={<FinanceDashboard />} />
-          <Route path="/insurance" element={<InsuranceDashboard />} />
+          <Route path="/insurance" element={<InsuranceAndRegistrationDashboard />} />
 
           {/* Job cards */}
           <Route path="/ServiceJobCard" element={<ServiceJobCard />} />
@@ -140,6 +186,7 @@ function Layout() {
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
+          <Route path="/JobStatistics" element={<JobStatistics />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -178,6 +225,26 @@ function Layout() {
           <Route path="/Reports" element={<CustomerReports/>}/>
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+
+          <Route path="/Reports" element={<CustomerReports/>}/>
+          
+          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+
+          <Route path="/Reports" element={<CustomerReports/>}/>
+          
+          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
           {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
 
@@ -186,6 +253,11 @@ function Layout() {
           <Route path="/InsurancesAll" element={<InsurancesAll />} />
           <Route path="/UpdateInsurances/:id" element={<UpdateInsurances />} />
           <Route path="/InsuranceDocument/:id" element={<InsuranceDocument />} />
+          <Route path="/InsuranceHistory" element={<InsuranceHistory />} />
+          <Route path="/BillGenerator" element={<BillGenerator />} />
+
+          {/*Finance */}
+          <Route path="/Expenses" element={<Expenses />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />
@@ -193,15 +265,24 @@ function Layout() {
           <Route path="/SparePartsUpdate/:id" element={<SparePartsUpdate />} />
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
+          <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+          {/* Renamed billing routes */}
+          <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
+          <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
           {/* Static pages */}
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/support" element={<Support />} />
           </Routes>
+          </div>
         </div>
       </div>
 
-      {!isIndexPage && <Footer />}
+      {!isIndexPage && (
+        <div ref={footerRef}>
+          <Footer />
+        </div>
+      )}
     </>
   );
 }

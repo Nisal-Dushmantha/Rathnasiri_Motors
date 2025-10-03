@@ -1,136 +1,198 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { Wrench, BarChart2, History, FilePlus2, FileBarChart, Receipt, FileText } from "lucide-react";
 
 function Dashboard() {
   const [serviceCount, setServiceCount] = useState(null);
   const [repairCount, setRepairCount] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // Helper for formatting numbers
+  const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetchCounts = async () => {
       try {
         setLoading(true);
         const [svcRes, repRes] = await Promise.all([
-          fetch('http://localhost:5000/services/count'),
-          fetch('http://localhost:5000/repairs/count'),
+          fetch('http://localhost:5000/services/count', { signal: controller.signal }),
+          fetch('http://localhost:5000/repairs/count', { signal: controller.signal }),
         ]);
-        const svc = await svcRes.json();
-        const rep = await repRes.json();
-        setServiceCount(svc.count || 0);
-        setRepairCount(rep.count || 0);
+        
+        if (svcRes.ok && repRes.ok) {
+          const svc = await svcRes.json();
+          const rep = await repRes.json();
+          setServiceCount(svc.count || 0);
+          setRepairCount(rep.count || 0);
+        } else {
+          console.error("Error fetching counts:", svcRes.status, repRes.status);
+          setServiceCount(0);
+          setRepairCount(0);
+        }
       } catch (e) {
-        setServiceCount(0);
-        setRepairCount(0);
+        if (e.name !== "AbortError") {
+          console.error("Error fetching job counts:", e);
+          setServiceCount(0);
+          setRepairCount(0);
+        }
       } finally {
         setLoading(false);
       }
     };
     fetchCounts();
+    return () => controller.abort();
   }, []);
 
+  // UI Components
+  const MetricCard = ({ title, subtitle, value, icon: Icon, accent }) => (
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
+      <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
+      <div className="p-5">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-sm font-semibold text-slate-700">{title}</h3>
+            <p className="text-xs text-slate-500">{subtitle}</p>
+          </div>
+          <div className="w-11 h-11 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center">
+            <Icon className="h-5 w-5 text-slate-700" />
+          </div>
+        </div>
+        <div className="mt-4">
+          {loading ? (
+            <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
+          ) : (
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
+              {fmt(value)}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ActionButton = ({ to, children, primary }) => (
+    <Link to={to} className="block group">
+      <button 
+        className={`inline-flex items-center justify-center gap-2 rounded-xl border ${
+          primary 
+            ? "bg-blue-600 border-blue-700 text-white hover:bg-blue-700" 
+            : "bg-white border-slate-200 text-slate-700 hover:bg-slate-50"
+        } font-semibold py-2 px-6 transition shadow-sm`}
+      >
+        {children}
+      </button>
+    </Link>
+  );
+
   return (
-    <div className="flex-1 bg-white p-10 min-h-screen">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-12">
-        <h1 className="text-4xl font-bold text-blue-900">Service & Repair Dashboard</h1>
-        <div className="flex gap-3">
-          <Link to="/ServiceJobCard">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Service Jobs</button>
-          </Link>
-          <Link to="/RepairJobCard">
-            <button className="inline-flex items-center justify-center rounded-xl border border-gray-200 bg-white text-blue-700 font-semibold py-2 px-6 hover:bg-blue-50 transition shadow-sm">Repair Jobs</button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Metrics Row (match ProductsDashboard style) */}
-      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Total Service Jobs */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-blue-600">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
+      {/* Header Band */}
+      <header className="relative overflow-hidden">
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600" />
+        <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
+        <div className="max-w-7xl mx-auto px-6 py-8 text-white">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-blue-900 mb-2">Total Service Jobs</h2>
-              <p className="text-gray-600">Completed and ongoing</p>
+              <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
+                Service & Repair Dashboard
+              </h1>
+              <p className="mt-1 text-blue-900">
+                View and manage all service and repair jobs
+              </p>
             </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-blue-900 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-blue-900">{serviceCount}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Services</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Total Repair Jobs */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border-l-4 border-red-600">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-2xl font-bold text-red-900 mb-2">Total Repair Jobs</h2>
-              <p className="text-gray-600">Completed and ongoing</p>
-            </div>
-            <div className="text-right">
-              {loading ? (
-                <div className="text-3xl font-bold text-red-600 animate-pulse">Loading...</div>
-              ) : (
-                <div className="text-4xl font-bold text-red-600">{repairCount}</div>
-              )}
-              <p className="text-sm text-gray-500 mt-1">Repairs</p>
+            <div className="flex gap-3">
+              <ActionButton to="/ServiceJobCard" primary>
+                <FilePlus2 className="w-5 h-5" />
+                New Service Job
+              </ActionButton>
+              <ActionButton to="/RepairJobCard">
+                <Wrench className="w-5 h-5" />
+                New Repair Job
+              </ActionButton>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      {/* Top Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-1 gap-8 mb-8">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Job Cards</h2>
-          <p className="text-gray-700 text-lg mb-6">Create and manage service and repair job cards</p>
+      {/* Body */}
+      <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
+        {/* Metrics */}
+        <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <MetricCard
+            title="Service Jobs"
+            subtitle="All service records"
+            value={serviceCount}
+            icon={FileBarChart}
+            accent="bg-blue-500"
+          />
+          <MetricCard
+            title="Repair Jobs"
+            subtitle="All repair records"
+            value={repairCount}
+            icon={Wrench}
+            accent="bg-indigo-500"
+          />
+          <MetricCard
+            title="Total Jobs"
+            subtitle="Service + Repairs"
+            value={(serviceCount || 0) + (repairCount || 0)}
+            icon={BarChart2}
+            accent="bg-teal-500"
+          />
+        </section>
 
-          {/* Sub-cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Service Jobs</h3>
-              <p className="text-sm mt-1 text-gray-600">Track service jobs</p>
-              <Link to="/ServiceJobCard">
-                <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">Add Service</button>
-              </Link>
-            </div>
-            <div className="flex flex-col justify-between bg-white text-blue-800 p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-md hover:bg-blue-50 hover:border-blue-200 transition-all cursor-pointer min-h-[140px]">
-              <h3 className="font-semibold text-lg text-blue-900">Repair Jobs</h3>
-              <p className="text-sm mt-1 text-gray-600">Track repair jobs</p>
-              <Link to="/RepairJobCard">
-                <button className="mt-4 inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition shadow-sm">Add Repair</button>
-              </Link>
-            </div>
+        {/* Job Management */}
+        <section className="mt-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold text-slate-900">Job Management</h2>
           </div>
-        </div>
-      </div>
-
-      {/* Bottom Card Layer */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">Vehicle History</h2>
-          <p className="text-gray-700 text-lg">View detailed history of services and repairs for each vehicle.</p>
-          <Link to="/VehicleHistory">
-            <button className="mt-auto inline-flex items-center justify-center bg-blue-600 text-white py-2 px-8 rounded-xl hover:bg-blue-700 transition shadow-sm">View Details</button>
-          </Link>
-        </div>
-
-        <div className="flex flex-col justify-between bg-white rounded-3xl shadow-lg border border-gray-100 p-8 hover:shadow-xl transition-all min-h-[350px]">
-          <h2 className="text-2xl font-bold mb-4 text-blue-800">All Jobs</h2>
-          <p className="text-gray-700 text-lg">Browse all completed service and repair jobs.</p>
-          <div className="mt-auto flex gap-4">
-            <Link to="/AllServiceJobs" className="flex-1">
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm">Service Jobs</button>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Link to="/AllServiceJobs" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">View Service Jobs</div>
+                <div className="text-slate-600 text-sm">Manage all service records</div>
+              </div>
+            </Link>
+            <Link to="/AllRepairJobs" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1">View Repair Jobs</div>
+                <div className="text-slate-600 text-sm">Manage all repair records</div>
+              </div>
+            </Link>
+            <Link to="/VehicleHistory" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <History className="w-4 h-4 mr-1" />
+                  Vehicle History
+                </div>
+                <div className="text-slate-600 text-sm">View complete service history</div>
+              </div>
+            </Link>
+            <Link to="/ServiceRepairBill" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <Receipt className="w-4 h-4 mr-1" />
+                  Make Bill
+                </div>
+                <div className="text-slate-600 text-sm">Create a service/repair bill</div>
+              </div>
+            </Link>
+            <Link to="/ServiceRepairBills" className="block group">
+              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
+                <div className="text-slate-900 font-semibold mb-1 flex items-center">
+                  <FileText className="w-4 h-4 mr-1" />
+                  View All Bills
+                </div>
+                <div className="text-slate-600 text-sm">Browse and review all bills</div>
+              </div>
             </Link>
             <Link to="/AllRepairJobs" className="flex-1">
-              <button className="w-full bg-blue-600 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition shadow-sm">Repair Jobs</button>
+              <button className="w-full bg-blue-800 text-white py-3 px-6 rounded-xl hover:bg-blue-700 transition">Repair Jobs</button>
             </Link>
           </div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
