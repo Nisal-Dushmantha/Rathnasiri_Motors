@@ -9,18 +9,7 @@ function ViewBills({ fetchUrl = "http://localhost:5000/api/bills" }) {
   const [error, setError] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(""); // YYYY-MM
 
-  const fetchBills = async () => {
-    try {
-      setLoading(true);
-      const res = await axios.get(fetchUrl);
-      setBills(res.data.bills || []);
-    } catch (err) {
-      console.error("Error fetching bills:", err);
-      setError("Failed to load bills.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  // removed unused top-level fetchBills (useEffect defines and uses its own)
 
   useEffect(() => {
     const fetchBills = async () => {

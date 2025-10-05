@@ -114,8 +114,7 @@ import CustomerReports from "./compononets/CustomerReports/CustomerReports";
  import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
  import SparePartBill from "./compononets/SparePartBill/SparePartBill";
  import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
- import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
-
+ 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
 import Terms from "./compononets/Static/Terms";

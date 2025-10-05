@@ -1,7 +1,5 @@
 // src/components/ReceiptDocument.js
 import React, { useRef, useEffect } from "react";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 
 function ReceiptDocument({ data, onReady }) {
   const invoiceRef = useRef();

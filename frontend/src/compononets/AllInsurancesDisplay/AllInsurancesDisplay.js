@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import InsuranceDocument from "../InsuranceDocument/InsuranceDocument";
 import { Edit, Trash2, Printer } from "lucide-react";
 
 function InsuranceDetailModal({ user, onClose, refresh }) {
-  const navigate = useNavigate();
   const [showDocument, setShowDocument] = useState(false);
 
   const deleteHandler = async () => {

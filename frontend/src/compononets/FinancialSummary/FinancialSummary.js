@@ -22,7 +22,7 @@ function FinancialSummary() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
   };
 
-  const [month, setMonth] = useState(getLastMonth());
+  const [month] = useState(getLastMonth());
   //const [month] = useState(getCurrentMonth());
 
 
