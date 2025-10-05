@@ -136,8 +136,8 @@ function SparePartBill() {
       doc.setFontSize(12);
       doc.text("Spare Parts Bill", 14, 22);
       doc.setFontSize(10);
-      doc.text("📍 123 Main Street, Colombo, Sri Lanka", 14, 29);
-      doc.text("📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com", 14, 34);
+      doc.text("Address: 123 Main Street, Colombo, Sri Lanka", 14, 29);
+      doc.text("Phone: +94 77 123 4567 | Email: info@rathnasirimotors.com", 14, 34);
       doc.setFontSize(11);
       doc.text(`Date: ${dateStr}`, 198, 14, { align: "right" });
       doc.text(`Time: ${timeStr}`, 198, 20, { align: "right" });

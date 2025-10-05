@@ -10,6 +10,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 
+const fmt = (n) => new Intl.NumberFormat().format(Number(n) || 0);
+
+// Small reusable metric card
 const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading }) => (
   <div className="relative overflow-hidden rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition">
     <div className={`absolute inset-y-0 left-0 w-1.5 ${accent}`} />
@@ -28,7 +31,7 @@ const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading }) => 
           <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
         ) : (
           <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
-            {value}
+            {fmt(value)}
           </div>
         )}
       </div>
@@ -36,6 +39,7 @@ const MetricCard = ({ title, subtitle, value, icon: Icon, accent, loading }) => 
   </div>
 );
 
+// Action button used in header
 const ActionButton = ({ to, children, primary }) => (
   <Link to={to} className="block group">
     <button

@@ -12,10 +12,8 @@ import {
 } from "lucide-react";
 
 /**
- * Modern Admin Dashboard (Vehicle Sales + Service)
- * - Tailwind-only styling
- * - No new deps
- * - Works with your existing endpoints
+ * Homepage Dashboard (Vehicle Sales + Service + Active Insurance)
+ * Tailwind-only styling
  */
 
 function Homepage() {
@@ -29,13 +27,6 @@ function Homepage() {
   const [insActive, setInsActive] = useState(0);
 
   // Helpers
-  const get = (obj, path) => {
-    try {
-      return path.split(".").reduce((o, k) => (o && o[k] !== undefined ? o[k] : undefined), obj);
-    } catch {
-      return undefined;
-    }
-  };
   const toNum = (v) => {
     const n = Number(v);
     return Number.isFinite(n) ? n : 0;
@@ -44,9 +35,12 @@ function Homepage() {
 
   useEffect(() => {
     const controller = new AbortController();
+
     const fetchAll = async () => {
       try {
         setLoading(true);
+
+        // Fetch all data in parallel
         const urls = [
           "http://localhost:5000/services/count",
           "http://localhost:5000/repairs/count",
@@ -54,84 +48,54 @@ function Homepage() {
           "http://localhost:5000/usedBs/count",
           "http://localhost:5000/newBs/quantity-sum",
           "http://localhost:5000/sp",
-          "http://localhost:5000/insurances/total/count",
+          "http://localhost:5000/insurances", // changed to full insurance data
         ];
 
-        const responses = await Promise.allSettled(
+        const responses = await Promise.all(
           urls.map((u) => fetch(u, { signal: controller.signal }))
         );
+        const jsons = await Promise.all(responses.map((r) => r.json()));
 
-        const parse = async (entry, label) => {
-          if (entry.status !== "fulfilled") {
-            console.error(`[Homepage] Fetch failed for ${label}:`, entry.reason);
-            return null;
-          }
-          const res = entry.value;
-          if (!res.ok) {
-            console.error(`[Homepage] Non-OK response for ${label}:`, res.status, res.statusText);
-            return null;
-          }
-          try {
-            const j = await res.json();
-            console.log(`[Homepage] ${label} ->`, j);
-            return j;
-          } catch (e) {
-            console.error(`[Homepage] JSON parse failed for ${label}:`, e);
-            return null;
-          }
-        };
+        // Services + Repairs
+        setSvcCount(toNum(jsons[0]?.count || jsons[0]?.total));
+        setRepCount(toNum(jsons[1]?.count || jsons[1]?.total));
 
-        const [
-          svcJson,
-          repJson,
-          newCountJson,
-          usedCountJson,
-          newQtyJson,
-          spJson,
-          insJson,
-        ] = await Promise.all([
-          parse(responses[0], "services/count"),
-          parse(responses[1], "repairs/count"),
-          parse(responses[2], "newBs/count"),
-          parse(responses[3], "usedBs/count"),
-          parse(responses[4], "newBs/quantity-sum"),
-          parse(responses[5], "sp"),
-          parse(responses[6], "insurances/total/count"),
-        ]);
-
-        setSvcCount(toNum(get(svcJson, "count")) || toNum(get(svcJson, "total")));
-        setRepCount(toNum(get(repJson, "count")) || toNum(get(repJson, "total")));
-
-        const catTotal = toNum(get(newCountJson, "count")) + toNum(get(usedCountJson, "count"));
+        // Catalog
+        const catTotal = toNum(jsons[2]?.count) + toNum(jsons[3]?.count);
         setCatalogTotal(catTotal);
 
-        const units =
-          toNum(get(newQtyJson, "totalQuantity")) + toNum(get(usedCountJson, "count"));
-        setStoreUnits(units);
+        // Units in store
+        const storeUnitsTotal = toNum(jsons[4]?.totalQuantity) + toNum(jsons[3]?.count);
+        setStoreUnits(storeUnitsTotal);
 
-        const spItems = Array.isArray(spJson?.sp)
-          ? spJson.sp
-          : Array.isArray(spJson?.items)
-          ? spJson.items
-          : [];
+        // Inventory
+        const spItems = Array.isArray(jsons[5]?.sp) ? jsons[5].sp : Array.isArray(jsons[5]?.items) ? jsons[5].items : [];
         setInvItemCount(spItems.length);
-        const sumUnits = spItems.reduce((acc, it) => acc + (Number(it.Quentity) || 0), 0);
-        setInvTotalUnits(sumUnits);
+        const totalUnits = spItems.reduce((acc, it) => acc + (Number(it.Quentity) || 0), 0);
+        setInvTotalUnits(totalUnits);
 
-        setInsActive(toNum(get(insJson, "total")) || toNum(get(insJson, "count")));
+        // Active Insurance
+        const insurances = Array.isArray(jsons[6]?.insurances) ? jsons[6].insurances : [];
+        const today = new Date();
+        const activeCount = insurances.filter((item) => {
+          const start = new Date(item.StartDate);
+          const end = new Date(item.EndDate);
+          if (isNaN(start) || isNaN(end)) return false;
+          return start <= today && end >= today;
+        }).length;
+        setInsActive(activeCount);
       } catch (e) {
-        if (e.name !== "AbortError") {
-          console.error("[Homepage] Unexpected error during fetchAll:", e);
-        }
+        if (e.name !== "AbortError") console.error("Error fetching dashboard data:", e);
       } finally {
         setLoading(false);
       }
     };
+
     fetchAll();
     return () => controller.abort();
   }, []);
 
-  // ----- UI Pieces -----
+  // ----- UI Components -----
   const Pill = ({ children }) => (
     <span className="inline-flex items-center gap-2 rounded-full bg-white/60 text-slate-700 px-3 py-1 text-xs font-medium border border-slate-200">
       {children}
@@ -155,9 +119,7 @@ function Homepage() {
           {loading ? (
             <div className="h-8 w-24 bg-slate-100 rounded animate-pulse" />
           ) : (
-            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">
-              {fmt(value)}
-            </div>
+            <div className="text-4xl font-extrabold text-slate-900 tabular-nums">{fmt(value)}</div>
           )}
         </div>
       </div>
@@ -177,34 +139,25 @@ function Homepage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
-      {/* Header Band */}
+      {/* Header */}
       <header className="relative overflow-hidden">
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-blue-700 via-indigo-700 to-sky-600" />
-        {/* subtle pattern */}
         <div className="absolute inset-0 -z-10 opacity-15 mix-blend-soft-light bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-white/20 via-transparent to-transparent" />
         <div className="max-w-7xl mx-auto px-6 py-8 text-white">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
               <h1 className="text-2xl font-bold" style={{ color: "#0B3954" }}>Dashboard Overview</h1>
               <p style={{ color: "#0B3954" }}>Welcome to your Rathnasiri Motors management dashboard</p>
-              
               <div className="mt-3 flex flex-wrap gap-2">
-                <Pill>
-                  <Gauge className="h-3.5 w-3.5" />
-                  Live KPIs
-                </Pill>
-                <Pill>
-                  <CalendarClock className="h-3.5 w-3.5" />
-                  Today Snapshot
-                </Pill>
+                <Pill><Gauge className="h-3.5 w-3.5" /> Live KPIs</Pill>
+                <Pill><CalendarClock className="h-3.5 w-3.5" /> Today Snapshot</Pill>
               </div>
             </div>
-
           </div>
         </div>
       </header>
 
-      {/* Body */}
+      {/* Main */}
       <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
         {/* KPI Cards */}
         <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -258,26 +211,10 @@ function Homepage() {
             <h2 className="text-xl font-bold text-slate-900">Quick Actions</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <QuickAction
-              to="/NewBikesForm"
-              title="Add New Vehicle"
-              desc="Create a fresh catalog entry"
-            />
-            <QuickAction
-              to="/SparePartsForm"
-              title="Add Spare Part"
-              desc="Update inventory with a new part"
-            />
-            <QuickAction
-              to="/ServiceJobCard"
-              title="New Service Job"
-              desc="Create a service/repair job card"
-            />
-            <QuickAction
-              to="/NewInsurances"
-              title="New Insurance"
-              desc="Add a policy / registration"
-            />
+            <QuickAction to="/NewBikesForm" title="Add New Vehicle" desc="Create a fresh catalog entry" />
+            <QuickAction to="/SparePartsForm" title="Add Spare Part" desc="Update inventory with a new part" />
+            <QuickAction to="/ServiceJobCard" title="New Service Job" desc="Create a service/repair job card" />
+            <QuickAction to="/NewInsurances" title="New Insurance" desc="Add a policy / registration" />
           </div>
         </section>
       </main>

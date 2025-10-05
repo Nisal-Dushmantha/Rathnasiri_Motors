@@ -78,6 +78,7 @@ import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
 import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
 import ServiceandRepairChart from "./compononets/ServiceandRepairChart/ServiceandRepairChart"; // JobStatistics component
+import ServiceDateBookings from "./compononets/ServiceDateBookings/ServiceDateBookings";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -99,18 +100,21 @@ import BillGenerator from "./compononets/BillGenerator/BillGenerator";
 import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
 import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
 import ViewBills from "./compononets/ViewBills/ViewBills";
+import ReceiptDocument from "./compononets/ReceiptDocument/ReceiptDocument";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
 import MonthlyIncomeReport from "./compononets/MonthlyIncomeReport/MonthlyIncomeReport";
+import MonthlyReport from "./compononets/MonthlyReport/MonthlyReport";
+import CustomReport from "./compononets/CustomReport/CustomReport";
+import FinancialSummary from"./compononets/FinancialSummary/FinancialSummary";
 
 // Commented out imports for components that don't exist or are not being used
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
  import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
  import SparePartBill from "./compononets/SparePartBill/SparePartBill";
  import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
- import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
-
+ 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
 import Terms from "./compononets/Static/Terms";
@@ -199,6 +203,7 @@ function Layout() {
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
           <Route path="/JobStatistics" element={<ServiceandRepairChart />} />
+          <Route path="/ServiceDateBookings" element={<ServiceDateBookings />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -285,10 +290,14 @@ function Layout() {
           <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
           <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
           <Route path="/ViewBills" element={<ViewBills />} />
+          <Route path="/ReceiptDocument/:id" element={<ReceiptDocument />} />
           
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
           <Route path="/MonthlyIncomeReport" element={<MonthlyIncomeReport />} />
+          <Route path="/MonthlyReport" element={<MonthlyReport />} />
+          <Route path="/CustomReport" element={<CustomReport />} />
+          <Route path="/FinancialSummary" element={<FinancialSummary />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />

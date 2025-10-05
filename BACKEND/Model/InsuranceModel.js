@@ -21,6 +21,7 @@ const InsuranceSchema = new Schema({
     },
     VehicleType:{
         type:String,
+        enum:["Bike","Car","Truck","Other"],
         required:true,
     },
     VehicleModel:{

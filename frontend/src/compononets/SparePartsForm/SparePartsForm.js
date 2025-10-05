@@ -114,53 +114,11 @@ function SparePartsForm() {
       setIsSubmitting(false);
     }
   };
-  
-  const sendRequest = async () => {
-    try {
-      const response = await axios.post("http://localhost:5000/sp", {
-        barcode: String(formData.barcode),
-        name: String(formData.name),
-        brand: String(formData.brand),
-        rack: String(formData.rack),
-        Quentity: Number(formData.quantity),
-        price: String(formData.price),
-        description: formData.description ? String(formData.description) : undefined
-      });
-      return response.data;
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.errors) {
-        // Map backend field names to frontend field names if needed
-        const fieldMap = {
-          'barcode': 'barcode',
-          'name': 'name',
-          'brand': 'brand',
-          'rack': 'rack',
-          'Quentity': 'quantity',
-          'price': 'price',
-          'description': 'description'
-        };
-        
-        // Create a new errors object for frontend fields
-        const formattedErrors = {};
-        error.response.data.errors.forEach(err => {
-          const frontendField = fieldMap[err.param] || err.param;
-          formattedErrors[frontendField] = err.msg;
-        });
-        
-        setErrors(formattedErrors);
-        setSubmitError("Please correct the errors below");
-      } else {
-        setSubmitError("Failed to submit spare part. Please try again.");
-      }
-      throw error; // Re-throw to let the calling function know there was an error
-    }
-  };
 
   return (
     <div className="flex-1 bg-white min-h-screen p-10">
       <PageHeader
         title="Add New Spare Part"
-        subtitle="Enter the detsils of the spare part to add it to the inventory."
         icon={
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
