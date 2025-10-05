@@ -131,12 +131,7 @@ function BikesSalesHistory() {
                     <tr key={monthKey} className="bg-blue-100">
                       <td colSpan="6" className="py-2 px-4 font-bold text-blue-800">{monthKey}</td>
                       <td className="py-2 px-4 text-right">
-                        <button
-                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg text-sm"
-                          onClick={() => exportMonthPDF(monthKey, groupedSales[monthKey])}
-                        >
-                          Export PDF
-                        </button>
+
                       </td>
                     </tr>,
                     ...groupedSales[monthKey].map((sale) => (
