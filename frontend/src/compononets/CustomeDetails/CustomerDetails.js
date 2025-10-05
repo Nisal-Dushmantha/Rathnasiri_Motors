@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
+import CustomerQRCodeModal from "./CustomerQRCodeModal";
 
 function CustomerDetails() {
   const [customers, setCustomers] = useState([]);
@@ -15,6 +16,7 @@ function CustomerDetails() {
   const [editingIndex, setEditingIndex] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [qrModalCustomer, setQrModalCustomer] = useState(null);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -168,6 +170,7 @@ function CustomerDetails() {
                         <div className="flex gap-2">
                           <Button onClick={() => handleStartEdit(originalIndex)} disabled={editingIndex !== null && editingIndex !== originalIndex} className="py-1 px-3 text-sm">Update</Button>
                           <button onClick={() => handleDeleteCustomer(customer._id)} className="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700">Delete</button>
+                          <button onClick={() => setQrModalCustomer(customer)} className="bg-green-600 text-white text-sm py-1 px-3 rounded-md hover:bg-green-700">View QR</button>
                         </div>
                       </td>
                     </tr>
@@ -193,9 +196,14 @@ function CustomerDetails() {
           <div className="mt-5 flex gap-3">
             <Button onClick={handleSaveUpdate} className="bg-green-600 hover:bg-green-700">Save Changes</Button>
             <Button variant="outline" onClick={handleCancelEdit}>Cancel</Button>
+           
           </div>
         )}
       </Card>
+      {/* QR Code Modal */}
+      {qrModalCustomer && (
+        <CustomerQRCodeModal customer={qrModalCustomer} onClose={() => setQrModalCustomer(null)} />
+      )}
     </div>
   );
 }

@@ -120,7 +120,7 @@ function BikeSummary() {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-10 flex flex-col items-center">
-          <div className="text-red-500 text-6xl mb-4">⚠</div>
+          <div className="text-red-500 text-6xl mb-4">⚠️</div>
           <h2 className="text-2xl font-bold text-red-800 mb-4">Error Loading Data</h2>
           <p className="text-gray-600 mb-6">{error}</p>
           <button 

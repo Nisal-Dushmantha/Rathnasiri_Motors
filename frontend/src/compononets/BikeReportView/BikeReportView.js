@@ -95,44 +95,77 @@ function BikeReportView() {
             <p className="text-xl font-bold text-gray-800">{report._id || id}</p>
           </div>
           <div className="text-right">
-            <span className="inline-block bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-semibold">
+            <span className="inline-block bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-semibold">
               COMPLETED
             </span>
           </div>
         </div>
 
-        {/* Customer Information */}
-        <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500 mb-6">
-          <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
-            <span className="mr-2">👤</span> Customer Information
-          </h2>
-          <div className="space-y-2 text-gray-700">
-            <p><span className="font-semibold">Name:</span> {report.name}</p>
-            <p><span className="font-semibold">NIC:</span> {report.NIC}</p>
-            <p><span className="font-semibold">License No:</span> {report.license_no}</p>
-            <p><span className="font-semibold">Contact No:</span> {report.contact_no}</p>
-            <p><span className="font-semibold">Address:</span> {report.address}</p>
+        {/* Customer Information - Modern UI */}
+        <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-10 shadow-sm">
+            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Customer Information</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Name</div>
+              <div className="text-lg font-medium">{report.name}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">NIC</div>
+              <div className="text-lg font-medium">{report.NIC}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">License No</div>
+              <div className="text-lg font-medium">{report.license_no}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Contact No</div>
+              <div className="text-lg font-medium">{report.contact_no}</div>
+            </div>
+            <div className="sm:col-span-2">
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Address</div>
+              <div className="text-lg font-medium">{report.address}</div>
+            </div>
           </div>
         </div>
 
-        {/* Bike Details */}
-        <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500 mb-6">
-          <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
-            <span className="mr-2">🏍️</span> Bike Details
-          </h2>
-          <div className="space-y-2 text-gray-700">
-            <p><span className="font-semibold">Model:</span> {report.bike_model}</p>
-            <p><span className="font-semibold">Color:</span> {report.color}</p>
-            <p><span className="font-semibold">Chassis No:</span> {report.chassis_no}</p>
-            <p><span className="font-semibold">Registration Year:</span> {report.reg_year}</p>
+        {/* Bike Details - Modern UI */}
+        <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-5 shadow-sm">
+            <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Bike Details</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Model</div>
+              <div className="text-lg font-medium">{report.bike_model}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Color</div>
+              <div className="text-lg font-medium">{report.color}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Chassis No</div>
+              <div className="text-lg font-medium">{report.chassis_no}</div>
+            </div>
+            <div>
+              <div className="text-xs text-blue-800 uppercase font-bold tracking-wider mb-1">Registration Year</div>
+              <div className="text-lg font-medium">{report.reg_year}</div>
+            </div>
           </div>
         </div>
 
-        {/* Last Price */}
-        <div className="mb-10 flex flex-col items-center">
-          <p className="text-xl text-gray-500 mb-2">Last Price</p>
-          <div className="border border-gray-300 rounded-lg px-16 py-3 bg-gray-50 font-bold text-blue-900 text-center text-4xl">
-            Rs. {report.last_price}
+
+        {/* Price and Signature Row - Same Line */}
+        <div className="flex flex-row justify-between items-end mt-12 mb-12 w-full">
+          {/* Last Price - Left */}
+          <div className="flex flex-col items-start">
+            <p className="text-xl font-semibold text-gray-500 mb-1">Total Price :</p>
+            <div className="rounded-lg px-10 py-2 font-bold text-blue-900 text-3xl  shadow-sm">
+              Rs. {report.last_price}
+            </div>
+          </div>
+          {/* Signature - Right */}
+          <div className="flex flex-col items-end">
+            <div className="w-56 h-14 border-b-2 border-gray-400 mb-1 mr-2"></div>
+            <p className="text-lg text-gray-700 mt-1 mr-2 font-bold">Authorized Signature</p>
+  
           </div>
         </div>
 
@@ -147,7 +180,7 @@ function BikeReportView() {
       <div className="mt-6 flex justify-center">
         <button
           onClick={handleDownloadPDF}
-          className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-bold shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all"
+          className="bg-gradient-to-r from-green-600 to-green-900 text-white px-6 py-3 rounded-lg font-bold shadow-lg  hover:to-green-700 transition-all"
         >
           📄 Download Report
         </button>

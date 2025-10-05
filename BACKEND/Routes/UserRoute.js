@@ -5,11 +5,14 @@ const router = express.Router();
 const User = require("../Model/UserModel");
 //insert user controller
 const UserController = require("../Controllers/UserController");
+const { validateUserPayload } = require("../middleware/userValidation");
 
 router.get("/",UserController.getAllUsers);
-router.post("/",UserController.addUsers);
+// Create user with validation
+router.post("/", validateUserPayload, UserController.addUsers);
 router.get("/:id",UserController.getById);
-router.put("/:id",UserController.updateUser);
+// Update user with validation
+router.put("/:id", validateUserPayload, UserController.updateUser);
 router.delete("/:id",UserController.deleteUser);
 
 //export

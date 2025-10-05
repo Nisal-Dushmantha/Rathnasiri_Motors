@@ -60,6 +60,8 @@ import BikeSummary from "./compononets/BikeSummary/BikeSummary";
 import Index from "./compononets/Index/Index";
 import CustomerDetails from "./compononets/CustomeDetails/CustomerDetails";
 import CustomerLoyalty from "./compononets/CustomerLoyality/CustomerLoyality";
+import AddCustomer from "./compononets/AddCustomer/AddCustomer";
+import AddLoyalty from "./compononets/AddLoyalty/AddLoyalty";
 
 // Inventory insert form
 import SparePartsForm from "./compononets/SparePartsForm/SparePartsForm";
@@ -67,11 +69,16 @@ import SparePartsDisplay from "./compononets/SpareParts/SparePartsDisplay";
 import SparePartsUpdate from "./compononets/SparePartsUpdate/SparePartsUpdate";
 import SparePartsViewForm from "./compononets/SparePartsView/SparePartsViewForm";
 
+import SparePartCategory from "./compononets/SparePartCategory/SparePartCategory";
+
+
 import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
 // import SparePartBill from "./compononets/SparePartBill/SparePartBill";
 // import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
 import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
+import ServiceandRepairChart from "./compononets/ServiceandRepairChart/ServiceandRepairChart"; // JobStatistics component
+import ServiceDateBookings from "./compononets/ServiceDateBookings/ServiceDateBookings";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -102,12 +109,12 @@ import MonthlyReport from "./compononets/MonthlyReport/MonthlyReport";
 import CustomReport from "./compononets/CustomReport/CustomReport";
 import FinancialSummary from"./compononets/FinancialSummary/FinancialSummary";
 
+// Commented out imports for components that don't exist or are not being used
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
-
-import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
-import SparePartBill from "./compononets/SparePartBill/SparePartBill";
-import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
-import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
+ import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
+ import SparePartBill from "./compononets/SparePartBill/SparePartBill";
+ import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+ import JobStatistics from "./compononets/ServiceandRepairChart/ServiceandRepairChart";
 
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -196,7 +203,8 @@ function Layout() {
           <Route path="/AllServiceJobs" element={<AllServiceJobs />} />
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
-          <Route path="/JobStatistics" element={<JobStatistics />} />
+          <Route path="/JobStatistics" element={<ServiceandRepairChart />} />
+          <Route path="/ServiceDateBookings" element={<ServiceDateBookings />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />
@@ -227,6 +235,21 @@ function Layout() {
           {/* Customers */}
           <Route path="/CustomerDetails" element={<CustomerDetails />} />
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+          <Route path="/AddCustomer" element={<AddCustomer />} />
+          <Route path="/AddLoyalty" element={<AddLoyalty />} />
+
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+
+          {/* Routes commented out due to missing components */}
+          {/* <Route path="/Reports" element={<CustomerReports/>}/> */}
+          
+          {/* <Route path="/CustomerOffers" element={<CustomerOffers/>}/> */}
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+          <Route path="/AddCustomer" element={<AddCustomer />} />
+          <Route path="/AddLoyalty" element={<AddLoyalty />} />
 
           <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
           <Route path="/Login" element={<Login />} />
@@ -237,6 +260,26 @@ function Layout() {
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
           <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
           <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+
+          <Route path="/Reports" element={<CustomerReports/>}/>
+          
+          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          <Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />
+
+          <Route path="/CustomerHomepage" element={<CustomerHomepage />} />
+          <Route path="/Login" element={<Login />} />
+          <Route path="/Register" element={<Register />} />
+
+          <Route path="/Reports" element={<CustomerReports/>}/>
+          
+          <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
+          {/*<Route path="/CustomerDetails" element={<CustomerDetails />} /> 
+          <Route path="/CustomerLoyalty" element={<CustomerLoyalty />} />  */}
 
           {/* Insurances */}
           <Route path="/NewInsurances" element={<NewInsurances />} />
@@ -264,6 +307,9 @@ function Layout() {
           <Route path="/SparePartsViewForm/:id" element={<SparePartsViewForm />} />
           <Route path="/SparePartBill" element={<SparePartBill />} />
           <Route path="/SparePartBillList" element={<SparePartBillsList />} />
+
+          {/*spare part category*/}
+          <Route path="/SparePartCategory" element={<SparePartCategory/>}/>
           {/* Renamed billing routes */}
           <Route path="/ServiceRepairBill" element={<ServiceRepairBill />} />
           <Route path="/ServiceRepairBills" element={<ServiceRepairBillsList />} />
