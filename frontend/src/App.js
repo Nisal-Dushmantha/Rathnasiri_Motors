@@ -78,6 +78,7 @@ import SparePBReports from "./compononets/SparePBReports/SparePBReports"; //NEW
 import ServiceRepairBill from "./compononets/ServiceRepairBill/ServiceRepairBill";
 import ServiceRepairBillsList from "./compononets/ServiceRepairBillsList/ServiceRepairBillsList";
 import ServiceandRepairChart from "./compononets/ServiceandRepairChart/ServiceandRepairChart"; // JobStatistics component
+import ServiceDateBookings from "./compononets/ServiceDateBookings/ServiceDateBookings";
 
 // Customer & Auth
 import CustomerHomepage from "./compononets/CustomerHomepage/CustomerHomepage";
@@ -199,6 +200,7 @@ function Layout() {
           <Route path="/AllRepairJobs" element={<AllRepairJobs />} />
           <Route path="/VehicleHistory" element={<VehicleHistory />} />
           <Route path="/JobStatistics" element={<ServiceandRepairChart />} />
+          <Route path="/ServiceDateBookings" element={<ServiceDateBookings />} />
 
           {/* Update jobs */}
           <Route path="/AllServiceJobs/:id" element={<UpdateServiceCard />} />

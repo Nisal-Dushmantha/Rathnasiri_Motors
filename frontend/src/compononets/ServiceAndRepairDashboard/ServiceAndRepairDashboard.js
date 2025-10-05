@@ -102,20 +102,22 @@ function Dashboard() {
               </p>
             </div>
             <div className="flex gap-3">
-              <ActionButton to="/ServiceJobCard" primary>
-                <FilePlus2 className="w-5 h-5" />
-                New Service Job
-              </ActionButton>
-              <ActionButton to="/RepairJobCard">
-                <Wrench className="w-5 h-5" />
-                New Repair Job
-              </ActionButton>
-            </div>
+            <ActionButton to="/ServiceJobCard" primary>
+              <FilePlus2 className="w-5 h-5" />
+              New Service Job
+            </ActionButton>
+            <ActionButton to="/RepairJobCard">
+              <Wrench className="w-5 h-5" />
+              New Repair Job
+            </ActionButton>
+            <ActionButton to="/ServiceDateBookings">
+              <History className="w-5 h-5" /> 
+              Service Date Bookings
+            </ActionButton>
           </div>
         </div>
+        </div>
       </header>
-
-      {/* Body */}
       <main className="max-w-7xl mx-auto px-6 pb-14 -mt-6">
         {/* Metrics */}
         <section className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">

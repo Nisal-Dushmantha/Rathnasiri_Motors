@@ -42,9 +42,9 @@ const validateService = [
       const date = new Date(value);
       const today = new Date();
       today.setHours(0, 0, 0, 0); // Set time to beginning of day for accurate comparison
-      
-      return date >= today; // Ensure date is today or in the future
-    }).withMessage('Service date must be today or in the future')
+
+      return date <= today; // Ensure date is today or in the past
+    }).withMessage('Service date must be today or in the past')
 ];
 
 // Validation middleware for repair jobs

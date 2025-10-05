@@ -83,7 +83,7 @@ function ServiceJobCard() {
     try {
       const response = await axios.post("http://localhost:5000/services", {
         Name: String(formData.customerName),
-        Phone: Number(formData.phoneNumber),
+        Phone: String(formData.phoneNumber),
         VehicleNumber: String(formData.vehicleNumber),
         VehicleType: String(formData.vehicleType),
         Model: String(formData.vehicleModel),
@@ -189,16 +189,25 @@ function ServiceJobCard() {
               error={errors.vehicleNumber}
             />
 
-            <Input 
-              label="Vehicle Type" 
-              type="text" 
-              name="vehicleType" 
-              value={formData.vehicleType} 
-              onChange={handleChange} 
-              placeholder="Bike / Scooter" 
-              required 
-              error={errors.vehicleType}
-            />
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Vehicle Type<span className="text-red-500 ml-1">*</span>
+              </label>
+              <select
+                name="vehicleType"
+                value={formData.vehicleType}
+                onChange={handleChange}
+                required
+                className={`w-full px-4 py-3 border ${errors.vehicleType ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+              >
+                <option value="" disabled>Select vehicle type</option>
+                <option value="Bike">Bike</option>
+                <option value="Scooter">Scooter</option>
+              </select>
+              {errors.vehicleType && (
+                <p className="mt-1 text-sm text-red-600">{errors.vehicleType}</p>
+              )}
+            </div>
 
             <Input 
               label="Vehicle Model" 
