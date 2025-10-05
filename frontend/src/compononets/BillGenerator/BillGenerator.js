@@ -1,7 +1,12 @@
 // src/components/BillGenerator.js
-import React, { useState } from "react";
-import jsPDF from "jspdf";
+import React, { useState, useRef } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+import Modal from "react-modal";
+import ReceiptDocument from "../ReceiptDocument/ReceiptDocument";
+
+Modal.setAppElement("#root");
 
 function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bills" }) {
   const [customerName, setCustomerName] = useState("");
@@ -11,8 +16,11 @@ function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bi
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
 
-  // Fixed service charge
-  const SERVICE_CHARGE = 150.00;
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewData, setPreviewData] = useState(null);
+  const previewRef = useRef();
+
+  const SERVICE_CHARGE = 150.0;
 
   const resetForm = () => {
     setCustomerName("");
@@ -22,90 +30,12 @@ function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bi
     setError(null);
   };
 
-  const generateReceiptPdf = ({ customerName, vehicleNumber, amount, serviceCharge, total, method, billId = null }) => {
-    const doc = new jsPDF({ unit: "pt", format: "A4" });
-    const pageWidth = doc.internal.pageSize.getWidth();
-
-    // Colors
-    const primary = [41, 128, 185]; // blue
-    const accent = [26, 188, 156]; // teal
-
-    // Header with background
-    doc.setFillColor(...primary);
-    doc.rect(0, 0, pageWidth, 80, "F");
-    doc.setFontSize(20);
-    doc.setTextColor(255, 255, 255);
-    doc.text("Rathnasiri Motors - Insurance Bill", pageWidth / 2, 50, { align: "center" });
-
-    let y = 110;
-
-    // Bill info
-    doc.setFontSize(12);
-    doc.setTextColor(0, 0, 0);
-    const now = new Date();
-    doc.text(`Date: ${now.toLocaleString()}`, 40, y);
-    doc.text(`Bill ID: ${billId || "N/A"}`, pageWidth - 200, y);
-    y += 30;
-
-    // Customer details box
-    doc.setFillColor(245, 245, 245);
-    doc.rect(40, y, pageWidth - 80, 100, "F");
-    doc.setFontSize(12);
-    doc.setTextColor(...primary);
-    doc.text("Customer Details", 50, y + 20);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Name: ${customerName}`, 60, y + 45);
-    doc.text(`Vehicle No: ${vehicleNumber}`, 60, y + 70);
-    y += 130;
-
-    // Payment details
-    doc.setFillColor(245, 245, 245);
-    doc.rect(40, y, pageWidth - 80, 140, "F");
-    doc.setTextColor(...primary);
-    doc.text("Payment Details", 50, y + 20);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Method: ${method}`, 60, y + 45);
-    doc.text(`Base Amount: Rs. ${amount.toFixed(2)}`, 60, y + 70);
-    doc.text(`Service Charge: Rs. ${serviceCharge.toFixed(2)}`, 60, y + 95);
-
-    // Total highlight
-    doc.setFillColor(...accent);
-    doc.setTextColor(255, 255, 255);
-    doc.rect(60, y + 115, pageWidth - 160, 30, "F");
-    doc.setFontSize(14);
-    doc.text(`TOTAL: Rs. ${total.toFixed(2)}`, pageWidth / 2, y + 137, { align: "center" });
-    y += 180;
-
-    // Thank you note
-    doc.setFontSize(10);
-    doc.setTextColor(80, 80, 80);
-    doc.text(
-      "Thank you for your payment. This receipt serves as an official proof of your insurance transaction.",
-      pageWidth / 2,
-      y,
-      { align: "center", maxWidth: pageWidth - 100 }
-    );
-    y += 40;
-
-    // Signature line
-    doc.text("__________________________", 60, y);
-    doc.text("Authorized Signature", 70, y + 15);
-
-    // Footer
-    doc.setFontSize(9);
-    doc.setTextColor(120, 120, 120);
-    doc.text("Rathnasiri Motors | Address line | Contact: 077-XXXXXXX", pageWidth / 2, 820, { align: "center" });
-
-    doc.save(`Insurance_Bill_${Date.now()}.pdf`);
-  };
-
   const handleGenerate = async (e) => {
     e.preventDefault();
     setError(null);
 
     const amount = parseFloat(amountText) || 0;
-    const serviceCharge = SERVICE_CHARGE;
-    const total = amount + serviceCharge;
+    const total = amount + SERVICE_CHARGE;
 
     if (!customerName || !vehicleNumber) {
       setError("Please enter customer name and vehicle number.");
@@ -116,127 +46,160 @@ function BillGenerator({ apiSave = true, saveUrl = "http://localhost:5000/api/bi
       return;
     }
 
+    let billId = null;
+
     if (apiSave) {
       setSaving(true);
       try {
-        const payload = {
-  customerName,
-  vehicleNumber,
-  amount,
-  serviceCharge,
-  total,
-  paymentMethod,
-  insuranceRef: "", // optional
-  cashier: "", // optional
-};
-
-const res = await axios.post("http://localhost:5000/api/bills/create", payload);
-const billId = res.data.bill?._id || null;
-
-        generateReceiptPdf({ customerName, vehicleNumber, amount, serviceCharge, total, method: paymentMethod, billId });
-        resetForm();
+        const payload = { customerName, vehicleNumber, amount, serviceCharge: SERVICE_CHARGE, total, paymentMethod };
+        const res = await axios.post(`${saveUrl}/create`, payload);
+        billId = res.data.bill?._id || null;
       } catch (err) {
         console.error("Error saving bill:", err);
-        generateReceiptPdf({ customerName, vehicleNumber, amount, serviceCharge, total, method: paymentMethod, billId: null });
       } finally {
         setSaving(false);
       }
-    } else {
-      generateReceiptPdf({ customerName, vehicleNumber, amount, serviceCharge, total, method: paymentMethod, billId: null });
-      resetForm();
     }
+
+    setPreviewData({ customerName, vehicleNumber, amount, serviceCharge: SERVICE_CHARGE, total, method: paymentMethod, billId });
+    setPreviewOpen(true);
   };
 
-  const baseAmount = parseFloat(amountText) || 0;
-  const totalAmount = baseAmount + SERVICE_CHARGE;
+  const downloadPdfFromPreview = async () => {
+    if (!previewRef.current) return;
+    const canvas = await html2canvas(previewRef.current, { scale: 2 });
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({ unit: "pt", format: "a4" });
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+    pdf.save(`Insurance_Bill_${Date.now()}.pdf`);
+    setPreviewOpen(false);
+    resetForm();
+  };
+
+  const totalAmount = (parseFloat(amountText) || 0) + SERVICE_CHARGE;
 
   return (
-    <div className="max-w-lg mx-auto bg-gradient-to-b from-sky-50 to-white shadow-xl rounded-2xl p-8 border border-gray-200">
-      <h2 className="text-2xl font-bold mb-6 text-blue-800 text-center">Insurance Bill Generator</h2>
+    <div className="max-w-5xl mx-auto p-8 bg-white shadow-2xl rounded-3xl border border-gray-200">
+      <h2 className="text-3xl font-bold mb-6 text-blue-800 text-center">Insurance Bill Generator</h2>
 
       <form onSubmit={handleGenerate} className="space-y-6">
-        {/* Customer Details */}
-        <div className="bg-gray-50 p-4 rounded-xl border">
-          <h3 className="font-semibold text-blue-700 mb-3">Customer Details</h3>
-          <label className="block text-sm font-medium">Customer Name</label>
-          <input
-            type="text"
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            placeholder="Enter customer name"
-            className="mt-1 w-full p-2 border rounded-lg"
-            required
-          />
+        <div className="flex flex-col lg:flex-row gap-6">
+          {/* Customer Details */}
+          <div className="flex-1 bg-blue-50 p-6 rounded-2xl border border-blue-100 shadow-inner">
+            <h3 className="font-semibold text-blue-700 text-lg mb-4">Customer Details</h3>
 
-          <label className="block text-sm font-medium mt-4">Vehicle Number</label>
-          <input
-            type="text"
-            value={vehicleNumber}
-            onChange={(e) => setVehicleNumber(e.target.value)}
-            placeholder="Enter vehicle number"
-            className="mt-1 w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+            <label className="block text-sm font-medium mb-1">Customer Name</label>
+            <input
+              type="text"
+              value={customerName}
+              onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Enter customer name"
+              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              required
+            />
 
-        {/* Payment Info */}
-        <div className="bg-gray-50 p-4 rounded-xl border">
-          <h3 className="font-semibold text-blue-700 mb-3">Payment Info</h3>
-          <label className="block text-sm font-medium">Base Amount</label>
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            value={amountText}
-            onChange={(e) => setAmountText(e.target.value)}
-            placeholder="Enter base amount"
-            className="mt-1 w-full p-2 border rounded-lg"
-            required
-          />
-
-          <label className="block text-sm font-medium mt-4">Service Charge</label>
-          <input
-            type="text"
-            value={SERVICE_CHARGE.toFixed(2)}
-            readOnly
-            className="mt-1 w-full p-2 border rounded-lg bg-gray-100"
-          />
-
-          <label className="block text-sm font-medium mt-4">Total Amount</label>
-          <div className="mt-1 w-full p-3 rounded-lg bg-gradient-to-r from-green-100 to-green-50 border text-lg font-bold text-green-700">
-            Rs. {totalAmount.toFixed(2)}
+            <label className="block text-sm font-medium mt-4 mb-1">Vehicle Number</label>
+            <input
+              type="text"
+              value={vehicleNumber}
+              onChange={(e) => setVehicleNumber(e.target.value)}
+              placeholder="Enter vehicle number"
+              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+              required
+            />
           </div>
 
-          <label className="block text-sm font-medium mt-4">Payment Method</label>
-          <select
-            value={paymentMethod}
-            onChange={(e) => setPaymentMethod(e.target.value)}
-            className="mt-1 w-full p-2 border rounded-lg"
-          >
-            <option value="Cash">Cash</option>
-            <option value="Card">Card</option>
-          </select>
+          {/* Payment Info */}
+          <div className="flex-1 bg-green-50 p-6 rounded-2xl border border-green-100 shadow-inner">
+            <h3 className="font-semibold text-green-700 text-lg mb-4">Payment Info</h3>
+
+            <label className="block text-sm font-medium mb-1">Base Amount</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={amountText}
+              onChange={(e) => setAmountText(e.target.value)}
+              placeholder="Enter base amount"
+              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+              required
+            />
+
+            <label className="block text-sm font-medium mt-4 mb-1">Service Charge</label>
+            <input
+              type="text"
+              value={SERVICE_CHARGE.toFixed(2)}
+              readOnly
+              className="w-full p-3 rounded-xl border border-gray-300 bg-gray-100"
+            />
+
+            <label className="block text-sm font-medium mt-4 mb-1">Total Amount</label>
+            <div className="w-full p-3 rounded-xl bg-gradient-to-r from-green-100 to-green-50 border text-lg font-bold text-green-700">
+              Rs. {totalAmount.toFixed(2)}
+            </div>
+
+            <label className="block text-sm font-medium mt-4 mb-1">Payment Method</label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="w-full p-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-400 transition"
+            >
+              <option value="Cash">Cash</option>
+              <option value="Card">Card</option>
+            </select>
+          </div>
         </div>
 
-        {error && <div className="text-red-600 text-sm">{error}</div>}
+        {error && <div className="text-red-600 text-sm font-medium">{error}</div>}
 
-        <div className="flex gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-4">
           <button
             type="submit"
-            className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-xl font-semibold hover:bg-blue-700 transition"
+            className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-2xl font-semibold hover:bg-blue-700 transition shadow-md"
             disabled={saving}
           >
             {saving ? "Saving & Generating..." : "Generate Bill"}
           </button>
           <button
             type="button"
-            className="px-4 py-3 border rounded-xl font-medium hover:bg-gray-100"
+            className="flex-1 px-6 py-3 border border-gray-300 rounded-2xl font-medium hover:bg-gray-100 transition"
             onClick={resetForm}
           >
             Reset
           </button>
         </div>
       </form>
+
+      {/* PDF Preview Modal */}
+      <Modal
+        isOpen={previewOpen}
+        onRequestClose={() => setPreviewOpen(false)}
+        contentLabel="PDF Preview"
+        style={{
+          content: { maxWidth: "700px", margin: "auto", borderRadius: "1.5rem", padding: "2rem", overflow: "auto" },
+          overlay: { backgroundColor: "rgba(0,0,0,0.5)" }
+        }}
+      >
+        <div ref={previewRef}>
+          <ReceiptDocument data={previewData} />
+        </div>
+        <div className="flex justify-end gap-4 mt-6">
+          <button
+            onClick={downloadPdfFromPreview}
+            className="bg-green-600 text-white px-5 py-2 rounded-xl hover:bg-green-700 transition shadow"
+          >
+            📄 Download PDF
+          </button>
+          <button
+            onClick={() => setPreviewOpen(false)}
+            className="px-5 py-2 border rounded-xl hover:bg-gray-100 transition"
+          >
+            Close
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 }

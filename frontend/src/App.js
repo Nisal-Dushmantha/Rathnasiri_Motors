@@ -93,10 +93,14 @@ import BillGenerator from "./compononets/BillGenerator/BillGenerator";
 import ExpiringInsurancesPage from "./compononets/ExpiringInsurancesPage/ExpiringInsurancesPage";
 import InsuranceDocumentCenter from "./compononets/InsuranceDocumentCenter/InsuranceDocumentCenter";
 import ViewBills from "./compononets/ViewBills/ViewBills";
+import ReceiptDocument from "./compononets/ReceiptDocument/ReceiptDocument";
 
 //Fiance
 import Expenses from "./compononets/Expenses/Expenses";
 import MonthlyIncomeReport from "./compononets/MonthlyIncomeReport/MonthlyIncomeReport";
+import MonthlyReport from "./compononets/MonthlyReport/MonthlyReport";
+import CustomReport from "./compononets/CustomReport/CustomReport";
+import FinancialSummary from"./compononets/FinancialSummary/FinancialSummary";
 
 import CustomerReports from "./compononets/CustomerReports/CustomerReports";
 
@@ -244,10 +248,14 @@ function Layout() {
           <Route path="/ExpiringInsurancesPage" element={<ExpiringInsurancesPage />} />
           <Route path="/InsuranceDocumentCenter" element={<InsuranceDocumentCenter />} />
           <Route path="/ViewBills" element={<ViewBills />} />
+          <Route path="/ReceiptDocument/:id" element={<ReceiptDocument />} />
           
           {/*Finance */}
           <Route path="/Expenses" element={<Expenses />} />
           <Route path="/MonthlyIncomeReport" element={<MonthlyIncomeReport />} />
+          <Route path="/MonthlyReport" element={<MonthlyReport />} />
+          <Route path="/CustomReport" element={<CustomReport />} />
+          <Route path="/FinancialSummary" element={<FinancialSummary />} />
 
           {/* Inventory */}
           <Route path="/SparePartsForm" element={<SparePartsForm />} />

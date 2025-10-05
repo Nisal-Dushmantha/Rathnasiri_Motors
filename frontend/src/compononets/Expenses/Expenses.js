@@ -164,7 +164,7 @@ const topCategory = Object.keys(categoryTotals).reduce((a, b) => categoryTotals[
     <div className="flex-1 bg-gradient-to-b from-red-50 to-orange-50 p-10 min-h-screen">
       {/* Header */}
       <div className="flex justify-between items-center mb-10">
-        <h1 className="text-4xl font-bold text-red-900">Expenses</h1>
+        <h1 className="text-4xl font-bold text-red-900">📊 Expenses</h1>
         <button
           onClick={() => setShowForm(true)}
           className="bg-red-700 text-white font-semibold py-2 px-6 rounded-xl hover:bg-red-800 transition"

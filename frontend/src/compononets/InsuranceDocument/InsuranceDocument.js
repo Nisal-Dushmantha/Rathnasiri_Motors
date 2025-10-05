@@ -28,10 +28,12 @@ function InsuranceDocument({ user, onClose }) {
     pdf.save(`Insurance_${user.fullname}_${user.RegistrationNo}.pdf`);
   };
 
-  if (!user) return <p className="text-center p-4">Loading insurance details...</p>;
-    const now = new Date();
-    const dateStr = now.toLocaleDateString();
-    const timeStr = now.toLocaleTimeString();
+  if (!user)
+    return <p className="text-center p-4">Loading insurance details...</p>;
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString();
+  const timeStr = now.toLocaleTimeString();
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50 p-4">
@@ -44,27 +46,30 @@ function InsuranceDocument({ user, onClose }) {
           ✕
         </button>
 
-        
-        {/* Invoice preview - Scrollable container */}
+        {/* Invoice preview */}
         <div className="flex-1 overflow-auto pr-2">
           <div
             ref={invoiceRef}
             className="bg-white border-2 border-gray-200 rounded-lg shadow-sm overflow-hidden max-w-4xl mx-auto"
           >
-            {/* Header with gradient background */}
+            {/* Header */}
             <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
               <div className="flex justify-between items-start">
                 <div>
                   <h1 className="text-3xl font-bold mb-1">RATHNASIRI MOTORS</h1>
-                  <p className="text-blue-100 text-lg">Insurance Registration Center</p>
+                  <p className="text-blue-100 text-lg">
+                    Insurance Registration Center
+                  </p>
                   <div className="mt-3 space-y-1 text-blue-100 text-sm">
-                    <p>📍 123 Main Street, Colombo, Sri Lanka</p>
-                    <p>📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com</p>
+                    <p>📍 Polgahawela Road,Imbulgasdeniya,Kegalle</p>
+                    <p>📞 037 2242101/0776575477/0761617789 | 📧 yamahakegalle@gmail.com </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
-                    <p className="text-blue-100 text-sm font-medium">INVOICE DATE</p>
+                    <p className="text-blue-100 text-sm font-medium">
+                      INVOICE DATE
+                    </p>
                     <p className="text-white text-lg font-semibold">{dateStr}</p>
                     <p className="text-blue-100 text-sm">{timeStr}</p>
                   </div>
@@ -87,28 +92,61 @@ function InsuranceDocument({ user, onClose }) {
                 </div>
               </div>
 
-          {/* Details */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <DetailBox label="Full Name" value={user.fullname} />
-            <DetailBox label="Contact No" value={user.ContactNo} />
-            <DetailBox label="Address" value={user.Address} />
-            <DetailBox label="Vehicle No" value={user.RegistrationNo} />
-            <DetailBox label="Vehicle Type" value={user.VehicleType} />
-            <DetailBox label="Vehicle Model" value={user.VehicleModel} />
-            <DetailBox label="Engine No" value={user.EngineNo} />
-            <DetailBox label="Chassis No" value={user.ChassisNo} />
-            <DetailBox label="Start Date" value={user.StartDate} />
-            <DetailBox label="End Date" value={user.EndDate} />
-          </div>
+              {/* Sections */}
+              <Section title="Client Information">
+                <DetailRow label="Full Name" value={user.fullname} index={0} />
+                <DetailRow label="Contact No" value={user.ContactNo} index={1} />
+                <DetailRow label="Address" value={user.Address} index={2} />
+              </Section>
+
+              <Section title="Vehicle Information">
+                <DetailRow
+                  label="Vehicle No"
+                  value={user.RegistrationNo}
+                  index={0}
+                />
+                <DetailRow
+                  label="Vehicle Type"
+                  value={user.VehicleType}
+                  index={1}
+                />
+                <DetailRow
+                  label="Vehicle Model"
+                  value={user.VehicleModel}
+                  index={2}
+                />
+                <DetailRow label="Engine No" value={user.EngineNo} index={3} />
+                <DetailRow label="Chassis No" value={user.ChassisNo} index={4} />
+              </Section>
+
+              <Section title="Policy Information">
+                <DetailRow label="Start Date" value={user.StartDate} index={0} />
+                <DetailRow label="End Date" value={user.EndDate} index={1} />
+              </Section>
+
+              {/* Signature */}
+              <div className="mt-12 flex justify-end">
+                <div className="text-right">
+                  <div className="h-16 border-b-2 border-gray-400 w-48"></div>
+                  <p className="mt-2 text-sm font-semibold text-gray-700">
+                    Manager - Rathnasiri Motors </p>
+                    <p className="text-sm text-gray-500">Authorized Signature
+                  </p>
+                </div>
+              </div>
 
               {/* Footer */}
-          <div className="border-t-2 border-gray-200 pt-6 text-center">
-            <p className="text-lg font-bold text-blue-600">Thank you for choosing Rathnasiri Motors!</p>
-            <p className="text-sm text-gray-600 mt-1">We appreciate your trust and business.</p>
+              <div className="border-t-2 border-gray-200 pt-6 text-center mt-10">
+                <p className="text-lg font-bold text-blue-600">
+                  Thank you for choosing Rathnasiri Motors!
+                </p>
+                <p className="text-sm text-gray-600 mt-1">
+                  We appreciate your trust and business.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-
 
         {/* Action Buttons */}
         <div className="mt-4 flex justify-center gap-4 pt-4 border-t border-gray-200">
@@ -127,16 +165,27 @@ function InsuranceDocument({ user, onClose }) {
         </div>
       </div>
     </div>
-    </div>
-    
   );
 }
 
-// Reusable Detail Box
-const DetailBox = ({ label, value }) => (
-  <div className="bg-gray-50 p-3 rounded-xl border">
-    <p className="text-xs text-gray-500">{label}</p>
-    <p className="font-semibold text-gray-800">{value}</p>
+/* 🔹 Section & Row Components */
+const Section = ({ title, children }) => (
+  <div className="mb-10">
+    <h2 className="text-lg font-bold text-blue-800 border-b-2 border-blue-200 mb-4 pb-1">
+      {title}
+    </h2>
+    <div className="border rounded-lg overflow-hidden">{children}</div>
+  </div>
+);
+
+const DetailRow = ({ label, value, index }) => (
+  <div
+    className={`grid grid-cols-2 px-4 py-3 text-sm ${
+      index % 2 === 0 ? "bg-white" : "bg-gray-50"
+    }`}
+  >
+    <div className="font-semibold text-gray-700">{label}</div>
+    <div className="text-gray-900">{value || "N/A"}</div>
   </div>
 );
 

@@ -2,11 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import * as XLSX from "xlsx";
 import {
+  FaFileInvoiceDollar,
+  FaMoneyBillWave,
+  FaWallet,
   FaMotorcycle,
   FaTools,
-  FaWrench,
-  FaFileInvoiceDollar,
+  FaShieldAlt,
 } from "react-icons/fa";
 import { Chart } from "react-chartjs-2";
 import {
@@ -28,9 +31,10 @@ const getCurrentMonth = () => {
   return `${year}-${month}`;
 };
 
-function MonthlyIncomeReport() {
+function MonthlyReport() {
   const chartRef = useRef(null);
   const [month, setMonth] = useState(getCurrentMonth());
+  const [expenses, setExpenses] = useState([]);
   const [bikes, setBikes] = useState([]);
   const [spareParts, setSpareParts] = useState([]);
   const [services, setServices] = useState([]);
@@ -39,10 +43,13 @@ function MonthlyIncomeReport() {
 
   useEffect(() => {
     if (!month) return;
-    setLoading(true);
 
-    const fetchAll = async () => {
+    const fetchData = async () => {
+      setLoading(true);
       try {
+        const expRes = await axios.get("http://localhost:5000/api/expenses");
+        const allExpenses = expRes.data || [];
+
         const [bikesRes, spareRes, servicesRes, insuranceRes] = await Promise.all([
           axios.get("http://localhost:5000/newBsH"),
           axios.get("http://localhost:5000/spb"),
@@ -60,6 +67,7 @@ function MonthlyIncomeReport() {
             return itemMonth === month;
           });
 
+        setExpenses(filterByMonth(allExpenses, "date"));
         setBikes(filterByMonth(bikesRes.data.newBsH || [], "date"));
 
         const rawSpare = spareRes.data.spb || [];
@@ -82,13 +90,13 @@ function MonthlyIncomeReport() {
         setServices(filterByMonth(servicesRes.data || [], "date"));
         setInsuranceBills(filterByMonth(insuranceRes.data.bills || [], "createdAt"));
       } catch (err) {
-        console.error("Failed to fetch monthly data:", err);
+        console.error("Failed to fetch monthly report:", err);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchAll();
+    fetchData();
   }, [month]);
 
   // Totals
@@ -102,16 +110,32 @@ function MonthlyIncomeReport() {
     (sum, b) => sum + Number(b.serviceCharge || 0),
     0
   );
-  const totalIncome = totalBikesIncome + totalSpareIncome + totalServicesIncome + totalInsuranceIncome;
+  const totalRevenue = totalBikesIncome + totalSpareIncome + totalServicesIncome + totalInsuranceIncome;
+  const totalExpenses = expenses.reduce((sum, exp) => sum + Number(exp.amount), 0);
+  const netProfit = totalRevenue - totalExpenses;
 
-  // Bar Chart Data
+  // Professional Bar Chart
   const chartData = {
-    labels: ["Bikes", "Spare Parts", "Service", "Insurance"],
+    labels: ["Bikes", "Spare Parts", "Service", "Insurance", "Expenses", "Net Profit"],
     datasets: [
       {
-        label: "Income (LKR)",
-        data: [totalBikesIncome, totalSpareIncome, totalServicesIncome, totalInsuranceIncome],
-        backgroundColor: ["#4f81bd", "#c0504d", "#9bbb59", "#8064a2"],
+        label: "Amount (LKR)",
+        data: [
+          totalBikesIncome,
+          totalSpareIncome,
+          totalServicesIncome,
+          totalInsuranceIncome,
+          totalExpenses,
+          netProfit,
+        ],
+        backgroundColor: [
+          "#4f81bd",
+          "#c0504d",
+          "#9bbb59",
+          "#8064a2",
+          "#f79646",
+          "#4bacc6",
+        ],
         borderRadius: 4,
       },
     ],
@@ -125,13 +149,21 @@ function MonthlyIncomeReport() {
     },
     scales: {
       x: { grid: { display: false } },
-      y: { grid: { color: "#e5e5e5" }, ticks: { beginAtZero: true, callback: (val) => val.toLocaleString() } },
+      y: {
+        grid: { color: "#e5e5e5" },
+        ticks: {
+          beginAtZero: true,
+          callback: (value) => value.toLocaleString(),
+        },
+      },
     },
   };
 
-  // PDF Export
+  // PDF export with chart
   const exportPDF = () => {
     const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "A4" });
+
+    // Header
     doc.setFontSize(20);
     doc.setTextColor("#2e3e5c");
     doc.setFont("helvetica", "bold");
@@ -139,27 +171,29 @@ function MonthlyIncomeReport() {
 
     doc.setFontSize(16);
     doc.setTextColor("#4f81bd");
-    doc.text("Monthly Income Report", 40, 70);
+    doc.text("Monthly Financial Report", 40, 80);
 
     doc.setFontSize(12);
     doc.setTextColor("#000");
     doc.text(
-      `Month: ${new Date(`${month}-01`).toLocaleString("default", { month: "long", year: "numeric" })}`,
+      `Month: ${new Date(`${month}-01`).toLocaleString("default", {
+        month: "long",
+        year: "numeric",
+      })}`,
       40,
-      85
+      100
     );
 
+    // Summary Table
     const summary = [
-      ["Bikes Income", totalBikesIncome.toFixed(2) + " LKR"],
-      ["Spare Parts Income", totalSpareIncome.toFixed(2) + " LKR"],
-      ["Service Income", totalServicesIncome.toFixed(2) + " LKR"],
-      ["Insurance Income", totalInsuranceIncome.toFixed(2) + " LKR"],
-      ["Total Income", totalIncome.toFixed(2) + " LKR"],
+      ["Total Revenue", totalRevenue.toFixed(2) + " LKR"],
+      ["Total Expenses", totalExpenses.toFixed(2) + " LKR"],
+      ["Net Profit", netProfit.toFixed(2) + " LKR"],
     ];
 
     autoTable(doc, {
-      startY: 90,
-      head: [["Source", "Amount"]],
+      startY: 130,
+      head: [["Metric", "Amount (LKR)"]],
       body: summary,
       theme: "grid",
       headStyles: { fillColor: "#4f81bd", textColor: "#fff", fontStyle: "bold" },
@@ -173,8 +207,9 @@ function MonthlyIncomeReport() {
       const chartImg = chartCanvas.toDataURL("image/png", 1.0);
       doc.addImage(chartImg, "PNG", 40, doc.lastAutoTable.finalY + 20, 520, 250);
     }
-    
-    const pageCount = doc.internal.getNumberOfPages();
+
+    // Footer
+   const pageCount = doc.internal.getNumberOfPages();
   for (let i = 1; i <= pageCount; i++) {
     doc.setPage(i);
     doc.setFontSize(9);
@@ -186,13 +221,25 @@ function MonthlyIncomeReport() {
     );
   }
 
+    doc.save(`MonthlyReport_${month}.pdf`);
+  };
 
-    doc.save(`MonthlyIncomeReport_${month}.pdf`);
+  // Excel Export
+  const exportExcel = () => {
+    const data = [
+      { Metric: "Total Revenue", Amount: totalRevenue },
+      { Metric: "Total Expenses", Amount: totalExpenses },
+      { Metric: "Net Profit", Amount: netProfit },
+    ];
+    const ws = XLSX.utils.json_to_sheet(data);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Monthly Report");
+    XLSX.writeFile(wb, `MonthlyReport_${month}.xlsx`);
   };
 
   return (
     <div className="min-h-screen bg-gray-100 p-10">
-      <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">📊 Monthly Income Report</h1>
+      <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">📊 Monthly Report</h1>
 
       <div className="flex flex-col md:flex-row items-center justify-center gap-4 mb-8">
         <input
@@ -203,9 +250,17 @@ function MonthlyIncomeReport() {
         />
         <button
           onClick={exportPDF}
+          disabled={!month}
           className="flex items-center gap-2 bg-gradient-to-r from-green-500 to-green-600 text-white px-5 py-2 rounded-xl font-semibold shadow-lg hover:from-green-600 hover:to-green-700 transition"
         >
-          📄 Export PDF
+          📄Export PDF
+        </button>
+        <button
+          onClick={exportExcel}
+          disabled={!month}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          📊 Export Excel
         </button>
       </div>
 
@@ -213,7 +268,8 @@ function MonthlyIncomeReport() {
 
       {!loading && month && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          {/* Revenue Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
             <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-blue-500">
               <FaMotorcycle size={36} className="text-blue-500" />
               <div>
@@ -229,14 +285,14 @@ function MonthlyIncomeReport() {
               </div>
             </div>
             <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-green-500">
-              <FaWrench size={36} className="text-green-500" />
+              <FaWallet size={36} className="text-green-500" />
               <div>
                 <p className="text-sm font-medium text-gray-500">Service Income</p>
                 <h2 className="text-2xl font-bold">{totalServicesIncome.toLocaleString()} LKR</h2>
               </div>
             </div>
             <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-purple-500">
-              <FaFileInvoiceDollar size={36} className="text-purple-500" />
+              <FaShieldAlt size={36} className="text-purple-500" />
               <div>
                 <p className="text-sm font-medium text-gray-500">Insurance Income</p>
                 <h2 className="text-2xl font-bold">{totalInsuranceIncome.toLocaleString()} LKR</h2>
@@ -244,9 +300,34 @@ function MonthlyIncomeReport() {
             </div>
           </div>
 
-          {/* Bar Chart */}
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-indigo-500">
+              <FaMoneyBillWave size={36} className="text-indigo-500" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Revenue</p>
+                <h2 className="text-2xl font-bold">{totalRevenue.toLocaleString()} LKR</h2>
+              </div>
+            </div>
+            <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-red-500">
+              <FaFileInvoiceDollar size={36} className="text-red-500" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Total Expenses</p>
+                <h2 className="text-2xl font-bold">{totalExpenses.toLocaleString()} LKR</h2>
+              </div>
+            </div>
+            <div className="p-6 bg-white text-gray-800 rounded-2xl shadow-md flex items-center gap-4 border-l-4 border-teal-500">
+              <FaWallet size={36} className="text-teal-500" />
+              <div>
+                <p className="text-sm font-medium text-gray-500">Net Profit</p>
+                <h2 className="text-2xl font-bold">{netProfit.toLocaleString()} LKR</h2>
+              </div>
+            </div>
+          </div>
+
+          {/* Professional Bar Chart */}
           <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4 text-gray-700">Monthly Income Breakdown</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-700">Monthly Breakdown</h2>
             <Chart ref={chartRef} type="bar" data={chartData} options={chartOptions} />
           </div>
         </>
@@ -255,4 +336,4 @@ function MonthlyIncomeReport() {
   );
 }
 
-export default MonthlyIncomeReport;
+export default MonthlyReport;

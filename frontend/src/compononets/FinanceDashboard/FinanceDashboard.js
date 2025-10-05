@@ -199,7 +199,7 @@ function FinanceDashboard() {
                 <div className="text-slate-600 text-sm">Track all revenue sources</div>
               </div>
             </Link>
-            <Link to="/Expenses" className="block group">
+            {/*<Link to="/Expenses" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <ArrowDownCircle className="w-4 h-4 mr-1" />
@@ -207,14 +207,14 @@ function FinanceDashboard() {
                 </div>
                 <div className="text-slate-600 text-sm">Manage all expenses</div>
               </div>
-            </Link>
-            <Link to="/CashFlow" className="block group">
+            </Link>*/}
+            <Link to="/Expenses" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1 flex items-center">
                   <CreditCard className="w-4 h-4 mr-1" />
-                  Cash Flow
+                  Expenses
                 </div>
-                <div className="text-slate-600 text-sm">Track money in and out</div>
+                <div className="text-slate-600 text-sm">Manage all expenses</div>
               </div>
             </Link>
           </div>
