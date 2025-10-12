@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+//import jsPDF from "jspdf";
+//import autoTable from "jspdf-autotable";
 
 function BikesSalesHistory() {
   const [sales, setSales] = useState([]);
@@ -42,7 +42,7 @@ function BikesSalesHistory() {
   };
 
   // Helper to export a single month's sales to PDF
-  const exportMonthPDF = (monthKey, monthSales) => {
+  /*const exportMonthPDF = (monthKey, monthSales) => {
     const doc = new jsPDF();
     const date = new Date().toLocaleDateString();
     const monthlyIncome = monthSales.reduce((sum, sale) => sum + Number(sale.last_price || 0), 0);
@@ -74,7 +74,7 @@ function BikesSalesHistory() {
       margin: { left: 15, right: 15 },
     });
     doc.save(`${monthKey.replace(/ /g, '_')}_Sold_Bikes_Summary.pdf`);
-  };
+  };*/
 
   // Group sales by month and year
   const groupedSales = sales.reduce((acc, sale) => {
