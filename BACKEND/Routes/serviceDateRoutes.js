@@ -7,7 +7,7 @@ const {
   verifyOTP,
   resendOTP,
   acceptBooking
-} = require('../controllers/ServiceDateController');
+} = require('../controllers/serviceDateController');
 
 // Legacy routes (keep for backward compatibility)
 router.post('/serviceDates', createServiceDate);
