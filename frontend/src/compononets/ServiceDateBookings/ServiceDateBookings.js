@@ -4,6 +4,7 @@ function ServiceDateBookings() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [actionLoadingId, setActionLoadingId] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -23,6 +24,27 @@ function ServiceDateBookings() {
     load();
     return () => controller.abort();
   }, []);
+
+  const acceptBooking = async (id) => {
+    try {
+      setActionLoadingId(id);
+      setError("");
+      const res = await fetch(`http://localhost:5000/api/serviceDates/${id}/accept`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Failed to accept booking (${res.status})`);
+      }
+      // Update UI to reflect accepted state
+      setBookings(prev => prev.map(b => b._id === id ? { ...b, accepted: true, acceptedAt: new Date().toISOString() } : b));
+    } catch (e) {
+      setError(e.message || 'Failed to accept booking');
+    } finally {
+      setActionLoadingId(null);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
@@ -52,12 +74,13 @@ function ServiceDateBookings() {
                   <th className="text-left px-4 py-3 border-b">Preferred Date</th>
                   <th className="text-left px-4 py-3 border-b">Preferred Time</th>
                   <th className="text-left px-4 py-3 border-b">Created</th>
+                  <th className="text-left px-4 py-3 border-b">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {bookings.length === 0 && (
                   <tr>
-                    <td colSpan="8" className="px-4 py-6 text-center text-slate-500">No bookings found</td>
+                    <td colSpan="9" className="px-4 py-6 text-center text-slate-500">No bookings found</td>
                   </tr>
                 )}
                 {bookings.map((b) => (
@@ -70,6 +93,16 @@ function ServiceDateBookings() {
                     <td className="px-4 py-3 border-b">{b.serviceDate ? new Date(b.serviceDate).toLocaleDateString() : "-"}</td>
                     <td className="px-4 py-3 border-b">{b.serviceTime || "-"}</td>
                     <td className="px-4 py-3 border-b">{b.createdAt ? new Date(b.createdAt).toLocaleString() : "-"}</td>
+                    <td className="px-4 py-3 border-b">
+                      <button
+                        onClick={() => acceptBooking(b._id)}
+                        disabled={b.accepted || actionLoadingId === b._id}
+                        className={`px-3 py-1.5 rounded-md text-white text-xs font-medium ${b.accepted ? 'bg-green-500 cursor-default' : 'bg-blue-600 hover:bg-blue-700 disabled:opacity-60'}`}
+                        title={b.accepted ? `Accepted on ${b.acceptedAt ? new Date(b.acceptedAt).toLocaleString() : ''}` : 'Accept booking'}
+                      >
+                        {actionLoadingId === b._id ? 'Accepting...' : (b.accepted ? 'Accepted' : 'Accept')}
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

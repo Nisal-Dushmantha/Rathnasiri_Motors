@@ -16,7 +16,8 @@ const validateService = [
   // Vehicle number validation
   body('VehicleNumber')
     .notEmpty().withMessage('Vehicle number is required')
-    .isLength({ min: 3, max: 10 }).withMessage('Vehicle number must be 3-10 characters'),
+    .isLength({ min: 6, max: 10 }).withMessage('Vehicle number must be 6-10 characters')
+    .matches(/^[A-Za-z]{2,}[-\s]?\d{4}$/).withMessage('Vehicle number must have at least 2 letters followed by 4 digits, optional hyphen/space (e.g., AB1234 or AB-1234)'),
   
   // Vehicle type validation
   body('VehicleType')
@@ -37,13 +38,15 @@ const validateService = [
   // Last service date validation
   body('LastServiceDate')
     .notEmpty().withMessage('Last service date is required')
-    .isDate().withMessage('Invalid date format')
+    .isISO8601().withMessage('Invalid date format')
     .custom(value => {
-      const date = new Date(value);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0); // Set time to beginning of day for accurate comparison
-
-      return date <= today; // Ensure date is today or in the past
+      // Parse input as local date (avoid UTC shift when using plain YYYY-MM-DD)
+      const date = new Date(`${value}T00:00:00`);
+      if (isNaN(date.getTime())) return false;
+      // Compare with end of today in local time
+      const endOfToday = new Date();
+      endOfToday.setHours(23, 59, 59, 999);
+      return date <= endOfToday;
     }).withMessage('Service date must be today or in the past')
 ];
 
@@ -63,7 +66,8 @@ const validateRepair = [
   // Vehicle number validation
   body('VehicleNumber')
     .notEmpty().withMessage('Vehicle number is required')
-    .isLength({ min: 3, max: 10 }).withMessage('Vehicle number must be 3-10 characters'),
+    .isLength({ min: 6, max: 10 }).withMessage('Vehicle number must be 6-10 characters')
+    .matches(/^[A-Za-z]{2,}[-\s]?\d{4}$/).withMessage('Vehicle number must have at least 2 letters followed by 4 digits, optional hyphen/space (e.g., AB1234 or AB-1234)'),
   
   // Vehicle type validation
   body('VehicleType')
