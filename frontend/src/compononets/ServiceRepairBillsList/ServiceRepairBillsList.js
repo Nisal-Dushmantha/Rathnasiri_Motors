@@ -180,26 +180,27 @@ function ServiceRepairBillsList() {
       doc.text("No services found", 105, 82, { align: "center" });
     }
     
-    // Add footer with border at the bottom
-    const finalY = doc.previousAutoTable ? doc.previousAutoTable.finalY + 15 : 120;
-    
-    // Add bottom border
+    // Anchor footer to bottom of page
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const bottomMargin = 18;
+    const footerY = pageHeight - bottomMargin;
+
+    // bottom border line
     doc.setDrawColor(30, 58, 138);
     doc.setLineWidth(0.5);
-    doc.line(15, finalY, 195, finalY);
-    
-    // Add thank you note
+    doc.line(15, footerY - 15, 195, footerY - 15);
+
+    // Thank you + contact lines (centered)
     doc.setFont("helvetica", "bold");
     doc.setTextColor(30, 58, 138);
-    doc.text("Thank you for your business!", 105, finalY + 10, { align: "center" });
-    
-    // Add contact info
+    doc.text("Thank you for your business!", 105, footerY - 6, { align: 'center' });
+
     doc.setFont("helvetica", "normal");
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
-    doc.text("Rathnasiri Motors - Quality Service Excellence", 105, finalY + 20, { align: "center" });
-    doc.text("Contact: +94 123 456 789 | Email: info@rathnasirimotors.com", 105, finalY + 25, { align: "center" });
-    
+    doc.text("Rathnasiri Motors - Quality Service Excellence", 105, footerY, { align: 'center' });
+    doc.text("Contact: +94 123 456 789 | Email: info@rathnasirimotors.com", 105, footerY + 5, { align: 'center' });
+
     // Save the PDF
     doc.save(`Rathnasiri_Motors_Bill_${bill.bill_no || Date.now()}.pdf`);
   };
@@ -330,28 +331,52 @@ function ServiceRepairBillsList() {
       },
       alternateRowStyles: {
         fillColor: [248, 250, 252]
-      }
+      },
+      margin: { bottom: 40 }
     });
     
     // Add footer with border at the bottom
-    const finalY = doc.previousAutoTable ? doc.previousAutoTable.finalY + 15 : 200;
+    // const finalY = doc.previousAutoTable ? doc.previousAutoTable.finalY + 15 : 200;
     
     // Add bottom border
     doc.setDrawColor(30, 58, 138);
     doc.setLineWidth(0.5);
-    doc.line(15, finalY, 195, finalY);
+    doc.line(15, 285, 195, 285);
     
     // Add signature line
     doc.setFont("helvetica", "normal");
-    doc.line(130, finalY + 25, 190, finalY + 25);
-    doc.text("Authorized Signature", 160, finalY + 30, { align: "center" });
+    doc.line(130, 310, 190, 310);
+    doc.text("Authorized Signature", 160, 315, { align: "center" });
     
     // Add generation info
     doc.setFontSize(9);
     doc.setTextColor(100, 100, 100);
-    doc.text(`Report generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 105, finalY + 40, { align: "center" });
+    doc.text(`Report generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 105, 330, { align: "center" });
     
     // Save the PDF
+    // Anchor footer to bottom of last page
+    const pageCount = doc.getNumberOfPages();
+    doc.setPage(pageCount);
+    const pageHeight = doc.internal.pageSize.getHeight();
+    
+    // Bottom border line slightly above bottom
+    const footerTopY = pageHeight - 30;
+    doc.setDrawColor(30, 58, 138);
+    doc.setLineWidth(0.5);
+    doc.line(15, footerTopY, 195, footerTopY);
+    
+    // Authorized Signature on the right, anchored
+    const sigLineY = pageHeight - 20;
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
+    doc.line(130, sigLineY, 190, sigLineY);
+    doc.text("Authorized Signature", 160, sigLineY + 6, { align: "center" });
+    
+    // Generation info centered at the very bottom
+    doc.setFontSize(9);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Report generated on: ${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`, 105, pageHeight - 6, { align: "center" });
+    
     doc.save(`Rathnasiri_Motors_Monthly_Summary_${monthName}_${year}.pdf`);
   };
 
