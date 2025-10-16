@@ -56,6 +56,7 @@ function ServiceRepairBillsList() {
       if (!groups[key]) {
         groups[key] = {
           monthName: monthNames[month],
+          monthIndex: month,
           year,
           bills: []
         };
@@ -64,9 +65,9 @@ function ServiceRepairBillsList() {
       groups[key].bills.push(bill);
     });
     
-    // Convert to array and sort by date (most recent first)
+    // Convert to array and sort by year then month index (chronological)
     return Object.values(groups).sort((a, b) => {
-      return (b.year - a.year) || (b.monthName > a.monthName ? -1 : 1);
+      return (a.year - b.year) || (a.monthIndex - b.monthIndex);
     });
   }, [bills]);
 
