@@ -6,7 +6,8 @@ const {
   initiateBooking,
   verifyOTP,
   resendOTP,
-  acceptBooking
+  acceptBooking,
+  deleteBooking
 } = require('../controllers/serviceDateController');
 
 // Legacy routes (keep for backward compatibility)
@@ -18,7 +19,8 @@ router.post('/serviceDates/initiate', initiateBooking);
 router.post('/serviceDates/verify', verifyOTP);
 router.post('/serviceDates/resend', resendOTP);
 
-// Admin accept route
+// Admin actions
 router.post('/serviceDates/:id/accept', acceptBooking);
+router.delete('/serviceDates/:id', deleteBooking);
 
 module.exports = router;

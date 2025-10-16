@@ -264,11 +264,29 @@ const acceptBooking = async (req, res) => {
   }
 };
 
+// Remove booking (admin action)
+const deleteBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await ServiceDate.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    await ServiceDate.findByIdAndDelete(id);
+    return res.status(200).json({ message: 'Booking removed successfully' });
+  } catch (error) {
+    console.error('deleteBooking error:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createServiceDate,
   getAllServiceDates,
   initiateBooking,
   verifyOTP,
   resendOTP,
-  acceptBooking
+  acceptBooking,
+  deleteBooking
 };

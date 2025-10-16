@@ -5,6 +5,7 @@ function ServiceDateBookings() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [actionLoadingId, setActionLoadingId] = useState(null);
+  const [deleteLoadingId, setDeleteLoadingId] = useState(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -43,6 +44,26 @@ function ServiceDateBookings() {
       setError(e.message || 'Failed to accept booking');
     } finally {
       setActionLoadingId(null);
+    }
+  };
+
+  const removeBooking = async (id) => {
+    if (!window.confirm('Remove this booking?')) return;
+    try {
+      setDeleteLoadingId(id);
+      setError("");
+      const res = await fetch(`http://localhost:5000/api/serviceDates/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || `Failed to remove booking (${res.status})`);
+      }
+      setBookings(prev => prev.filter(b => b._id !== id));
+    } catch (e) {
+      setError(e.message || 'Failed to remove booking');
+    } finally {
+      setDeleteLoadingId(null);
     }
   };
 
@@ -93,7 +114,7 @@ function ServiceDateBookings() {
                     <td className="px-4 py-3 border-b">{b.serviceDate ? new Date(b.serviceDate).toLocaleDateString() : "-"}</td>
                     <td className="px-4 py-3 border-b">{b.serviceTime || "-"}</td>
                     <td className="px-4 py-3 border-b">{b.createdAt ? new Date(b.createdAt).toLocaleString() : "-"}</td>
-                    <td className="px-4 py-3 border-b">
+                    <td className="px-4 py-3 border-b space-x-2">
                       <button
                         onClick={() => acceptBooking(b._id)}
                         disabled={b.accepted || actionLoadingId === b._id}
@@ -101,6 +122,14 @@ function ServiceDateBookings() {
                         title={b.accepted ? `Accepted on ${b.acceptedAt ? new Date(b.acceptedAt).toLocaleString() : ''}` : 'Accept booking'}
                       >
                         {actionLoadingId === b._id ? 'Accepting...' : (b.accepted ? 'Accepted' : 'Accept')}
+                      </button>
+                      <button
+                        onClick={() => removeBooking(b._id)}
+                        disabled={deleteLoadingId === b._id}
+                        className="px-3 py-1.5 rounded-md bg-red-600 hover:bg-red-700 text-white text-xs font-medium disabled:opacity-60"
+                        title="Remove booking"
+                      >
+                        {deleteLoadingId === b._id ? 'Removing...' : 'Remove'}
                       </button>
                     </td>
                   </tr>
