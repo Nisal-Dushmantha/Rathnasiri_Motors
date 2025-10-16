@@ -41,6 +41,13 @@ const serviceDateSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  accepted: {
+    type: Boolean,
+    default: false,
+  },
+  acceptedAt: {
+    type: Date,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
