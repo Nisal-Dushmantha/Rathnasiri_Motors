@@ -75,7 +75,26 @@ app.use("/job-stats", jobStatsRouter);
 mongoose
   .connect("mongodb+srv://lawanyanisal:It23557574@itp.hpgudhh.mongodb.net/")
   .then(() => console.log("connected to MongoDB"))
-  .then(() => {
+  .then(async () => {
+    // After connecting, ensure there isn't an accidental unique index on loyalty.customerId
+    // so the same customerId can appear in multiple loyalty records.
+    try {
+      const db = mongoose.connection.db;
+      // collection name derived from model name 'Loyalty' -> 'loyalties'
+      const coll = db.collection('loyalties');
+      if (coll) {
+        const indexes = await coll.indexes();
+        const idx = indexes.find((i) => i.key && i.key.customerId === 1 && i.unique);
+        if (idx) {
+          await coll.dropIndex(idx.name);
+          console.log(`Dropped unique index on loyalties.customerId (${idx.name}) to allow repeated customerId values`);
+        }
+      }
+    } catch (err) {
+      // Not fatal: just log and continue. If collection doesn't exist yet, indexes() will fail.
+      console.warn('Index check/drop for loyalties.customerId skipped or failed:', err.message || err);
+    }
+
     app.listen(5000);
   })
   .catch((err) => console.log(err));

@@ -3,6 +3,7 @@ import axios from "axios";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 import CustomerQRCodeModal from "./CustomerQRCodeModal";
+import CustomerEditModal from './CustomerEditModal';
 
 function CustomerDetails() {
   const [customers, setCustomers] = useState([]);
@@ -13,8 +14,10 @@ function CustomerDetails() {
     email: "",
   });
   const [error, setError] = useState("");
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editingId, setEditingId] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [highlightedRow, setHighlightedRow] = useState(null); // index of table row to highlight (or 'form')
+  const [editModalCustomer, setEditModalCustomer] = useState(null);
+  const [duplicateModal, setDuplicateModal] = useState({ open: false, title: '', message: '' });
   const [searchQuery, setSearchQuery] = useState("");
   const [qrModalCustomer, setQrModalCustomer] = useState(null);
 
@@ -33,10 +36,15 @@ function CustomerDetails() {
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    // clear field-specific error when user edits the field
+    setFieldErrors((prev) => (prev && prev[name] ? { ...prev, [name]: undefined } : prev));
+    // clear highlighted row because user is editing
+    setHighlightedRow(null);
   }
 
   function isFormValid() {
-    return Boolean(form.customerId && form.customerName && form.contactNumber && form.email);
+    // customerId optional (server can auto-generate)
+    return Boolean(form.customerName && form.contactNumber && form.email);
   }
 
   async function handleAddCustomer() {
@@ -44,55 +52,57 @@ function CustomerDetails() {
       setError("Please fill in all fields before adding.");
       return;
     }
+    // check for duplicate customerId (primary key behavior)
+    const existingById = customers.find((c) => c.customerId === form.customerId);
+    if (existingById) {
+      setDuplicateModal({ open: true, title: 'Customer ID in use', message: `Customer ID ${form.customerId} is already being used.` });
+      return;
+    }
+    // NOTE: name-duplication check intentionally removed — only customerId is enforced as primary key
     try {
+      setFieldErrors({});
+      setHighlightedRow(null);
       const res = await axios.post("http://localhost:5000/customers", form);
       setCustomers((prev) => [res.data, ...prev]);
+      // notify user of the assigned/generated ID (parity with AddCustomer page)
+      if (res && res.data && res.data.customerId) {
+        alert(`Customer created with ID: ${res.data.customerId}`);
+      }
       setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
       setError("");
+      setFieldErrors({});
     } catch (err) {
       console.error("Failed to add customer", err);
-      setError("Failed to add customer. Please try again.");
+      // backend validation returns { errors: [{ field, message }] }
+      const apiErrors = err?.response?.data?.errors;
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        const byField = {};
+        apiErrors.forEach((e) => {
+          if (e.field) byField[e.field] = e.message || "Invalid value";
+        });
+        setFieldErrors(byField);
+        // highlight the form area
+        setHighlightedRow('form');
+        setError("Please fix the highlighted fields.");
+      } else {
+        setError("Failed to add customer. Please try again.");
+      }
     }
   }
 
   function handleStartEdit(index) {
     const selected = customers[index];
-    setForm({
-      customerId: selected.customerId,
-      customerName: selected.customerName,
-      contactNumber: selected.contactNumber,
-      email: selected.email,
-    });
-    setEditingIndex(index);
-    setEditingId(selected._id);
-    setError("");
+    // open edit modal with selected customer
+    setEditModalCustomer(selected);
+    // clear any previous errors/highlight
+    setFieldErrors({});
+    setHighlightedRow(null);
+    setError('');
   }
 
-  async function handleSaveUpdate() {
-    if (!isFormValid()) {
-      setError("Please fill in all fields before saving.");
-      return;
-    }
-    try {
-      const res = await axios.put(`http://localhost:5000/customers/${editingId}`, form);
-      const updated = res.data;
-      setCustomers((prev) => prev.map((c, idx) => (idx === editingIndex ? updated : c)));
-      setEditingIndex(null);
-      setEditingId(null);
-      setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
-      setError("");
-    } catch (err) {
-      console.error("Failed to update customer", err);
-      setError("Failed to update customer. Please try again.");
-    }
-  }
+  // Update is now handled in the edit modal. The modal will call onSaved/onValidationError callbacks.
 
-  function handleCancelEdit() {
-    setEditingIndex(null);
-    setEditingId(null);
-    setForm({ customerId: "", customerName: "", contactNumber: "", email: "" });
-    setError("");
-  }
+  // Editing is handled in the modal; no inline cancel handler needed
 
   async function handleDeleteCustomer(id) {
     if (window.confirm("Are you sure you want to delete this customer?")) {
@@ -160,15 +170,19 @@ function CustomerDetails() {
 
                 return filtered.map((customer, index) => {
                   const originalIndex = customers.indexOf(customer);
+                  const isHighlighted = highlightedRow === originalIndex;
                   return (
-                    <tr key={`${customer.customerId}-${index}`} className="hover:bg-blue-50 border-b border-gray-100">
+                    <tr
+                      key={`${customer.customerId}-${index}`}
+                      className={`hover:bg-blue-50 border-b border-gray-100 ${isHighlighted ? 'bg-yellow-50 ring-2 ring-yellow-300' : ''}`}
+                    >
                       <td className="p-3">{customer.customerId}</td>
                       <td className="p-3">{customer.customerName}</td>
                       <td className="p-3">{customer.contactNumber}</td>
                       <td className="p-3">{customer.email}</td>
                       <td className="p-3">
                         <div className="flex gap-2">
-                          <Button onClick={() => handleStartEdit(originalIndex)} disabled={editingIndex !== null && editingIndex !== originalIndex} className="py-1 px-3 text-sm">Update</Button>
+                          <Button onClick={() => handleStartEdit(originalIndex)} disabled={editModalCustomer !== null} className="py-1 px-3 text-sm">Update</Button>
                           <button onClick={() => handleDeleteCustomer(customer._id)} className="bg-red-600 text-white text-sm py-1 px-3 rounded-md hover:bg-red-700">Delete</button>
                           <button onClick={() => setQrModalCustomer(customer)} className="bg-green-600 text-white text-sm py-1 px-3 rounded-md hover:bg-green-700">View QR</button>
                         </div>
@@ -182,27 +196,69 @@ function CustomerDetails() {
         </div>
 
         <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-4">
-          <input name="customerId" value={form.customerId} onChange={handleChange} placeholder="Customer ID" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-          <input name="customerName" value={form.customerName} onChange={handleChange} placeholder="Customer Name" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-          <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Contact Number" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
-          <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className="px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" />
+          <div>
+            <input name="customerId" value={form.customerId} onChange={handleChange} placeholder="Customer ID (leave blank to auto-generate)" className={`px-4 py-3 border ${fieldErrors.customerId ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`} />
+            {fieldErrors.customerId && <div className="text-xs text-red-600 mt-1">{fieldErrors.customerId}</div>}
+          </div>
+          <div>
+            <input name="customerName" value={form.customerName} onChange={handleChange} placeholder="Customer Name" className={`px-4 py-3 border ${fieldErrors.customerName ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`} />
+            {fieldErrors.customerName && <div className="text-xs text-red-600 mt-1">{fieldErrors.customerName}</div>}
+          </div>
+          <div>
+            <input name="contactNumber" value={form.contactNumber} onChange={handleChange} placeholder="Contact Number" className={`px-4 py-3 border ${fieldErrors.contactNumber ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`} />
+            {fieldErrors.contactNumber && <div className="text-xs text-red-600 mt-1">{fieldErrors.contactNumber}</div>}
+          </div>
+          <div>
+            <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Email" className={`px-4 py-3 border ${fieldErrors.email ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`} />
+            {fieldErrors.email && <div className="text-xs text-red-600 mt-1">{fieldErrors.email}</div>}
+          </div>
         </div>
 
         {error && <p className="text-red-600 mt-3">{error}</p>}
 
-        {editingIndex === null ? (
-          <Button onClick={handleAddCustomer} className="mt-5">Add Customer</Button>
-        ) : (
-          <div className="mt-5 flex gap-3">
-            <Button onClick={handleSaveUpdate} className="bg-green-600 hover:bg-green-700">Save Changes</Button>
-            <Button variant="outline" onClick={handleCancelEdit}>Cancel</Button>
-           
-          </div>
-        )}
+        <div className="mt-5">
+          <Button onClick={handleAddCustomer} className="">Add Customer</Button>
+        </div>
       </Card>
       {/* QR Code Modal */}
       {qrModalCustomer && (
         <CustomerQRCodeModal customer={qrModalCustomer} onClose={() => setQrModalCustomer(null)} />
+      )}
+      {/* Edit Modal */}
+      {editModalCustomer && (
+        <CustomerEditModal
+          customer={editModalCustomer}
+          existingCustomers={customers}
+          onDuplicate={(title, message) => setDuplicateModal({ open: true, title, message })}
+          onClose={() => setEditModalCustomer(null)}
+          onSaved={(updated) => {
+            // find index by _id and replace
+            setCustomers((prev) => prev.map((c) => (c._id === updated._id ? updated : c)));
+            setFieldErrors({});
+            setHighlightedRow(null);
+            setError('');
+          }}
+          onValidationError={(byField) => {
+            // highlight the row for the customer
+            const idx = customers.findIndex((c) => c._id === editModalCustomer._id);
+            if (idx >= 0) setHighlightedRow(idx);
+            setFieldErrors(byField || {});
+            setError('Please fix the highlighted fields.');
+          }}
+        />
+      )}
+
+      {/* Duplicate / conflict popup */}
+      {duplicateModal.open && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold mb-2 text-blue-900">{duplicateModal.title}</h3>
+            <p className="text-sm text-gray-700 mb-4">{duplicateModal.message}</p>
+            <div className="flex justify-end">
+              <Button onClick={() => setDuplicateModal({ open: false, title: '', message: '' })}>Close</Button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
