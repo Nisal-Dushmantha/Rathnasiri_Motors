@@ -65,7 +65,7 @@ function SidePanel({ onNavigate }) {
         <div className="flex items-center gap-3">
           <div className="bg-blue-100 rounded-lg p-2">
             <img 
-              src="/logo192.png" 
+              src="\rathnasiri-logo.jpeg" 
               alt="Logo" 
               className="w-8 h-8"
               onError={(e) => {
