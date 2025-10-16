@@ -40,8 +40,15 @@ const validateService = [
     .notEmpty().withMessage('Last service date is required')
     .isISO8601().withMessage('Invalid date format')
     .custom(value => {
-      // Parse input as local date (avoid UTC shift when using plain YYYY-MM-DD)
-      const date = new Date(`${value}T00:00:00`);
+      const raw = String(value);
+      let date;
+      // If value is a plain date (YYYY-MM-DD), pin it to local midnight
+      if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) {
+        date = new Date(`${raw}T00:00:00`);
+      } else {
+        // Likely a full ISO string from DB (e.g., 2025-10-16T00:00:00.000Z)
+        date = new Date(raw);
+      }
       if (isNaN(date.getTime())) return false;
       // Compare with end of today in local time
       const endOfToday = new Date();
