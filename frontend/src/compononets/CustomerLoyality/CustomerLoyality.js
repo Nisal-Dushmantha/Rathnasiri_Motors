@@ -10,11 +10,12 @@ function CustomerLoyality() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editForm, setEditForm] = useState(null);
 
+  const todayStr = new Date().toISOString().slice(0, 10);
   const [formData, setFormData] = useState({
     customerId: "",
     name: "",
     interaction: "",
-    date: "",
+    date: todayStr,
     points: 0,
   });
 
@@ -122,7 +123,7 @@ function CustomerLoyality() {
       };
       const res = await axios.post("http://localhost:5000/loyalty", payload);
       setCustomers((prev) => [res.data, ...prev]);
-      setFormData({ customerId: "", name: "", interaction: "", date: "", points: 0 });
+  setFormData({ customerId: "", name: "", interaction: "", date: todayStr, points: 0 });
     } catch (err) {
       console.error("Failed to add loyalty record", err);
     }
