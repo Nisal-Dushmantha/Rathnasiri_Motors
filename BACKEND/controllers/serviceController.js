@@ -38,7 +38,7 @@ const addServices = async (req, res, next) => {
   try {
     services = new service({
       Name,
-    Phone,
+    Phone: String(Phone),
     VehicleNumber,
     VehicleType,
     Model,
@@ -93,15 +93,15 @@ const updateService = async (req, res, next) => {
   try {
     services = await service.findByIdAndUpdate(id, {
     Name: Name,
-    Phone: Phone,
+    Phone: String(Phone),
     VehicleNumber: VehicleNumber,
     VehicleType: VehicleType,
     Model: Model,
     KiloMeters: KiloMeters,
     LastServiceDate: LastServiceDate,
     Requests: Requests
-    });
-    services = await services.save();
+    }, { new: true });
+    // Removed extra save() on the result of findByIdAndUpdate
   } catch (err) {
     console.log(err);
   }

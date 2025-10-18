@@ -29,7 +29,7 @@ const addRepairs = async (req, res, next) => {
   try {
     repairs = new repair({
       Name,
-      Phone,
+      Phone: String(Phone),
       VehicleNumber,
       VehicleType,
       Model,
@@ -72,15 +72,18 @@ const updateRepairs = async (req, res, next) => {
   let repairs;
 
   try {
-    repairs = await repair.findByIdAndUpdate(id, {
-      Name: Name,
-      Phone: Phone,
-      VehicleNumber: VehicleNumber,
-      VehicleType: VehicleType,
-      Model: Model,
-      Details: Details,
-    });
-    repairs = await repairs.save();
+    repairs = await repair.findByIdAndUpdate(
+      id,
+      {
+        Name: Name,
+        Phone: String(Phone),
+        VehicleNumber: VehicleNumber,
+        VehicleType: VehicleType,
+        Model: Model,
+        Details: Details,
+      },
+      { new: true }
+    );
   } catch (err) {
     console.log(err);
   }

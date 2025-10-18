@@ -115,6 +115,8 @@ import CustomerReports from "./compononets/CustomerReports/CustomerReports";
  import SparePartBill from "./compononets/SparePartBill/SparePartBill";
  import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
  import SparePartsChart from "./compononets/SparePartsChart/SparePartsChart";
+import CustomerAnalytics from "./compononets/CustomerAnalytics/CustomerAnalytics";
+import LoyalityAnalytics from "./compononets/LoyaltyAnalytics/LoyaltyAnalytics";
  
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -257,6 +259,8 @@ function Layout() {
           <Route path="/Register" element={<Register />} />
 
           <Route path="/Reports" element={<CustomerReports/>}/>
+          <Route path="/CustomerReport" element={<CustomerAnalytics/>}/>
+          <Route path="/loyalty-analytics" element={<LoyalityAnalytics/>} />
           
           <Route path="/CustomerOffers" element={<CustomerOffers/>}/>
           <Route path="/CustomerDetails" element={<CustomerDetails />} /> 

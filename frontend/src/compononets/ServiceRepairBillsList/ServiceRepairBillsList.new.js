@@ -5,12 +5,6 @@ function ServiceRepairBillsList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expanded, setExpanded] = useState({});
-  
-  // Month names for display
-  const monthNames = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
 
   useEffect(() => {
     let isMounted = true;
@@ -41,6 +35,11 @@ function ServiceRepairBillsList() {
   
   // Group bills by month and year
   const groupedBillsByMonth = useMemo(() => {
+    const monthNames = [
+      "January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"
+    ];
+
     const groups = {};
     
     bills.forEach(bill => {
@@ -54,6 +53,7 @@ function ServiceRepairBillsList() {
       if (!groups[key]) {
         groups[key] = {
           monthName: monthNames[month],
+          monthIndex: month,
           year,
           bills: []
         };
@@ -62,11 +62,11 @@ function ServiceRepairBillsList() {
       groups[key].bills.push(bill);
     });
     
-    // Convert to array and sort by date (most recent first)
+    // Convert to array and sort chronologically (ascending)
     return Object.values(groups).sort((a, b) => {
-      return (b.year - a.year) || (b.month - a.month);
+      return (a.year - b.year) || (a.monthIndex - b.monthIndex);
     });
-  }, [bills, monthNames]);
+  }, [bills]);
 
   // Function to render a single bill
   const renderBill = (b, i) => {

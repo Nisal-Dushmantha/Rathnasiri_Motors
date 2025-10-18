@@ -1,8 +1,8 @@
 // VehicleHistory.js
-import React, {  useEffect, useState } from "react";
+import React, {  useEffect, useState, useRef } from "react";
 import axios from "axios";
 import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import html2canvas from "html2canvas";
 
 function VehicleHistory() {
   const [serviceJobs, setServiceJobs] = useState([]);
@@ -10,6 +10,7 @@ function VehicleHistory() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
+  const pdfRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,59 +30,29 @@ function VehicleHistory() {
     fetchData();
   }, []);
 
-  // PDF Export
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(16);
-    doc.text("Vehicle History Report", 14, 20);
+  // PDF Export - capture styled template similar to ServiceDocument
+  const downloadPDF = async () => {
+    const container = pdfRef.current;
+    if (!container) return;
 
-    // --- Service Jobs Table ---
-    if (serviceJobs.length > 0 && (filter === "All" || filter === "Service")) {
-      doc.setFontSize(12);
-      doc.text("Service Jobs", 14, 35);
+    // Render to canvas at high scale for clarity
+    const canvas = await html2canvas(container, { scale: 2, useCORS: true });
+    const imgData = canvas.toDataURL("image/png");
 
-      autoTable(doc, {
-        startY: 40,
-        head: [["Plate Number", "Vehicle", "Request", "Status"]],
-        body: serviceJobs.map((job) => [
-          job.VehicleNumber || "N/A",
-          `${job.VehicleType || ""} ${job.Model || ""}`,
-          job.Requests || "No details",
-          job.Status || "Completed",
-        ]),
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [66, 133, 244], textColor: 255 },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-      });
-    }
+    // Convert container px to mm for exact page size
+    const divWidth = container.offsetWidth; // px
+    const divHeight = container.offsetHeight; // px
+    const widthMM = divWidth * 0.264583; // 1px = 0.264583mm
+    const heightMM = divHeight * 0.264583;
 
-    // --- Repair Jobs Table ---
-    let y = doc.lastAutoTable?.finalY + 15 || 50;
-    if (repairJobs.length > 0 && (filter === "All" || filter === "Repair")) {
-      doc.setFontSize(12);
-      doc.text("Repair Jobs", 14, y);
+    const pdf = new jsPDF({
+      orientation: widthMM > heightMM ? "landscape" : "portrait",
+      unit: "mm",
+      format: [widthMM, heightMM],
+    });
 
-      autoTable(doc, {
-        startY: y + 5,
-        head: [["Plate Number", "Vehicle", "Details", "Status"]],
-        body: repairJobs.map((job) => [
-          job.VehicleNumber || "N/A",
-          `${job.VehicleType || ""} ${job.Model || ""}`,
-          job.Details || "No details",
-          job.Status || "Completed",
-        ]),
-        styles: { fontSize: 10 },
-        headStyles: { fillColor: [220, 53, 69], textColor: 255 },
-        alternateRowStyles: { fillColor: [245, 245, 245] },
-      });
-    }
-
-    // Footer
-    const pageHeight = doc.internal.pageSize.height;
-    doc.setFontSize(9);
-    doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, pageHeight - 10);
-
-    doc.save("VehicleHistory.pdf");
+    pdf.addImage(imgData, "PNG", 0, 0, widthMM, heightMM);
+    pdf.save("Rathnasiri_Motors_Vehicle_History.pdf");
   };
 
   if (loading) return <div className="p-10 text-center">Loading vehicle history...</div>;
@@ -102,6 +73,13 @@ function VehicleHistory() {
       job.Model?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       job.Details?.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const includeService = filter === "All" || filter === "Service";
+  const includeRepair = filter === "All" || filter === "Repair";
+
+  const now = new Date();
+  const dateStr = now.toLocaleDateString();
+  const timeStr = now.toLocaleTimeString();
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen flex flex-col items-center">
@@ -135,7 +113,7 @@ function VehicleHistory() {
           </div>
         </div>
 
-        {/* Table */}
+        {/* Table (on-screen view) */}
         <div className="w-full max-w-7xl bg-white rounded-2xl shadow-2xl border border-gray-200">
           <h2 className="text-2xl font-bold text-blue-700 mb-4 px-8 pt-8 text-left">
             Vehicle Service & Repair History
@@ -199,6 +177,139 @@ function VehicleHistory() {
                   ))}
               </tbody>
             </table>
+          </div>
+        </div>
+
+        {/* Printable template (styled like ServiceDocument). Keep offscreen but rendered so html2canvas can capture. */}
+        <div className="absolute -left-[10000px] top-0">
+          <div
+            ref={pdfRef}
+            className="bg-white border-2 border-gray-200 rounded-lg shadow-sm overflow-hidden mx-auto"
+            style={{ width: 794 }}
+          >
+            {/* Header with gradient background */}
+            <div className="bg-gradient-to-r from-blue-600 to-blue-800 text-white p-6">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h1 className="text-3xl font-bold mb-1">RATHNASIRI MOTORS</h1>
+                  <p className="text-blue-100 text-lg">Vehicle Repair & Service Center</p>
+                  <div className="mt-3 space-y-1 text-blue-100 text-sm">
+                    <p>📍 123 Main Street, Colombo, Sri Lanka</p>
+                    <p>📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="bg-white bg-opacity-20 rounded-lg p-4 backdrop-blur-sm">
+                    <p className="text-blue-100 text-sm font-medium">REPORT DATE</p>
+                    <p className="text-white text-lg font-semibold">{dateStr}</p>
+                    <p className="text-blue-100 text-sm">{timeStr}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-6">
+              {/* Title and filter info */}
+              <div className="flex items-center justify-between mb-6 p-4 bg-gray-50 rounded-lg">
+                <div>
+                  <p className="text-gray-600 text-sm font-medium">REPORT</p>
+                  <p className="text-xl font-bold text-gray-800">Vehicle History</p>
+                  <p className="text-sm text-gray-500 mt-1">Filter: {filter}</p>
+                </div>
+                <div className="text-right">
+                  <span className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+                    {includeService && includeRepair ? "Service & Repair" : includeService ? "Service" : "Repair"}
+                  </span>
+                </div>
+              </div>
+
+              {/* Service Jobs Table */}
+              {includeService && filteredServices.length > 0 && (
+                <div className="mb-6">
+                  <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
+                    <span className="mr-2">🛠️</span>
+                    Service Jobs
+                  </h2>
+                  <div className="overflow-hidden rounded-lg border">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-blue-600 text-white">
+                        <tr>
+                          <th className="px-4 py-2">Plate Number</th>
+                          <th className="px-4 py-2">Vehicle</th>
+                          <th className="px-4 py-2">Request</th>
+                          <th className="px-4 py-2">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredServices.map((job, i) => (
+                          <tr key={i} className={i % 2 ? "bg-gray-50" : "bg-white"}>
+                            <td className="px-4 py-2 border-t">{job?.VehicleNumber || "N/A"}</td>
+                            <td className="px-4 py-2 border-t">{`${job?.VehicleType || "N/A"} ${job?.Model || ""}`}</td>
+                            <td className="px-4 py-2 border-t">{job?.Requests || "No details"}</td>
+                            <td className="px-4 py-2 border-t">{job?.Status || "Completed"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Repair Jobs Table */}
+              {includeRepair && filteredRepairs.length > 0 && (
+                <div className="mb-6">
+                  <h2 className="font-bold text-gray-800 text-lg mb-3 flex items-center">
+                    <span className="mr-2">🔧</span>
+                    Repair Jobs
+                  </h2>
+                  <div className="overflow-hidden rounded-lg border">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-red-600 text-white">
+                        <tr>
+                          <th className="px-4 py-2">Plate Number</th>
+                          <th className="px-4 py-2">Vehicle</th>
+                          <th className="px-4 py-2">Details</th>
+                          <th className="px-4 py-2">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {filteredRepairs.map((job, i) => (
+                          <tr key={i} className={i % 2 ? "bg-gray-50" : "bg-white"}>
+                            <td className="px-4 py-2 border-t">{job?.VehicleNumber || "N/A"}</td>
+                            <td className="px-4 py-2 border-t">{`${job?.VehicleType || "N/A"} ${job?.Model || ""}`}</td>
+                            <td className="px-4 py-2 border-t">{job?.Details || "No details"}</td>
+                            <td className="px-4 py-2 border-t">{job?.Status || "Completed"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* Footer */}
+              <div className="border-t-2 border-gray-200 pt-6">
+                <div className="grid md:grid-cols-3 gap-4 text-center">
+                  <div>
+                    <p className="font-semibold text-gray-800">Quality Service</p>
+                    <p className="text-sm text-gray-600">Professional & Reliable</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">Expert Technicians</p>
+                    <p className="text-sm text-gray-600">Certified & Experienced</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-800">Customer Satisfaction</p>
+                    <p className="text-sm text-gray-600">Your Trust, Our Priority</p>
+                  </div>
+                </div>
+                <div className="text-center mt-6 pt-4 border-t border-gray-200">
+                  <p className="text-lg font-bold text-blue-600">Thank you for choosing Rathnasiri Motors!</p>
+                  <p className="text-sm text-gray-600 mt-1">We appreciate your business</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -76,8 +76,8 @@ function BikeReportView() {
             <h1 className="text-3xl font-bold mb-1">RATHNASIRI MOTORS</h1>
             <p className="text-lg text-blue-100 mb-2">Bike Sales Report</p>
             <div className="text-blue-100 text-sm">
-              <p>📍 123 Main Street, Colombo, Sri Lanka</p>
-              <p>📞 +94 77 123 4567 | 📧 info@rathnasirimotors.com</p>
+              <p>📍Rathansiri Motors, Kegalle </p>
+              <p>📞 +94 37 224 2101 | 📧 Yamahakegalle@gmail.com</p>
             </div>
           </div>
 
@@ -101,7 +101,7 @@ function BikeReportView() {
           </div>
         </div>
 
-        {/* Customer Information - Modern UI */}
+        {/* Customer Information */}
         <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-10 shadow-sm">
             <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Customer Information</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
@@ -128,7 +128,7 @@ function BikeReportView() {
           </div>
         </div>
 
-        {/* Bike Details - Modern UI */}
+        {/* Bike Details */}
         <div className="bg-white/80 p-10 rounded-2xl border border-blue-200 mb-5 shadow-sm">
             <h2 className="font-bold text-blue-900 text-2xl mb-8 tracking-wide underline decoration-blue-900 decoration-4 underline-offset-4">Bike Details</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-12 gap-y-3 text-gray-800">
@@ -152,20 +152,20 @@ function BikeReportView() {
         </div>
 
 
-        {/* Price and Signature Row - Same Line */}
+        {/* Price and Signature Row */}
         <div className="flex flex-row justify-between items-end mt-12 mb-12 w-full">
-          {/* Last Price - Left */}
+          {/* Last Price */}
           <div className="flex flex-col items-start">
             <p className="text-xl font-semibold text-gray-500 mb-1">Total Price :</p>
             <div className="rounded-lg px-10 py-2 font-bold text-blue-900 text-3xl  shadow-sm">
               Rs. {report.last_price}
             </div>
           </div>
-          {/* Signature - Right */}
+          {/* Signature */}
           <div className="flex flex-col items-end">
             <div className="w-56 h-14 border-b-2 border-gray-400 mb-1 mr-2"></div>
             <p className="text-lg text-gray-700 mt-1 mr-2 font-bold">Authorized Signature</p>
-  
+
           </div>
         </div>
 
@@ -176,7 +176,7 @@ function BikeReportView() {
         </div>
       </div>
 
-      {/* Download PDF Button - Shorter */}
+      {/* Download PDF Button */}
       <div className="mt-6 flex justify-center">
         <button
           onClick={handleDownloadPDF}

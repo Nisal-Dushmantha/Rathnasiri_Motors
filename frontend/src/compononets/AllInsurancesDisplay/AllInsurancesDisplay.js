@@ -31,6 +31,7 @@ function InsuranceDetailModal({ user, onClose, refresh }) {
           <h2 className="text-2xl font-bold text-gray-800">{user.fullname}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <DetailRow label="Contact No" value={user.ContactNo} />
+            <DetailRow label="Email" value={user.Email} />
             <DetailRow label="Address" value={user.Address} />
             <DetailRow label="Vehicle No" value={user.RegistrationNo} />
             <DetailRow label="Vehicle Type" value={user.VehicleType} />
