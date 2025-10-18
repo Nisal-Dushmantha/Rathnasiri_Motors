@@ -24,6 +24,41 @@ function RepairJobCard() {
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const MODELS = [
+    'Ray ZR- Street Rally',
+    'FZs v4',
+    'Ray ZR Disc',
+    'Ray ZR 125 cc',
+    'MT-15 v2',
+    'R-15 v4',
+    'FZs v2',
+    'FZs v1',
+    'FZs v3'
+  ];
+
+  const isCustomModel = formData.vehicleModel && !MODELS.includes(formData.vehicleModel);
+
+  const handleModelSelect = (e) => {
+    const val = e.target.value;
+    if (val === "__OTHER__") {
+      const custom = window.prompt("Enter bike model");
+      if (custom && custom.trim().length > 0) {
+        const model = custom.trim();
+        setFormData(prev => ({ ...prev, vehicleModel: model }));
+        if (errors.vehicleModel) {
+          setErrors(prev => ({ ...prev, vehicleModel: undefined }));
+        }
+      } else {
+        setFormData(prev => ({ ...prev, vehicleModel: "" }));
+      }
+    } else {
+      setFormData(prev => ({ ...prev, vehicleModel: val }));
+      if (errors.vehicleModel) {
+        setErrors(prev => ({ ...prev, vehicleModel: undefined }));
+      }
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     
@@ -196,16 +231,30 @@ function RepairJobCard() {
               )}
             </div>
 
-            <Input 
-              label="Vehicle Model" 
-              type="text" 
-              name="vehicleModel" 
-              value={formData.vehicleModel} 
-              onChange={handleChange} 
-              placeholder="Vehicle model" 
-              required 
-              error={errors.vehicleModel}
-            />
+            <div>
+              <label className="block text-sm font-semibold text-gray-700">
+                Vehicle Model<span className="text-red-500 ml-1">*</span>
+              </label>
+              <select
+                name="vehicleModel"
+                value={formData.vehicleModel}
+                onChange={handleModelSelect}
+                required
+                className={`w-full px-4 py-3 border ${errors.vehicleModel ? 'border-red-500' : 'border-gray-200'} rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+              >
+                <option value="" disabled>Select vehicle model</option>
+                {isCustomModel && (
+                  <option value={formData.vehicleModel}>{formData.vehicleModel} (custom)</option>
+                )}
+                {MODELS.map(m => (
+                  <option key={m} value={m}>{m}</option>
+                ))}
+                <option value="__OTHER__">Other</option>
+              </select>
+              {errors.vehicleModel && (
+                <p className="mt-1 text-sm text-red-600">{errors.vehicleModel}</p>
+              )}
+            </div>
           </div>
 
           {/* Kilometers & Repair Details */}

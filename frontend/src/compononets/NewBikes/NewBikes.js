@@ -83,7 +83,7 @@ function NewBikes() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-b from-white-1000 to-white-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">

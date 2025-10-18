@@ -6,11 +6,12 @@ import Button from "../ui/Button";
 
 function AddLoyalty() {
   const navigate = useNavigate();
+  const todayStr = new Date().toISOString().slice(0, 10);
   const [formData, setFormData] = useState({
     customerId: "",
     name: "",
     interaction: "",
-    date: "",
+    date: todayStr,
     points: 0,
   });
   const [error, setError] = useState("");

@@ -7,7 +7,8 @@ import PageHeader from "../ui/PageHeader";
 
 function SalesBikeForm() {
   const navigate = useNavigate();
-  // Get current date in yyyy-mm-dd format
+  
+  // Get current date 
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0');
