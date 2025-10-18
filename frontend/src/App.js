@@ -114,6 +114,7 @@ import CustomerReports from "./compononets/CustomerReports/CustomerReports";
  import CustomerOffers from "./compononets/CustomerOffers/CustomerOffers";
  import SparePartBill from "./compononets/SparePartBill/SparePartBill";
  import SparePartBillsList from "./compononets/SparePartBillsList/SparePartBillsList";
+ import SparePartsChart from "./compononets/SparePartsChart/SparePartsChart";
  
 // Static pages
 import Privacy from "./compononets/Static/Privacy";
@@ -184,6 +185,7 @@ function Layout() {
           <Route path="/CustomerSpareParts" element={<CustomerSpareParts />} />
           <Route path="/CustomerServiceDates" element={<CustomerServiceDates />} />
           <Route path="/CustomerAboutUs" element={<CustomerAboutUs />} />
+          <Route path="/SparePartsChart" element={<SparePartsChart />} />
 
           {/* Dashboards */}
           <Route path="/homepage" element={<Homepage />} />

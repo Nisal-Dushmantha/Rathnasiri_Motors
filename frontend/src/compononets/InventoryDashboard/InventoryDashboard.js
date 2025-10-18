@@ -264,17 +264,8 @@ function InventoryDashboard() {
                 </div>
                 <div className="text-slate-600 text-sm">Generate inventory reports</div>
               </div>
-            </Link>
-            <Link to="/SparePartsReport" className="block group">
-              <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
-                <div className="text-slate-900 font-semibold mb-1 flex items-center">
-                  <FileText className="w-4 h-4 mr-1" />
-                  Usage Analysis
-                </div>
-                <div className="text-slate-600 text-sm">Track part usage trends</div>
-              </div>
-            </Link>
-            <Link to="/SparePartsReport" className="block group">
+            </Link>   
+            <Link to="/SparePartsChart" className="block group">
               <div className="rounded-2xl bg-white border border-slate-200 p-5 shadow-sm group-hover:border-blue-400 group-hover:shadow-md group-hover:bg-blue-50/50 transition-all">
                 <div className="text-slate-900 font-semibold mb-1">Summary Charts</div>
                 <div className="text-slate-600 text-sm">Visual inventory analytics</div>
