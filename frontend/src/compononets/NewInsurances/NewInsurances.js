@@ -12,6 +12,7 @@ function NewInsurances() {
     fullname: "",
     Address: "",
     ContactNo: "",
+    Email: "",
     RegistrationNo: "",
     VehicleType: "",
     VehicleModel: "",
@@ -61,6 +62,13 @@ function NewInsurances() {
       return;
     }
 
+    // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(FormData.Email)) {
+    alert("Invalid Email address.");
+    return;
+  }
+
     console.log("New Insurance Added:", FormData);
     alert("New Insurance added to system!");
     sendRequest().then(() => history("/InsurancesAll"));
@@ -72,6 +80,7 @@ function NewInsurances() {
         fullname: String(FormData.fullname),
         Address: String(FormData.Address),
         ContactNo: String(FormData.ContactNo),
+        Email: String(FormData.Email),
         RegistrationNo: String(FormData.RegistrationNo),
         VehicleType: String(FormData.VehicleType),
         VehicleModel: String(FormData.VehicleModel),
@@ -133,6 +142,15 @@ function NewInsurances() {
               value={FormData.ContactNo}
               onChange={handleChange}
               placeholder="Enter Contact number"
+              required
+            />
+             <Input
+              label="Email"
+              type="text"
+              name="Email"
+              value={FormData.Email}
+              onChange={handleChange}
+              placeholder="Enter Email"
               required
             />
           </div>
