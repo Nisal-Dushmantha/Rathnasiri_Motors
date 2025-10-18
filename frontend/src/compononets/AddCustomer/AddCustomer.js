@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Card from "../ui/Card";
@@ -13,18 +13,33 @@ function AddCustomer() {
     email: "",
   });
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [customers, setCustomers] = useState([]);
+  const [duplicateModal, setDuplicateModal] = useState({ open: false, title: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+    setFieldErrors((prev) => (prev && prev[name] ? { ...prev, [name]: undefined } : prev));
   }
 
   function isFormValid() {
-    return Boolean(
-      form.customerId && form.customerName && form.contactNumber && form.email
-    );
+    // customerId optional (server can auto-generate)
+    return Boolean(form.customerName && form.contactNumber && form.email);
   }
+
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/customers');
+        setCustomers(res.data || []);
+      } catch (err) {
+        console.error('Failed to load customers for validation', err);
+      }
+    };
+    fetchCustomers();
+  }, []);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -32,14 +47,37 @@ function AddCustomer() {
       setError("Please fill in all fields before adding.");
       return;
     }
+    // client-side duplicate check for customerId
+    if (form.customerId) {
+      const existingById = customers.find((c) => c.customerId === form.customerId);
+      if (existingById) {
+        setDuplicateModal({ open: true, title: 'Customer ID in use', message: `Customer ID ${form.customerId} is already being used.` });
+        return;
+      }
+    }
     try {
       setSubmitting(true);
-      await axios.post("http://localhost:5000/customers", form);
+      const res = await axios.post("http://localhost:5000/customers", form);
       setError("");
+      const created = res.data;
+      if (created && created.customerId) {
+        alert(`Customer created with ID: ${created.customerId}`);
+      }
       navigate("/CustomerDetails");
     } catch (err) {
       console.error("Failed to add customer", err);
-      setError("Failed to add customer. Please try again.");
+      // parse structured field errors from backend if available
+      const apiErrors = err?.response?.data?.errors;
+      if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+        const byField = {};
+        apiErrors.forEach((e) => {
+          if (e.field) byField[e.field] = e.message || 'Invalid value';
+        });
+        setFieldErrors(byField);
+        setError('Please fix the highlighted fields.');
+      } else {
+        setError("Failed to add customer. Please try again.");
+      }
     } finally {
       setSubmitting(false);
     }
@@ -56,9 +94,10 @@ function AddCustomer() {
               name="customerId"
               value={form.customerId}
               onChange={handleChange}
-              placeholder="Enter customer ID"
+              placeholder="Customer ID (leave blank to auto-generate)"
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {fieldErrors.customerId && <div className="text-xs text-red-600 mt-1">{fieldErrors.customerId}</div>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
@@ -69,6 +108,7 @@ function AddCustomer() {
               placeholder="Enter customer name"
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {fieldErrors.customerName && <div className="text-xs text-red-600 mt-1">{fieldErrors.customerName}</div>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Contact Number</label>
@@ -79,6 +119,7 @@ function AddCustomer() {
               placeholder="Enter contact number"
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {fieldErrors.contactNumber && <div className="text-xs text-red-600 mt-1">{fieldErrors.contactNumber}</div>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -90,6 +131,7 @@ function AddCustomer() {
               placeholder="Enter email address"
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
+            {fieldErrors.email && <div className="text-xs text-red-600 mt-1">{fieldErrors.email}</div>}
           </div>
 
           {error && <p className="text-red-600">{error}</p>}
@@ -101,6 +143,17 @@ function AddCustomer() {
           </div>
         </form>
       </Card>
+      {duplicateModal.open && (
+        <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-2xl p-6 w-full max-w-md mx-4">
+            <h3 className="text-lg font-semibold mb-2 text-blue-900">{duplicateModal.title}</h3>
+            <p className="text-sm text-gray-700 mb-4">{duplicateModal.message}</p>
+            <div className="flex justify-end">
+              <Button onClick={() => setDuplicateModal({ open: false, title: '', message: '' })}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -23,7 +23,7 @@ function UpdateServiceCard() {
     await axios
       .put(`http://Localhost:5000/services/${id}`, {
         Name: String(inputs.Name),
-        Phone: Number(inputs.Phone),
+        Phone: String(inputs.Phone), // send as string to keep leading zero and match 10-digit regex
         VehicleNumber: String(inputs.VehicleNumber),
         VehicleType: String(inputs.VehicleType),
         Model: String(inputs.Model),
@@ -41,10 +41,20 @@ function UpdateServiceCard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    sendRequest().then(() => {
-      alert("Service Job updated!");
-      navigate("/AllServiceJobs");
-    });
+    sendRequest()
+      .then(() => {
+        alert("Service Job updated!");
+        navigate("/AllServiceJobs");
+      })
+      .catch((err) => {
+        const errs = err?.response?.data?.errors;
+        if (Array.isArray(errs)) {
+          alert(errs.map((x) => `${x.param}: ${x.msg}`).join("\n"));
+        } else {
+          alert("Update failed. Please check inputs and try again.");
+        }
+        console.error("Update service error:", err?.response?.data || err);
+      });
   };
 
   return (
@@ -53,72 +63,158 @@ function UpdateServiceCard() {
         Update Service Job
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          type="text"
-          name="Name"
-          value={inputs.Name}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="number"
-          name="Phone"
-          value={inputs.Phone || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          name="VehicleNumber"
-          value={inputs.VehicleNumber || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          name="VehicleType"
-          value={inputs.VehicleType || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="text"
-          name="Model"
-          value={inputs.Model || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="number"
-          name="KiloMeters"
-          value={inputs.KiloMeters || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <input
-          type="date"
-          name="LastServiceDate"
-          value={
-            inputs.LastServiceDate
-              ? inputs.LastServiceDate.substring(0, 10)
-              : ""
-          }
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-          required
-        />
-        <textarea
-          name="Requests"
-          value={inputs.Requests || ""}
-          onChange={handleChange}
-          className="w-full p-2 border rounded"
-        />
+        <div>
+          <label
+            htmlFor="Name"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Customer Name
+          </label>
+          <input
+            id="Name"
+            type="text"
+            name="Name"
+            value={inputs.Name || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="Phone"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Phone Number
+          </label>
+          <input
+            id="Phone"
+            type="tel"
+            name="Phone"
+            value={inputs.Phone || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="VehicleNumber"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Vehicle Number
+          </label>
+          <input
+            id="VehicleNumber"
+            type="text"
+            name="VehicleNumber"
+            value={inputs.VehicleNumber || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="VehicleType"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Vehicle Type
+          </label>
+          <select
+            id="VehicleType"
+            name="VehicleType"
+            value={inputs.VehicleType || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          >
+            <option value="" disabled>
+              Select vehicle type
+            </option>
+            <option value="Bike">Bike</option>
+            <option value="Scooter">Scooter</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="Model"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Vehicle Model
+          </label>
+          <input
+            id="Model"
+            type="text"
+            name="Model"
+            value={inputs.Model || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="KiloMeters"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Kilometers
+          </label>
+          <input
+            id="KiloMeters"
+            type="number"
+            name="KiloMeters"
+            value={inputs.KiloMeters || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="LastServiceDate"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Last Service Date
+          </label>
+          <input
+            id="LastServiceDate"
+            type="date"
+            name="LastServiceDate"
+            value={
+              inputs.LastServiceDate
+                ? inputs.LastServiceDate.substring(0, 10)
+                : ""
+            }
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+            required
+          />
+        </div>
+
+        <div>
+          <label
+            htmlFor="Requests"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
+            Requests / Notes
+          </label>
+          <textarea
+            id="Requests"
+            name="Requests"
+            value={inputs.Requests || ""}
+            onChange={handleChange}
+            className="w-full p-2 border rounded"
+          />
+        </div>
+
         <button
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"

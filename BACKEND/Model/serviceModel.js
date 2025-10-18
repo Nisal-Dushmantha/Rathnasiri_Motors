@@ -8,8 +8,9 @@ const serviceSchema = new Schema({
         required:true,
     },
     Phone: {
-        type:Number,
+        type:String,
         required:true,
+        trim: true,
     },
     VehicleNumber: {
         type:String,

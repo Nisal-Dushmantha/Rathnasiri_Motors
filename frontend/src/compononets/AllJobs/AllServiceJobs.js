@@ -104,15 +104,15 @@ function AllServiceJobs() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => fetchJobs()}
-                className="inline-flex items-center gap-2 justify-center rounded-xl border border-white bg-white/10 backdrop-blur-sm text-white font-semibold py-2 px-4 hover:bg-white/20 transition"
+                className="inline-flex items-center gap-2 justify-center rounded-xl bg-white text-blue-700 font-semibold py-2 px-4 hover:bg-blue-50 border border-blue-200 shadow-sm transition"
               >
                 <RefreshCw className="h-4 w-4" />
                 Refresh
               </button>
-              <Link to="/AddServiceCard">
-                <button className="inline-flex items-center gap-2 justify-center rounded-xl border border-white bg-white/10 backdrop-blur-sm text-white font-semibold py-2 px-4 hover:bg-white/20 transition">
+              <Link to="/ServiceJobCard">
+                <button className="inline-flex items-center gap-2 justify-center rounded-xl bg-blue-600 text-white font-semibold py-2 px-4 hover:bg-blue-700 shadow transition">
                   <PlusCircle className="h-4 w-4" />
-                  Add New Job
+                  Add Service Job
                 </button>
               </Link>
             </div>
@@ -150,7 +150,7 @@ function AllServiceJobs() {
             <p className="text-slate-500 mb-6">
               {search ? "Try using different search terms." : "There are currently no service jobs in the system."}
             </p>
-            <Link to="/AddServiceCard">
+            <Link to="/ServiceJobCard">
               <button className="inline-flex items-center gap-2 justify-center rounded-xl border border-blue-600 bg-blue-50 text-blue-700 font-semibold py-2 px-4 hover:bg-blue-100 transition">
                 <PlusCircle className="h-4 w-4" />
                 Create New Service Job
