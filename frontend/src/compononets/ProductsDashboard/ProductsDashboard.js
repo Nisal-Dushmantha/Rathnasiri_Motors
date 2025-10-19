@@ -118,7 +118,7 @@ function ProductsDashboard() {
               <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 Products Dashboard
               </h1>
-              <p className="mt-1 text-white/80">
+              <p className="mt-1 text-blue-900">
                 Manage new bikes, used bikes, and inventory
               </p>
             </div>

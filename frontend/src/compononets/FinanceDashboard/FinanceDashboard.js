@@ -140,7 +140,7 @@ function FinanceDashboard() {
             <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
               Finance Dashboard
             </h1>
-            <p className="mt-1 text-white/80">Revenue • Expenses • Analytics</p>
+            <p className="mt-1 text-blue-900">Revenue • Expenses • Analytics</p>
           </div>
           <div className="flex gap-3">
             <ActionButton to="/MonthlyIncomeReport" primary>
