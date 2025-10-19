@@ -5,7 +5,6 @@ import {
   AlertTriangle,
   PlusCircle,
   Layers,
-  FileText,
   BarChart2,
   ShoppingCart,
 
@@ -110,7 +109,7 @@ function InventoryDashboard() {
               <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 Inventory Dashboard
               </h1>
-              <p className="mt-1 text-white/80">
+              <p className="mt-1 text-blue-900">
                 Spare Parts • Stock Levels • Inventory Management
               </p>
             </div>

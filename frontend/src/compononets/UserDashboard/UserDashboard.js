@@ -12,7 +12,6 @@ import {
 function UserDashboard() {
   const [loading, setLoading] = useState(true);
   const [totalCustomers, setTotalCustomers] = useState(0);
-  const [loyaltyMembers, setLoyaltyMembers] = useState(0);
   const [goldenMember, setGoldenMember] = useState(null);
   const [goldenLoading, setGoldenLoading] = useState(false);
   const [newCustomersThisMonth, setNewCustomersThisMonth] = useState(0);
@@ -49,7 +48,6 @@ function UserDashboard() {
           setNewCustomersThisMonth(0);
         }
         // Optionally fetch loyalty summary here if backend supports it
-        setLoyaltyMembers((prev) => prev);
       } catch (e) {
         if (e.name !== "CanceledError" && e.name !== "AbortError") {
           console.error("Error fetching customer data:", e);
@@ -147,7 +145,7 @@ function UserDashboard() {
               <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 User Management
               </h1>
-              <p className="mt-1 text-white/80">
+              <p className="mt-1 text-blue-900">
                 Customers • Loyalty • Analytics
               </p>
             </div>
