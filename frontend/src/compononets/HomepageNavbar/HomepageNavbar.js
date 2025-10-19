@@ -46,9 +46,9 @@ function HomepageNavbar() {
             <Link to="/homepage" className="flex items-center">
               <div className="mr-3">
                 <img
-                  src="/logo192.png"
+                  src="\rathnasiri-logo.jpeg"
                   alt="Logo"
-                  className="h-12 w-12"
+                  className="h-12 w-12 rounded-full object-cover"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src =

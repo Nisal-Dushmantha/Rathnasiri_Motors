@@ -21,6 +21,7 @@ function UpdateInsurances() {
       fullname: String(updateinsurance.fullname),
       Address: String(updateinsurance.Address),
       ContactNo: String(updateinsurance.ContactNo),
+      Email: String(updateinsurance.Email),
       RegistrationNo: String(updateinsurance.RegistrationNo),
       VehicleType: String(updateinsurance.VehicleType),
       VehicleModel: String(updateinsurance.VehicleModel),
@@ -49,6 +50,12 @@ function UpdateInsurances() {
       alert("Contact Number must be exactly 10 digits.");
       return;
     }
+    // Email validation
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(updateinsurance.Email)) {
+    alert("Invalid Email address.");
+    return;
+  }
 
     // --- FIXED DATE VALIDATION ---
     const startDate = new Date(updateinsurance.StartDate);
@@ -108,7 +115,19 @@ function UpdateInsurances() {
               required
             />
           </div>
-
+          {/*Email */}
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-2">Email</label>
+            <input
+              type="text"
+              name="Email"
+              value={updateinsurance.Email || ""}
+              onChange={handleChange}
+              placeholder="Email"
+              className="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+              required
+            />
+          </div>
           {/* Address */}
           <div className="flex flex-col md:col-span-2">
             <label className="text-gray-700 font-semibold mb-2">Address</label>

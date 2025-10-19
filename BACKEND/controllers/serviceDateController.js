@@ -1,4 +1,3 @@
-
 const ServiceDate = require('../Model/ServiceDateModel');
 const twilio = require('twilio');
 
@@ -72,6 +71,26 @@ const sendOTP = async (phoneNumber, otp) => {
     return { success: true };
   } catch (error) {
     console.error('Failed to send OTP via Twilio:', error.message);
+    return { success: false, error: error.message };
+  }
+};
+
+// Generic SMS sender for arbitrary messages
+const sendSMS = async (phoneNumber, message) => {
+  if (DEV_MODE) {
+    console.log(`⭐⭐⭐ DEVELOPMENT MODE SMS to ${phoneNumber}: ${message} ⭐⭐⭐`);
+    return { success: true, devMode: true };
+  }
+  if (!twilioClient || !twilioPhoneNumber) {
+    console.error('Twilio not configured. Cannot send SMS.');
+    return { success: false, error: 'SMS service not configured' };
+  }
+  try {
+    const formattedNumber = formatPhoneNumber(phoneNumber);
+    await twilioClient.messages.create({ body: message, from: twilioPhoneNumber, to: formattedNumber });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to send SMS via Twilio:', error.message);
     return { success: false, error: error.message };
   }
 };
@@ -203,10 +222,71 @@ const resendOTP = async (req, res) => {
   }
 };
 
+// Accept booking (admin action)
+const acceptBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await ServiceDate.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    if (!booking.verified) {
+      return res.status(400).json({ error: 'Booking is not verified yet' });
+    }
+
+    booking.accepted = true;
+    booking.acceptedAt = new Date();
+    await booking.save();
+
+    // Build a friendly date/time/plate message
+    let dateDisplay = booking.serviceDate;
+    try {
+      const d = new Date(booking.serviceDate);
+      if (!isNaN(d.getTime())) {
+        dateDisplay = d.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
+      }
+    } catch (_) {}
+    const timeDisplay = booking.serviceTime || '-';
+    const plateDisplay = booking.plateNumber || '-';
+
+    const smsText = `Your service booking for ${dateDisplay} at ${timeDisplay} (Plate: ${plateDisplay}) is accepted.`;
+    const smsResult = await sendSMS(booking.phoneNumber, smsText);
+
+    return res.status(200).json({ 
+      message: 'Booking accepted successfully',
+      smsError: !smsResult.success,
+      devMode: smsResult.devMode || false
+    });
+  } catch (error) {
+    console.error('acceptBooking error:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+// Remove booking (admin action)
+const deleteBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const booking = await ServiceDate.findById(id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    await ServiceDate.findByIdAndDelete(id);
+    return res.status(200).json({ message: 'Booking removed successfully' });
+  } catch (error) {
+    console.error('deleteBooking error:', error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
 module.exports = {
   createServiceDate,
   getAllServiceDates,
   initiateBooking,
   verifyOTP,
-  resendOTP
+  resendOTP,
+  acceptBooking,
+  deleteBooking
 };

@@ -15,6 +15,11 @@ const InsuranceSchema = new Schema({
         required:true,
         match: [/^[0-9]{10}$/, "Please enter a valid 10-digit phone number"]
     },
+    Email:{
+        type:String,
+        required:true,
+       
+    },
     RegistrationNo:{
         type:String,
         required:true,
@@ -43,8 +48,12 @@ const InsuranceSchema = new Schema({
     EndDate:{
         type:Date,
         required:true,
-    }
-
+    },
+    reminderSent: { type: Boolean, default: false }, // New field
+    expiredEmailSent: {
+    type: Boolean,
+    default: false,
+  },
 });
 module.exports = mongoose.model(
     "InsuranceModel",//filename

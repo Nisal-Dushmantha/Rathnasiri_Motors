@@ -19,7 +19,7 @@ const addnewBH = async (req, res, next) => {
   console.log("Request body:", req.body);
   const { type, model, last_price, buyer_name, contact_no, date } = req.body;
 
-  // Backend validation: date must be today only
+  // (Backend validation) date must be today only
   const today = new Date();
   today.setHours(0,0,0,0);
   let submittedDate = date ? new Date(date) : today;

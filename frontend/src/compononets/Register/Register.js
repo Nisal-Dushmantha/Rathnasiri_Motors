@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import background1 from '../uploads/background1.mp4';
-import { User, Mail, Lock, Phone, UserPlus, Eye, EyeOff, AlertTriangle, CheckCircle, ArrowLeft, CarFront } from 'lucide-react';
+import { User, Mail, Lock, Phone, Eye, EyeOff, AlertTriangle, CheckCircle, ArrowLeft } from 'lucide-react';
 
 function Register() {
   const [email, setEmail] = useState('');
@@ -55,219 +55,166 @@ function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-950 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background video with overlay */}
-      <div className="absolute inset-0 overflow-hidden -z-10">
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        >
-          <source src={background1} type="video/mp4" />
-        </video>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/80 via-blue-800/80 to-blue-950/90"></div>
-      </div>
-      
-      {/* Decorative elements */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 -left-24 w-96 h-96 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-        <div className="absolute top-1/3 -right-24 w-96 h-96 bg-cyan-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 w-96 h-96 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
-      </div>
-      
-      {/* Back to home button */}
-      <div className="absolute top-6 left-6">
-        <Link to="/" className="inline-flex items-center gap-2 text-white hover:text-blue-200 transition-colors bg-white/10 backdrop-filter backdrop-blur-lg px-4 py-2 rounded-lg shadow-lg hover:bg-white/20">
-          <ArrowLeft className="h-4 w-4" />
-          <span className="font-medium">Back to Home</span>
-        </Link>
-      </div>
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Background video to match Login */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover -z-10"
+      >
+        <source src={background1} type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-slate-900/50" />
 
-      {/* Register card */}
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <div className="bg-white p-3 rounded-full shadow-md">
-              <CarFront className="h-10 w-10 text-blue-600" />
-            </div>
-          </div>
-          <h1 className="text-4xl font-extrabold text-white mb-2 drop-shadow-md">Create Account</h1>
-          <p className="text-white/90 text-lg">Join Rathnasiri Motors community</p>
+      {/* Go Back button (top-left) */}
+      <Link to="/" className="fixed top-4 left-4 z-20 inline-flex items-center gap-2 rounded-full bg-white/15 text-white border border-white/30 backdrop-blur px-3 py-1.5 hover:bg-white/25">
+        <ArrowLeft className="h-4 w-4" />
+        <span className="text-sm font-medium">Go back</span>
+      </Link>
+
+      {/* Minimal header like Login */}
+      <header className="relative z-10">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between text-white/90">
+          <div className="text-lg font-semibold tracking-wide">Rathnasiri Motors</div>
         </div>
-        
-        <div className="bg-white/95 backdrop-filter backdrop-blur-lg rounded-2xl shadow-2xl p-8 border border-white/20 transform transition-all duration-300 hover:shadow-blue-500/10">
-          {/* Alert messages */}
+      </header>
+
+      {/* Centered glass card */}
+      <div className="relative z-10 flex min-h-[calc(100vh-72px)] items-center justify-center px-4 py-10">
+        <div className="w-full max-w-md rounded-2xl border border-white/25 bg-white/15 backdrop-blur-xl shadow-2xl p-6 sm:p-8 text-white">
+          <div className="relative mb-6">
+            <h2 className="text-2xl font-semibold text-center">Create account</h2>
+          </div>
+
+          {/* Alerts adapted for dark card */}
           {error && (
-            <div className="bg-red-50 text-red-700 rounded-lg p-4 mb-6 flex items-center border-l-4 border-red-500 shadow-sm animate-fade-in">
-              <AlertTriangle className="h-5 w-5 mr-3 flex-shrink-0" />
-              <span className="font-medium">{error}</span>
+            <div className="mb-4 rounded-lg border border-red-400/40 bg-red-500/20 px-3 py-2 text-red-100 flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5" />
+              <span className="text-sm font-medium">{error}</span>
             </div>
           )}
-          
           {success && (
-            <div className="bg-green-50 text-green-700 rounded-lg p-4 mb-6 flex items-center border-l-4 border-green-500 shadow-sm animate-fade-in">
-              <CheckCircle className="h-5 w-5 mr-3 flex-shrink-0" />
-              <span className="font-medium">{success}</span>
+            <div className="mb-4 rounded-lg border border-emerald-400/40 bg-emerald-500/20 px-3 py-2 text-emerald-100 flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              <span className="text-sm font-medium">{success}</span>
             </div>
           )}
-          
-          <form onSubmit={handleRegister} className="space-y-5">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <span>Email Address</span>
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
-                </div>
+
+          {/* Form */}
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-white/90 mb-1">Email</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-white/70" />
+                </span>
                 <input
                   type="email"
-                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="your@email.com"
                   required
-                  className="pl-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
+                  className="w-full pl-10 pr-3 py-3 rounded-xl bg-white/15 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <span>Full Name</span>
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
-                </div>
+            <div>
+              <label className="block text-sm font-medium text-white/90 mb-1">Full name</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <User className="h-5 w-5 text-white/70" />
+                </span>
                 <input
                   type="text"
-                  placeholder="Your Name"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
+                  placeholder="Your name"
                   required
-                  className="pl-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
+                  className="w-full pl-10 pr-3 py-3 rounded-xl bg-white/15 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <span>Password</span>
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
-                </div>
-                <input
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  className="pl-10 pr-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <span>Confirm Password</span>
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
-                </div>
-                <input
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  required
-                  className="pl-10 pr-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
-                />
-                <button 
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-blue-500 transition-colors"
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
-                    <Eye className="h-5 w-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 flex items-center">
-                <span>Phone Number</span>
-                <span className="ml-1 text-red-500">*</span>
-              </label>
-              <div className="relative group">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-blue-500 group-focus-within:text-blue-600 transition-colors" />
-                </div>
+            <div>
+              <label className="block text-sm font-medium text-white/90 mb-1">Phone number</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Phone className="h-5 w-5 text-white/70" />
+                </span>
                 <input
                   type="tel"
-                  placeholder="Phone Number (e.g. 0771234567)"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
+                  placeholder="0771234567"
                   required
-                  className="pl-10 w-full px-4 py-3 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition-all duration-200 hover:border-blue-300"
+                  className="w-full pl-10 pr-3 py-3 rounded-xl bg-white/15 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                Your phone number will be used for account verification
-              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white/90 mb-1">Password</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-white/70" />
+                </span>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/15 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/80 hover:text-white"
+                >
+                  {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-white/90 mb-1">Confirm password</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-white/70" />
+                </span>
+                <input
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  className="w-full pl-10 pr-10 py-3 rounded-xl bg-white/15 text-white placeholder-white/70 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-white/80 hover:text-white"
+                >
+                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center items-center py-3 px-4 gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-medium rounded-xl shadow-lg hover:shadow-blue-500/30 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all disabled:opacity-70 mt-4 transform hover:-translate-y-0.5 active:translate-y-0"
+              className="w-full py-3 rounded-xl bg-slate-900/90 hover:bg-slate-900 text-white font-semibold shadow-lg transition disabled:opacity-70"
             >
-              {loading ? (
-                <>
-                  <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Creating Account...
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-5 w-5" />
-                  Create Account
-                </>
-              )}
+              {loading ? 'Creating Account...' : 'Create Account'}
             </button>
           </form>
 
-          <div className="text-center mt-8">
-            <p className="text-gray-600">
-              Already have an account?{' '}
-              <Link to="/Login" className="text-blue-600 hover:text-blue-800 font-medium transition-colors hover:underline">
-                Sign In
-              </Link>
-            </p>
+          <div className="text-center mt-6 text-sm text-white/90">
+            Already have an account?{' '}
+            <Link to="/Login" className="font-semibold underline underline-offset-2 hover:text-white">Sign in</Link>
           </div>
         </div>
       </div>

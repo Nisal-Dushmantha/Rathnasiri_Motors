@@ -1,3 +1,4 @@
+
 const Insurance = require("../Model/InsuranceModel");
 
 const getAllInsurances = async (req, res, next) => {
@@ -21,6 +22,7 @@ const addInsurance = async (req,res,next) => {
     const {fullname,
         Address,
         ContactNo,
+        Email,
         RegistrationNo,
         VehicleType,
         VehicleModel,
@@ -35,12 +37,19 @@ const addInsurance = async (req,res,next) => {
       .status(400)
       .json({ message: "Invalid Contact Number. Must be 10 digits." });
   }
+
+  // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(Email)) {
+        return res.status(400).json({ message: "Invalid Email address." });
+    }
     let insurances;
     try{
         insurances = new Insurance({
             fullname,
             Address,
             ContactNo,
+            Email,
             RegistrationNo,
             VehicleType,
             VehicleModel,
@@ -84,6 +93,7 @@ const updateInsurance = async (req,res,next) => {
     const {fullname,
         Address,
         ContactNo,
+        Email,
         RegistrationNo,
         VehicleType,
         VehicleModel,
@@ -98,6 +108,10 @@ const updateInsurance = async (req,res,next) => {
       .status(400)
       .json({ message: "Invalid Contact Number. Must be 10 digits." });
   }
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(Email)) {
+        return res.status(400).json({ message: "Invalid Email address." });
+    }
 
         let insurances;
         try{
@@ -105,6 +119,7 @@ const updateInsurance = async (req,res,next) => {
                 {fullname : fullname,
                  Address  : Address,
                  ContactNo: ContactNo,
+                 Email : Email,
                  RegistrationNo : RegistrationNo,
                  VehicleType : VehicleType,
                  VehicleModel : VehicleModel,
@@ -157,46 +172,6 @@ const getTotalInsurances = async (req, res) => {
   }
 };
 
-const sendExpiryReminders = async (req, res) => {
-  try {
-    // Find tomorrow's date
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    // Get only the date part
-    const startOfDay = new Date(tomorrow.setHours(0, 0, 0, 0));
-    const endOfDay = new Date(tomorrow.setHours(23, 59, 59, 999));
-
-    // Find insurances expiring tomorrow
-    const expiringInsurances = await Insurance.find({
-      EndDate: { $gte: startOfDay, $lte: endOfDay }
-    });
-
-    if (expiringInsurances.length === 0) {
-      return res.status(200).json({ message: "No insurances expiring tomorrow." });
-    }
-
-    // Loop through and send SMS
-    for (const insurance of expiringInsurances) {
-      const message = `Dear ${insurance.fullname}, your insurance for vehicle ${insurance.RegistrationNo} will expire on ${insurance.EndDate.toDateString()}. Please renew before expiry.`;
-
-      await client.messages.create({
-        body: message,
-        from: twilioPhone,
-        to: insurance.ContactNo // must be in E.164 format, e.g. +94712345678
-      });
-    }
-
-    return res.status(200).json({ 
-      message: "Reminder SMS sent.", 
-      count: expiringInsurances.length 
-    });
-
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Error sending reminder SMS" });
-  }
-};
 
 
 exports.getAllInsurances = getAllInsurances;
@@ -209,11 +184,11 @@ exports.getById =getById;
 exports.updateInsurance = updateInsurance;
 exports.deleteInsurance = deleteInsurance;
 exports.getTotalInsurances = getTotalInsurances;
-exports.sendExpiryReminders = sendExpiryReminders;
+//exports.sendExpiryReminders = sendExpiryReminders;
 exports.addInsurance = addInsurance;
 exports.getById =getById;
 exports.updateInsurance = updateInsurance;
 exports.deleteInsurance = deleteInsurance;
 exports.getTotalInsurances = getTotalInsurances;
-exports.sendExpiryReminders = sendExpiryReminders;
+
 

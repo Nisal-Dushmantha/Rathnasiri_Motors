@@ -121,12 +121,26 @@ function ServiceRepairBill() {
       const grand = saved.total ?? totals.total;
       doc.text(String(Number(grand || 0).toFixed(2)), 198, y, { align: "right" });
 
-      // Footer
-      y += 16;
+      // Footer anchored to bottom of page
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const bottomMargin = 18;
+      const footerY = pageHeight - bottomMargin;
+
+      // bottom border line
+      doc.setDrawColor(30, 58, 138);
+      doc.setLineWidth(0.5);
+      doc.line(12, footerY - 15, 198, footerY - 15);
+
+      // Thank you + contact lines (centered)
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(30, 58, 138);
+      doc.text("Thank you for your business!", 105, footerY - 6, { align: "center" });
+
+      doc.setFont("helvetica", "normal");
       doc.setFontSize(10);
-      doc.setTextColor(120);
-      doc.text("Thank you for your business!", 14, y);
-      doc.text("Please retain this bill for your records.", 14, y + 6);
+      doc.setTextColor(100, 100, 100);
+      doc.text("Rathnasiri Motors - Quality Service Excellence", 105, footerY, { align: "center" });
+      doc.text("Contact: +94 123 456 789 | Email: info@rathnasirimotors.com", 105, footerY + 5, { align: "center" });
 
       doc.save(`Bill_${saved.bill_no || billNo || now.getTime()}.pdf`);
 
