@@ -13,6 +13,10 @@ function SparePBReports() {
 
     const doc = new jsPDF();
     const monthTitle = new Date(monthKey + '-01').toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+    // Current date and time for header
+    const now = new Date();
+    const currentDateTime = `${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
 
     // Title
     doc.setFontSize(20);
@@ -23,6 +27,11 @@ function SparePBReports() {
     doc.setFontSize(13);
     doc.setTextColor(60, 60, 60);
     doc.text(monthTitle, 105, 28, { align: 'center' });
+    
+    // Generated date/time in header
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Generated on: ${currentDateTime}`, 105, 35, { align: 'center' });
 
     // Table data
     const tableData = monthBills.map((bill) => [
@@ -41,7 +50,7 @@ function SparePBReports() {
     autotable(doc, {
       head: [["Bill No", "Date", "Customer Name", "Items", "Total"]],
       body: tableData,
-      startY: 36,
+      startY: 42,
       theme: 'grid',
       headStyles: {
         fillColor: [37, 99, 235],
