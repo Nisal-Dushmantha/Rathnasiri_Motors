@@ -18,10 +18,10 @@ function SparePartBill() {
   const [spareParts, setSpareParts] = useState([]);
   const [submitting, setSubmitting] = useState(false);
 
-  // ✅ Store validation errors
+  // Store validation errors
   const [errors, setErrors] = useState({});
 
-  // ✅ Fetch spare parts & brands
+  // Fetch spare parts & brands
   useEffect(() => {
     const fetchSpareParts = async () => {
       try {
@@ -55,7 +55,7 @@ function SparePartBill() {
     setItems((prev) => prev.filter((_, i) => i !== idx));
   };
 
-  // ✅ Select item → auto-fill brand + price
+  // Select item → auto-fill brand + price
   const handleSelectSparePart = (idx, spareName) => {
     const part = spareParts.find((sp) => sp.name === spareName);
     if (part) {
@@ -71,7 +71,7 @@ function SparePartBill() {
     }
   };
 
-  // ✅ Select brand manually
+  // Select brand manually
   const handleSelectBrand = (idx, brand) => {
     setItems((prev) =>
       prev.map((it, i) => (i === idx ? { ...it, brand } : it))
@@ -82,7 +82,7 @@ function SparePartBill() {
     setItems((prev) => prev.map((it, i) => (i === idx ? { ...it, [field]: value } : it)));
   };
 
-  // ✅ Validation
+  // Validation
   const validateForm = () => {
     let newErrors = {};
 
@@ -105,7 +105,7 @@ function SparePartBill() {
     e.preventDefault();
 
     if (!validateForm()) {
-      return; // ❌ stop if errors exist
+      return; // stop if errors exist
     }
 
     setSubmitting(true);
@@ -122,7 +122,7 @@ function SparePartBill() {
         });
       }
 
-      // ✅ Generate PDF (unchanged)
+      // Generate PDF (unchanged)
       const doc = new jsPDF();
       const now = new Date();
       const dateStr = now.toLocaleDateString();
