@@ -99,7 +99,7 @@ function CustomReport() {
 
     doc.setTextColor(0, 0, 0);
     doc.setFontSize(12);
-    doc.text(`Report Period: ${fromDate} ➝ ${toDate}`, 14, 35);
+    doc.text(`Report Period: ${fromDate} to ${toDate}`, 14, 35);
 
     autoTable(doc, {
       startY: 42,
