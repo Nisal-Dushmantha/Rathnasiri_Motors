@@ -125,7 +125,7 @@ function InsuranceAndRegistrationDashboard() {
               <h1 className="text-3xl md:text-4xl text-blue-900 font-extrabold tracking-tight">
                 Insurance & Registration
               </h1>
-              <p className="mt-1 text-white/80">Policies • Vehicle Registration • Renewals</p>
+              <p className="mt-1 text-blue-900">Policies • Vehicle Registration • Renewals</p>
             </div>
             <div className="flex gap-3">
               <ActionButton to="/NewInsurances" primary>
