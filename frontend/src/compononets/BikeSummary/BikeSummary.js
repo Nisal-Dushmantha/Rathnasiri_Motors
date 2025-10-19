@@ -8,6 +8,9 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 function BikeSummary() {
   const [availableBikes, setAvailableBikes] = useState(0);
   const [soldBikes, setSoldBikes] = useState(0);
+  const [allSoldRecords, setAllSoldRecords] = useState([]);
+  const [monthOptions, setMonthOptions] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -34,8 +37,26 @@ function BikeSummary() {
         const usedBikesCount = usedBikesData.count || 0;
         const totalAvailable = newBikesQuantity + usedBikesCount;
 
-        // Get sold bikes count
-        const soldBikesCount = Array.isArray(soldBikesData.newBsH) ? soldBikesData.newBsH.length : 0;
+        // Keep all sold records for month filtering
+        const soldRecords = Array.isArray(soldBikesData.newBsH) ? soldBikesData.newBsH : [];
+        setAllSoldRecords(soldRecords);
+
+        // derive month options from soldRecords (format YYYY-MM)
+        const monthsSet = new Set();
+        soldRecords.forEach((r) => {
+          if (r.date) {
+            const d = new Date(r.date);
+            if (!isNaN(d)) {
+              const m = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2,'0')}`;
+              monthsSet.add(m);
+            }
+          }
+        });
+        const months = Array.from(monthsSet).sort((a,b) => b.localeCompare(a));
+        setMonthOptions(months);
+
+        // default: show total sold count across all time
+        const soldBikesCount = soldRecords.length;
 
         setAvailableBikes(totalAvailable);
         setSoldBikes(soldBikesCount);
@@ -116,6 +137,36 @@ function BikeSummary() {
     );
   }
 
+  // handle month selection
+  const handleMonthChange = (e) => {
+    const val = e.target.value;
+    setSelectedMonth(val);
+    if (!val) {
+      setSoldBikes(allSoldRecords.length);
+      return;
+    }
+    // compute sold in that month
+    const [y, m] = val.split('-').map(Number);
+    const count = allSoldRecords.reduce((acc, r) => {
+      if (!r.date) return acc;
+      const d = new Date(r.date);
+      if (d.getFullYear() === y && (d.getMonth()+1) === m) return acc + 1;
+      return acc;
+    }, 0);
+    setSoldBikes(count);
+  };
+
+  // derive sold list for selected month
+  const soldListForMonth = (() => {
+    if (!selectedMonth) return allSoldRecords;
+    const [y, m] = selectedMonth.split('-').map(Number);
+    return allSoldRecords.filter((r) => {
+      if (!r.date) return false;
+      const d = new Date(r.date);
+      return d.getFullYear() === y && (d.getMonth()+1) === m;
+    });
+  })();
+
   if (error) {
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -140,17 +191,29 @@ function BikeSummary() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 mb-6">
           <div>
-            <h1 className="text-4xl font-extrabold text-blue-900 mb-2 tracking-tight">
+            <h1 className="text-3xl font-extrabold text-blue-900 mb-2 tracking-tight">
               🏍 Bike Inventory Summary
             </h1>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-700 text-lg">
               Overview of available and sold bikes in your inventory
             </p>
           </div>
-          <div className="flex gap-4">
-            <button onClick={() => window.location.href = '/NewBikes'} className="bg-blue-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-blue-800 transition">New Bikes</button>
-            <button onClick={() => window.location.href = '/UsedBikes'} className="bg-green-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-green-800 transition">Used Bikes</button>
-            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-6 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition"> Monthly Sales History</button>
+          <div className="flex gap-4 items-center">
+            {/* Month filter dropdown */}
+            <div>
+              <select value={selectedMonth} onChange={handleMonthChange} className="px-3 py-2 border rounded-lg">
+                <option value="">All Months</option>
+                {monthOptions.map((m) => {
+                  const display = new Date(`${m}-01`).toLocaleString('default', { month: 'long', year: 'numeric' });
+                  return <option key={m} value={m}>{display}</option>;
+                })}
+              </select>
+            </div>
+
+          
+            <button onClick={() => window.location.href = '/NewBikes'} className="bg-blue-700 text-white px-4 py-2 rounded-xl font-semibold shadow hover:bg-blue-800 transition">New Bikes</button>
+            <button onClick={() => window.location.href = '/UsedBikes'} className="bg-green-700 text-white px-4 py-2 rounded-xl font-semibold shadow hover:bg-green-800 transition">Used Bikes</button>
+            <button onClick={() => window.location.href = '/BikesSalesHistory'} className="bg-purple-700 text-white px-4 py-2 rounded-xl font-semibold shadow hover:bg-purple-800 transition"> Monthly Sales History</button>
           </div>
         </div>
 
@@ -209,6 +272,18 @@ function BikeSummary() {
               <li>Monitor sales trends to optimize stock levels.</li>
               <li>Use quick actions above to manage inventory efficiently.</li>
             </ul>
+            <div className="mt-4">
+              <h4 className="font-semibold text-gray-700 mb-2">Sold Bikes ({selectedMonth ? new Date(`${selectedMonth}-01`).toLocaleString('default', { month: 'long', year: 'numeric' }) : 'All'})</h4>
+              {soldListForMonth.length === 0 ? (
+                <div className="text-sm text-gray-500">No sold bikes for this period.</div>
+              ) : (
+                <ul className="text-sm text-gray-700 list-disc pl-6 space-y-1 max-h-40 overflow-auto">
+                  {soldListForMonth.map((r) => (
+                    <li key={r._id}>{r.buyer_name ? `${r.buyer_name} — ` : ''}{r.model || r.bike_model || 'Unknown Model'} — Rs. {r.last_price}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>
